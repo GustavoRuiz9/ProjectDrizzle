@@ -11,7 +11,7 @@ public class DrizzleController {
 	public ModelAndView redireccionPrincipal(){
 		ModelAndView Mv = new ModelAndView();
 		Mv.setViewName("Index");
-		Mv.addObject("Mensaje","Hola soy jorge");
+		Mv.addObject("Mensaje","Hola soy adolfo");
 		return Mv;
 	}
 
