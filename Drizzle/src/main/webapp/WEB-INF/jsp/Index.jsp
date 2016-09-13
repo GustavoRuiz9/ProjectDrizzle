@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+    
 <!DOCTYPE html>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -203,50 +205,73 @@
                 <div class="col-lg-8 col-lg-offset-2">
                     <!-- To configure the contact form email address, go to mail/contact_me.php and update the email address in the PHP file on line 19. -->
                     <!-- The form should work on most web servers, but if the form is not working you may need to configure your web server differently. -->
-                    <form action="">
+                    <form:form action="registrar.html" method="post">
                         <div class="row control-group">
                             <div class="form-group col-xs-12 floating-label-form-group controls">
-                                <label>Name</label>
-                                <input type="text" class="form-control" placeholder="Name" id="name" required data-validation-required-message="Please enter your name.">
-                                <p class="help-block text-danger"></p>
+                                <div class="col-xs-6">
+                               		<form:label path="name">Name</form:label>
+                          			<form:input type="text" path="name" class="form-control" placeholder="Name" id="Name" required data-validation-required-message="Please enter your name."/>
+                                	<p class="help-block text-danger"></p>
+                                </div>
+                                <div class="col-xs-6">
+                                	<form:label path="name">Last Name</form:label>
+                                	<form:input type="text" path="lasName" class="form-control" placeholder="Last Name" id="last_name" required data-validation-required-message="Please enter your last name."/>
+                                	<p class="help-block text-danger"></p>
+                                </div>
+                            </div>
+                        </div>
+                         <div class="row control-group">
+                            <div class="form-group col-xs-12 floating-label-form-group controls">
+                            	<div class="col-xs-6">
+                                	<form:label path="email">Email Address</form:label>
+                                	<form:input type="email" path="email" class="form-control" placeholder="Email Address" id="email" required data-validation-required-message="Please enter your email address."/>
+                                	<p class="help-block text-danger"></p>
+                            	</div>
+                            	<div class="col-xs-6">
+                                	<form:label path="dirt">Birth Date</form:label>
+                                	<form:input type="date" path="dirt" class="form-control" placeholder="Birth Date" id="birth" required data-validation-required-message="Please enter your Birth Date."/>
+                                	<p class="help-block text-danger"></p>
+                            	</div>
                             </div>
                         </div>
                         <div class="row control-group">
                             <div class="form-group col-xs-12 floating-label-form-group controls">
-                                <label>Email Address</label>
-                                <input type="email" class="form-control" placeholder="Email Address" id="email" required data-validation-required-message="Please enter your email address.">
-                                <p class="help-block text-danger"></p>
+                                <div class="col-xs-11">
+                                	<form:label path="phone">Phone Number</form:label>
+                                	<form:input type="tel" path="phone" class="form-control" placeholder="Phone Number" id="phone" required data-validation-required-message="Please enter your phone number."/>
+                                	<p class="help-block text-danger"></p>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="row control-group">
+                            <div class="form-group col-xs-12 floating-label-form-group controls">
+                            	<div class="col-xs-11">
+                                	<form:label path="contraseña">Contrasena</form:label>
+                                	<form:input type="password" path="contraseña" class="form-control" placeholder="Password" id="password" required data-validation-required-message="Please enter a Password."/>
+                                	<p class="help-block text-danger"></p>
+                              	</div>
                             </div>
                         </div>
                         <div class="row control-group">
                             <div class="form-group col-xs-12 floating-label-form-group controls">
-                                <label>Phone Number</label>
-                                <input type="tel" class="form-control" placeholder="Phone Number" id="phone" required data-validation-required-message="Please enter your phone number.">
-                                <p class="help-block text-danger"></p>
-                            </div>
-                        </div>
-                        <div class="row control-group">
-                            <div class="form-group col-xs-12 floating-label-form-group controls">
-                                <label>Contrasena</label>
-                                <input type="password" class="form-control" placeholder="password" id="password" required data-validation-required-message="Please enter a Password."></input>
-                                <p class="help-block text-danger"></p>
-                            </div>
-                        </div>
-                        <div class="row control-group">
-                            <div class="form-group col-xs-12 floating-label-form-group controls">
-                                <label>Confirmar Contrasena</label>
-                                <input type="password" class="form-control" placeholder="Confirmar password" id="password2" required data-validation-required-message="Please enter a comfirm password."></input>
-                                <p class="help-block text-danger"></p>
+                            	<div class="col-xs-11">
+                                	<form:label path="contraseñaConf">Confirmar Contrasena</form:label>
+                                	<form:input path="contraseñaConf" type="password" class="form-control" placeholder="Confirmar password" id="password2" required data-validation-required-message="Please enter a comfirm password."/>
+                                	<p class="help-block text-danger"></p>
+                            	</div>
                             </div>
                         </div>
                         <br>
                         <div id="success"></div>
                         <div class="row">
                             <div class="form-group col-xs-12">
+                            	<div class="col-xs-11">
                                 <button type="submit" class="btn btn-success btn-lg">Registrarme</button>
+                                </div>
                             </div>
                         </div>
-                    </form>
+                    </form:form>
                 </div>
             </div>
         </div>
