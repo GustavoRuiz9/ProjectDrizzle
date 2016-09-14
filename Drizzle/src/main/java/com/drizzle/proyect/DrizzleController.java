@@ -15,12 +15,13 @@ public class DrizzleController {
 		return new ModelAndView("Index","command",new Account());
 	}
 	@RequestMapping(value="/registrar",method={RequestMethod.GET,RequestMethod.POST})
-	public String redireccionregistro(ModelMap Model,Account Usu){
+	public ModelAndView redireccionregistro(ModelMap Model,Account Usu){
 		//ModelAndView Mv = new ModelAndView();
 		//Mv.setViewName("Index");
 		//Mv.addObject("Mensaje","Hola soy adolfo");
-		Model.addAttribute("name",Usu.getName());
-		return "Saludo";
+		//Model.addAttribute("name",Usu.getName());
+		System.out.println(Usu.getName());
+		return new ModelAndView("Index","command",new Account());
 	}
 
 }

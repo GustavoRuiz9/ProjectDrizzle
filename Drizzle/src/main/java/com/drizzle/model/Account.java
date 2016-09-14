@@ -1,11 +1,10 @@
 package com.drizzle.model;
 
-import java.sql.Date;
 
 public class Account {
 	
-	private String name,lastName,email,contraseña;
-	private Date dirt;
+	private String name,lastName,email,contrasena;
+	private String birt;
 	private int phone;
 	
 	public String getName() {
@@ -25,12 +24,14 @@ public class Account {
 	}
 	public void setEmail(String email) {
 		this.email = email;
+		
 	}
-	public Date getDirt() {
-		return dirt;
+	
+	public String getBirt() {
+		return birt;
 	}
-	public void setDirt(Date dirt) {
-		this.dirt = dirt;
+	public void setBirt(String birt) {
+		this.birt = birt;
 	}
 	public int getPhone() {
 		return phone;
@@ -38,13 +39,13 @@ public class Account {
 	public void setPhone(int phone) {
 		this.phone = phone;
 	}
+	public String getContrasena() {
+		return contrasena;
+	}
+	public void setContrasena(String contrasena) {
+		this.contrasena = contrasena;
+	}
 	
-	public String getContraseña() {
-		return contraseña;
-	}
-	public void setContraseña(String contraseña) {
-		this.contraseña = contraseña;
-	}
 	
 
 }
