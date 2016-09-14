@@ -34,7 +34,8 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-
+    
+   
 </head>
 
 <body id="page-top" class="index">
@@ -205,17 +206,17 @@
                 <div class="col-lg-8 col-lg-offset-2">
                     <!-- To configure the contact form email address, go to mail/contact_me.php and update the email address in the PHP file on line 19. -->
                     <!-- The form should work on most web servers, but if the form is not working you may need to configure your web server differently. -->
-                    <form:form action="registrar.html">
+                    <form:form action="registrar.html" data-toggle="validator">
                         <div class="row control-group">
                             <div class="form-group col-xs-12 floating-label-form-group controls">
                                 <div class="col-xs-6">
                                		<form:label path="name">Name</form:label>
-                          			<form:input type="text"  path="name" class="form-control" placeholder="Name" />
+                          			<form:input type="text" path="name" class="form-control" placeholder="Name" id="name" required="required"/>
                                 	<p class="help-block text-danger"></p>
                                 </div>
                                 <div class="col-xs-6">
                                 	<form:label path="lastName">Last Name</form:label>
-                                	<form:input type="text" path="lastName" class="form-control" placeholder="Last Name" id="last_name"/>
+                                	<form:input type="text" path="lastName" class="form-control" placeholder="Last Name" id="lastname" required="required"/>
                                 	<p class="help-block text-danger"></p>
                                 </div>
                             </div>
@@ -224,12 +225,12 @@
                             <div class="form-group col-xs-12 floating-label-form-group controls">
                             	<div class="col-xs-6">
                                 	<form:label path="email">Email Address</form:label>
-                                	<form:input type="email" path="email" class="form-control" placeholder="Email Address" id="email" />
+                                	<form:input type="email" path="email" class="form-control" placeholder="Email Address" id="email" required="required"/>
                                 	<p class="help-block text-danger"></p>
                             	</div>
                             	<div class="col-xs-6">
-                                	<form:label path="birt">Birth Date</form:label>
-                                	<form:input type="date" path="birt" class="form-control" placeholder="Birth Date" id="birth" />
+                                	<form:label path="birth">Birth Date</form:label>
+                                	<form:input type="date" path="birth" class="form-control" placeholder="Birth Date" id="birth" required="required"/>
                                 	<p class="help-block text-danger"></p>
                             	</div>
                             </div>
@@ -238,7 +239,7 @@
                             <div class="form-group col-xs-12 floating-label-form-group controls">
                                 <div class="col-xs-11">
                                 	<form:label path="phone">Phone Number</form:label>
-                                	<form:input type="number" path="phone" class="form-control" placeholder="Phone Number" id="phone" />
+                                	<form:input type="number" path="phone" class="form-control" placeholder="Phone Number" id="phone" required="required"/>
                                 	<p class="help-block text-danger"></p>
                                 </div>
                             </div>
@@ -248,7 +249,7 @@
                             <div class="form-group col-xs-12 floating-label-form-group controls">
                             	<div class="col-xs-11">
                                 	<form:label path="contrasena">Password</form:label>
-                                	<form:input type="password" path="contrasena" class="form-control" placeholder="Password" id="password" />
+                                	<form:input type="password" path="contrasena" class="form-control" placeholder="Password" id="password" required="required"/>
                                 	<p class="help-block text-danger"></p>
                               	</div>
                             </div>
@@ -257,7 +258,7 @@
                             <div class="form-group col-xs-12 floating-label-form-group controls">
                             	<div class="col-xs-11">
                                 	<label>Confirm Password</label>
-                                	<input type="password" class="form-control" placeholder="Confirmar password" id="password2" />
+                                	<input type="password" class="form-control" placeholder="Confirmar password" id="password2" required="required"/>
                                 	<p class="help-block text-danger"></p>
                             	</div>
                             </div>

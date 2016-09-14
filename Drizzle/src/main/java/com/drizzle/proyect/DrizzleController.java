@@ -1,7 +1,9 @@
 package com.drizzle.proyect;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -15,13 +17,12 @@ public class DrizzleController {
 		return new ModelAndView("Index","command",new Account());
 	}
 	@RequestMapping(value="/registrar",method={RequestMethod.GET,RequestMethod.POST})
-	public ModelAndView redireccionregistro(ModelMap Model,Account Usu){
+	public ModelAndView redireccionregistro(@ModelAttribute Account account){
 		//ModelAndView Mv = new ModelAndView();
 		//Mv.setViewName("Index");
 		//Mv.addObject("Mensaje","Hola soy adolfo");
 		//Model.addAttribute("name",Usu.getName());
-		System.out.println(Usu.getName());
-		return new ModelAndView("Index","command",new Account());
+		return new ModelAndView("Registrado","accountDataModel",account.toString());
 	}
 
 }
