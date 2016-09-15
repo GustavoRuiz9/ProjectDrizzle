@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.drizzle.model.Account;
+import com.drizzle.persistence.hibernateTransations;
 
 @Controller
 public class DrizzleController {
@@ -22,7 +23,8 @@ public class DrizzleController {
 		//Mv.setViewName("Index");
 		//Mv.addObject("Mensaje","Hola soy adolfo");
 		//Model.addAttribute("name",Usu.getName());
-		return new ModelAndView("Registrado","accountDataModel",account.toString());
+		hibernateTransations.registrar(account);
+		return new ModelAndView("Registrado","registro",account);
 	}
 
 }

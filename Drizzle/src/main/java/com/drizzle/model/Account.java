@@ -1,16 +1,49 @@
 package com.drizzle.model;
 
+import javax.persistence.*;
+
 import org.springframework.beans.factory.annotation.Required;
 
+@javax.persistence.Entity
+@Table
 public class Account {
 	
+	public Account(String name, String lastName, String email, String contrasena, String birth, int phone) {
+		this.name = name;
+		this.lastName = lastName;
+		this.email = email;
+		this.contrasena = contrasena;
+		this.birth = birth;
+		this.phone = phone;
+	}
+	
+	public Account() {
+		
+	}
+
+	@Id
+	private int id;
+	
 	private String name;
+	
 	private String lastName;
+	
 	private String email;
+	
 	private String contrasena;
+	
 	private String birth;
+	
 	private int phone;
 	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	public String getName() {
 		return name;
 	}
