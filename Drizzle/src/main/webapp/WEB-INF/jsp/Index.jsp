@@ -83,7 +83,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
-                    <img class="img-responsive" src="././resources/img/profile.png" alt="">
+                    <img class="img-responsive" src="././resources/img/perfil/profile.png" alt="">
                     <div class="intro-text">
                         <span class="name">Comparte el Clima</span>
                         <hr class="star-light">
