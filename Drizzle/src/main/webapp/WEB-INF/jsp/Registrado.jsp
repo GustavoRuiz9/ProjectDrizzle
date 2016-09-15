@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -40,7 +41,9 @@
   <![endif]-->
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
-Datos:${accountDataModel}
+<%--hibernateTransations.registrar(new Account("fabian","ruiz","fabia.an@hotmail.com","dr1ssl3","05/02/1999",4458745));--%>
+
+Registro:${registro};
 <div class="wrapper">
 
   <header class="main-header">
@@ -1257,5 +1260,12 @@ Datos:${accountDataModel}
 <script src="././resources/dashboard.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="././resources/js/demo.js"></script>
+<body>
+
+<%--hibernateTransations.registrar(new Account("fabian","ruiz","fabia.an@hotmail.com","dr1ssl3","05/02/1999",4458745));--%>
+
+Registro:${registro};
+	
+	
 </body>
 </html>
