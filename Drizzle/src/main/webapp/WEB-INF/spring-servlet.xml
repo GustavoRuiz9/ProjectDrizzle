@@ -15,5 +15,13 @@
 		<property name="prefix" value="/WEB-INF/jsp/"></property>
 		<property name="suffix" value=".jsp"> </property>
 	</bean>
+	
+	
+   <!-- Redirect view -->
+   <bean id="Index"
+       class="org.springframework.web.servlet.view.RedirectView">
+           <property name="url" value="Index.jsp" />
+    </bean>
+
 
 </beans>

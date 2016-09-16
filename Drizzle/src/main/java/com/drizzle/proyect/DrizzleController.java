@@ -18,13 +18,14 @@ public class DrizzleController {
 		return new ModelAndView("Index","command",new Account());
 	}
 	@RequestMapping(value="/registrar",method={RequestMethod.GET,RequestMethod.POST})
-	public ModelAndView redireccionregistro(@ModelAttribute Account account){
-		//ModelAndView Mv = new ModelAndView();
-		//Mv.setViewName("Index");
-		//Mv.addObject("Mensaje","Hola soy adolfo");
-		//Model.addAttribute("name",Usu.getName());
-		hibernateTransations.registrar(account);
-		return new ModelAndView("Registrado","registro",account);
+	public String redireccionregistro(@ModelAttribute Account account){
+	
+		if(hibernateTransations.registrar(account)){
+			return "Registrado";
+			
+		}
+		
+		return "redirect:/index.html#contact";
 	}
 
 }
