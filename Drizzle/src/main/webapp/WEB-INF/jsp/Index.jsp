@@ -257,6 +257,7 @@
                         <div class="row control-group">
                             <div class="form-group col-xs-12 floating-label-form-group controls">
                             	<div class="col-xs-11">
+                            	<%%>
                                 	<label>Confirm Password</label>
                                 	<input type="password" class="form-control" placeholder="Confirmar password" id="password2" required="required"/>
                                 	<p class="help-block text-danger"></p>

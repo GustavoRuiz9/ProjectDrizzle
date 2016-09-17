@@ -2,6 +2,7 @@ package com.drizzle.model;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.GeneratorType;
 import org.springframework.beans.factory.annotation.Required;
 
 @javax.persistence.Entity
