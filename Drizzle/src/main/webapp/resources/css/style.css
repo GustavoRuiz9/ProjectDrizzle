@@ -1,0 +1,432 @@
+
+
+@import url('sau-content/css/bootstrap-datetimepicker.css');
+@import url('sau-content/css/font-awesome.min.css');
+@import url('sau-content/css/bootstrap.min.css');
+@import url('sau-content/css/loaders.min.css');
+@import url('sau-content/css/responsive.css');
+@import url('sau-content/css/hover-min.css');
+@import url('sau-content/css/animate.css');
+
+
+
+body{
+    font-family: 'Source Sans Pro', sans-serif;
+    background: #ededed;
+}
+
+a,a:hover,a:focus,a:active{
+    text-decoration: none;
+}
+
+a,button{
+	-moz-transition: all .2s ease-in;
+    -o-transition: all .2s ease-in;
+    -webkit-transition: all .2s ease-in;
+    transition: all .2s ease-in;
+}
+
+.table {
+    margin-bottom: 0px;
+}
+
+.comments-box{
+    padding: 5px 5px;
+    background: #fff;
+    float: left;
+    width: 100%; 
+    display: none;       
+}
+
+
+.profile-image{
+    border-radius: 50%;
+}
+
+
+
+#contactos a{
+    display: inline-block;
+    margin-bottom: 8px;
+    float: left;        
+}
+
+#contactos a > img{
+    border-radius: 50%;
+}
+
+.message-icon > img {
+ min-height: 40px;
+ max-height: 40px;
+ border-radius: 50%;
+}
+
+
+.message-footer a{
+    color: #fff;
+    margin-right: 10px;
+    text-decoration: none;
+    cursor: pointer;    
+}
+
+
+.nopadding{
+	padding: 0px;
+}
+
+.nomargin{
+    margin: 0px;
+}
+
+
+#loginbox{
+    margin: 150px auto;
+    width: 325px;
+}
+
+.sau-status{
+    padding: 15px 10px 0px;
+}
+
+
+/* SAU */
+#sau-container{
+	margin-top: 30px;
+}
+
+.login-link-content{
+    padding: 0px;
+    margin-top: 5%;
+    text-align: right;	
+}
+
+.login-link-content a{
+    display: block;
+    width: 100%;
+    margin-bottom: 2px;
+    text-decoration: none;
+    font-size: 12px;
+}
+
+
+.bootstrap-datetimepicker-widget *{
+	-moz-transition: all .2s ease-in;
+    -o-transition: all .2s ease-in;
+    -webkit-transition: all .2s ease-in;
+    transition: all .2s ease-in;	
+}
+
+
+.panel-body {
+    padding: 15px 10px 5px;
+}
+
+.panel{
+    width: 100%;
+    float: left;
+}
+
+.hidelike{
+    display: none;
+}
+
+.deletepost{
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    background: #CE1F1F;
+    padding: 2px 5px;
+    color: #fff;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;    
+}
+
+.deletepost:hover,.deletepost:focus,.deletepost:active{
+    text-decoration: none;
+    background: #B70000;
+    color: #FFF;
+} 
+
+
+.deletecomment{
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    background: #CE1F1F;
+    padding: 2px 5px;
+    color: #fff;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;    
+}
+
+.deletecomment:hover,.deletecomment:focus,.deletecomment:active{
+    text-decoration: none;
+    background: #B70000;
+    color: #FFF;
+} 
+
+
+
+
+#loaders{
+    top: 0px;
+    left: 0px;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    text-align: center;
+    padding-top: 4%;    
+}
+
+.line-scale-pulse-out-rapid>div {
+    background-color: #D17171;
+}
+
+.hideform{
+    display: none;
+}
+
+
+#loadingimg{
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 12%;    
+}
+
+.opacityimg{
+    opacity: 0.3;    
+}
+
+#alertimg{
+    background: #E61B1B;
+    border-radius: 4px;
+    display: none;
+    color: #fff;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-bottom: 5px;      
+}
+
+#viewmore{
+    padding-bottom: 4%;
+}
+
+#viewmore a{
+    cursor: pointer;
+}
+
+.hidebtncontact{
+    display: none;
+}
+
+
+
+#messagesul>li>a {
+    display: block;
+    padding: 5px 5px 5px 3px;
+    float: left;
+    width: 100%;
+    white-space: normal;
+}
+
+#messagesul>li>a p{
+    margin: 0px;
+}
+
+.ptimemessage{
+    background: #D1719D;
+    display: inline-block;
+    border-radius: 4px;
+    color: #fff;
+    padding: 1px 5px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;   
+}
+
+.messageprofileradius{
+    border-radius: 50%;
+}
+
+.navbar-default .navbar-toggle {
+    border-color: transparent;
+    color: #FFF;
+}
+
+.navbar-default .navbar-collapse, .navbar-default .navbar-form {
+    border-color: transparent;
+}
+
+.navbar-default .navbar-toggle:focus, .navbar-default .navbar-toggle:hover {
+    background-color: transparent;
+}
+
+.messagesbox{
+  padding: 0px;
+}
+
+.messageview{
+    cursor: pointer;
+}
+
+.mesages-body{
+    font-weight: bold;
+}
+
+.message-fecha{
+    background: #10AD0D;
+    color: #fff;
+    text-align: center;
+    display: inline-block;
+    padding: 3px 5px;
+    border-radius: 4px;  
+}
+
+.message-usuario{
+    color: #777;
+}
+
+.modal-content{
+    float: left;
+    width: 100%;
+}
+
+.modal-header {
+    float: left;
+    width: 100%;
+}
+
+.modal-body {
+    position: relative;
+    padding: 15px;
+    float: left;
+    width: 100%;
+}
+
+.modal-footer {
+    float: left;
+    width: 100%;
+}
+
+
+.alert {
+   float: left;
+   width: 100%;
+}
+
+#updasuccess{
+    width: 200px;
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    background: #65BD23;
+    border-radius: 4px;
+    padding: 5px 13px;
+    text-align: center;
+    color: #fff;
+    display: none;    
+}
+
+.actualmail{
+    display: inline-block;
+    width: 100%;
+    background: #369839;
+    color: #FFF;
+    padding: 5px 10px;
+    border-radius: 3px;    
+}
+
+.actualperma{
+    display: inline-block;
+    width: 100%;
+    background: #983636;
+    color: #FFF;
+    padding: 5px 10px;
+    border-radius: 3px;    
+}
+
+#notactualpass{
+    display: none;
+}
+
+.borderimgsearch{
+    border-radius: 50%;
+}
+
+.parselinks a{
+    margin-left: 3px;
+}
+
+.busqueda .link{
+   color: #777;
+}
+
+.busqueda .link:hover,.link:focus,.link:active{
+   color: #D86A32;
+
+}
+
+#notactualperma{
+   display: none;
+}
+
+#notactualemail{
+    display: none;
+}
+
+#notactualusemail{
+    display: none;
+}
+
+
+#follow{
+    float: left;
+    width: 100%;
+    padding: 15px 10px;   
+}
+
+#follow a{
+    display: inline-block;
+    float: left;    
+}
+
+#follow a>img{
+   border-radius: 50%;   
+}
+
+
+#followers{
+    float: left;
+    width: 100%;
+    padding: 15px 10px;   
+}
+
+#followers a{
+    display: inline-block;
+    float: left;    
+}
+
+#followers a>img{
+   border-radius: 50%;   
+}
+
+.avisodisable{
+    background: #14a6de;
+    margin: 0px;
+    text-align: center;
+    color: #FFF;
+    border-radius: 4px;
+    padding-top: 3%;
+    padding-bottom: 3%;
+    font-size: 14px;    
+}
+
+.avisodisable i{
+    display: block;
+}
