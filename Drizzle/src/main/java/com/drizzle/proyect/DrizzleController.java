@@ -20,9 +20,9 @@ public class DrizzleController {
 	@RequestMapping(value="/registrar",method={RequestMethod.GET,RequestMethod.POST})
 	public String redireccionregistro(@ModelAttribute Account account){
 	
-		if(hibernateTransations.registrar(account)){
+		if(hibernateTransations.consultarAccount(account.getEmail())){
+			hibernateTransations.registrarAccount(account);
 			return "Registrado";
-			
 		}
 		
 		return "redirect:/index.html#contact";
