@@ -17,7 +17,7 @@ CREATE TABLE ACCOUNT (
   last_name VARCHAR(40) NOT NULL,
   email VARCHAR(40) NOT NULL,
   password VARCHAR(40) NOT NULL,
-  user VARCHAR(40),
+  /*user VARCHAR(40),*/
   birth_date VARCHAR(40) NOT NULL,
   number_phone VARCHAR(40),
   CONSTRAINT PK_ACCOUNT PRIMARY KEY (id_account)
