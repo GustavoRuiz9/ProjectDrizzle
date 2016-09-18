@@ -46,7 +46,7 @@ CREATE TABLE PROFILE (
   profile_account VARCHAR(40) NOT NULL,
   photo BLOB,
   ubication VARCHAR(40) NOT NULL,
-  auto_ubucaction BOOL NOT NULL,
+  auto_ubication BOOL NOT NULL,
   status BOOL NOT NULL,
   reputation NUMERIC NOT NULL,
   CONSTRAINT PK_PROFILE PRIMARY KEY (profile_account),
