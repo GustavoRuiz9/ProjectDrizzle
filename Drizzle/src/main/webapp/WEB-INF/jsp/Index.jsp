@@ -215,8 +215,8 @@
                                 	<p class="help-block text-danger"></p>
                                 </div>
                                 <div class="col-xs-6">
-                                	<form:label path="lastName">Last Name</form:label>
-                                	<form:input type="text" path="lastName" class="form-control" placeholder="Last Name" id="lastname" required="required"/>
+                                	<form:label path="last_name">Last Name</form:label>
+                                	<form:input type="text" path="last_name" class="form-control" placeholder="Last Name" id="lastname" required="required"/>
                                 	<p class="help-block text-danger"></p>
                                 </div>
                             </div>
@@ -229,8 +229,8 @@
                                 	<p class="help-block text-danger"></p>
                             	</div>
                             	<div class="col-xs-6">
-                                	<form:label path="birth">Birth Date</form:label>
-                                	<form:input type="date" path="birth" class="form-control" placeholder="Birth Date" id="birth" required="required"/>
+                                	<form:label path="birth_date">Birth Date</form:label>
+                                	<form:input type="date" path="birth_date" class="form-control" placeholder="Birth Date" id="birth" required="required"/>
                                 	<p class="help-block text-danger"></p>
                             	</div>
                             </div>
@@ -238,8 +238,8 @@
                         <div class="row control-group">
                             <div class="form-group col-xs-12 floating-label-form-group controls">
                                 <div class="col-xs-11">
-                                	<form:label path="phone">Phone Number</form:label>
-                                	<form:input type="number" path="phone" class="form-control" placeholder="Phone Number" id="phone" required="required"/>
+                                	<form:label path="number_phone">Phone Number</form:label>
+                                	<form:input type="number" path="number_phone" class="form-control" placeholder="Phone Number" id="phone" required="required"/>
                                 	<p class="help-block text-danger"></p>
                                 </div>
                             </div>
@@ -248,8 +248,8 @@
                         <div class="row control-group">
                             <div class="form-group col-xs-12 floating-label-form-group controls">
                             	<div class="col-xs-11">
-                                	<form:label path="contrasena">Password</form:label>
-                                	<form:input type="password" path="contrasena" class="form-control" placeholder="Password" id="password" required="required"/>
+                                	<form:label path="password">Password</form:label>
+                                	<form:input type="password" path="password" class="form-control" placeholder="Password" id="password" required="required"/>
                                 	<p class="help-block text-danger"></p>
                               	</div>
                             </div>
@@ -257,7 +257,6 @@
                         <div class="row control-group">
                             <div class="form-group col-xs-12 floating-label-form-group controls">
                             	<div class="col-xs-11">
-                            	<%%>
                                 	<label>Confirm Password</label>
                                 	<input type="password" class="form-control" placeholder="Confirmar password" id="password2" required="required"/>
                                 	<p class="help-block text-danger"></p>

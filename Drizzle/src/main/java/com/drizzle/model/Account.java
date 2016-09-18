@@ -2,66 +2,70 @@ package com.drizzle.model;
 
 import javax.persistence.*;
 
-import org.hibernate.annotations.GeneratorType;
 import org.springframework.beans.factory.annotation.Required;
 
 @javax.persistence.Entity
 @Table
 public class Account {
-	
-	public Account(String name, String lastName, String email, String contrasena, String birth, int phone) {
-		this.name = name;
-		this.lastName = lastName;
-		this.email = email;
-		this.contrasena = contrasena;
-		this.birth = birth;
-		this.phone = phone;
-	}
-	
-	public Account() {
+
+	public Account(){
 		
 	}
 
+
+	public Account(String name, String last_name, String email, String password, String birth_date,
+			String number_phone) {
+		this.name = name;
+		this.last_name = last_name;
+		this.email = email;
+		this.password = password;
+		this.birth_date = birth_date;
+		this.number_phone = number_phone;
+	}
+
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int id;
+	private int id_account;
 	
 	private String name;
 	
-	private String lastName;
+	private String last_name;
 	
 	private String email;
 	
-	private String contrasena;
+	private String password;
 	
-	private String birth;
+	private String birth_date;
 	
-	private int phone;
+	private String number_phone;
 	
-	public int getId() {
-		return id;
+	
+	
+	public int getId_account() {
+		return id_account;
 	}
-
-	public void setId(int id) {
-		this.id = id;
+	
+	public void setId_account(int id_account) {
+		this.id_account = id_account;
 	}
 
 	public String getName() {
 		return name;
 	}
-	
 	@Required
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	public String getLastName() {
-		return lastName;
+
+	public String getLast_name() {
+		return last_name;
 	}
 	@Required
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
+	public void setLast_name(String last_name) {
+		this.last_name = last_name;
 	}
+
 	public String getEmail() {
 		return email;
 	}
@@ -69,34 +73,35 @@ public class Account {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public String getBirth() {
-		return birth;
+
+	public String getPassword() {
+		return password;
 	}
 	@Required
-	public void setBirth(String birth) {
-		this.birth = birth;
+	public void setPassword(String password) {
+		this.password = password;
 	}
-	public int getPhone() {
-		return phone;
-	}
-	@Required
-	public void setPhone(int phone) {
-		this.phone = phone;
-	}
-	public String getContrasena() {
-		return contrasena;
+
+	public String getBirth_date() {
+		return birth_date;
 	}
 	@Required
-	public void setContrasena(String contrasena) {
-		this.contrasena = contrasena;
+	public void setBirth_date(String birth_date) {
+		this.birth_date = birth_date;
+	}
+	public String getNumber_phone() {
+		return number_phone;
+	}
+	
+	public void setNumber_phone(String number_phone) {
+		this.number_phone = number_phone;
 	}
 
 	@Override
 	public String toString() {
-		return "Account [name=" + name + ", lastName=" + lastName + ", email=" + email + ", contrasena=" + contrasena
-				+ ", birth=" + birth + ", phone=" + phone + "]";
+		return "Account [id_account=" + id_account + ", name=" + name + ", last_name=" + last_name + ", email=" + email
+				+ ", password=" + password + ", birth_date=" + birth_date + ", number_phone=" + number_phone + "]";
 	}
-	
 	
 
 }
