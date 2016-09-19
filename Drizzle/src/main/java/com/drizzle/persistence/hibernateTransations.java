@@ -22,7 +22,7 @@ public class hibernateTransations {
 			session.beginTransaction();		
 			session.save(new_account);
 			session.getTransaction().commit();
-			System.out.println("Insert Succesfull");
+			System.out.println("Insert Successful");
 			return true;
 			
 		}catch (Exception e) {
@@ -48,7 +48,7 @@ public class hibernateTransations {
 			Query query = session.createQuery(sentenciaSQL);			
 			query.setParameter(0,emailAccount);
 			results = query.getResultList();
-			System.out.println("RESULT!!!");	
+			System.out.println("Select Successful");	
 			return results.isEmpty();
 			
 		}catch (Exception e) {
@@ -110,16 +110,12 @@ public class hibernateTransations {
 			session.beginTransaction();
 			session.save(new_profile);
 			session.getTransaction().commit();
+						
 			return true;
 			
 		}catch (Exception e) {
-
+			borrarAccount(new_profile.getProfile_account());
 			System.out.println("Error en el metodo registrarProfile - " + e.getMessage());
-			/*String sentenciaSQL = "delete FROM Account where id_account = ?";
-			Query query = session.createQuery(sentenciaSQL);	
-			query.setParameter(0, idAccount+"");
-			int result = query.executeUpdate();
-			System.out.println("Result: " + result);*/
 			return false;
 			
 		}finally {
@@ -127,6 +123,34 @@ public class hibernateTransations {
 		}
 		
 	}
+	
+	public static boolean borrarAccount(int id_account) {
+		System.out.println("inicia metodo borrarAccount!");
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		
+		try{
+			
+			String sentenciaSQL = "delete FROM Account as a where a.id_account=:id_account";
+			Query query = session.createQuery(sentenciaSQL);	
+			System.out.println("YA TIENE EL QUERY " + query.toString()) ;
+			query.setParameter("id_account", id_account+"");
+			int result = query.executeUpdate();
+			
+			//session.beginTransaction();		
+			//session.delete(id_account);
+			System.out.println("Delete Successful "	+result);
+			return true;
+			
+		}catch (Exception e) {
+			System.out.println("Error en el metodo borrarAccount - " + e.getMessage());
+			return false;
+		}finally {
+			session.disconnect();
+		}
+
+	}
+	
+	
 	
 	
 	

@@ -282,16 +282,16 @@
   			<div class="modal-content modal-popup">
   				<a href="#" class="close-link"><i class="icon_close_alt2"></i></a>
   				<h3 class="white">Login</h3>
-  				<form action="" class="popup-form">
-  					<input type="text" class="form-control form-white" placeholder="Full Name">
-  					<input type="text" class="form-control form-white" placeholder="Email Address">
+  				<form action="registrar.html" class="popup-form" method="get">
+  					<input type="text" id="user_name" name="user_name" class="form-control form-white" placeholder="Full Name">
+  					<input type="text" id="pass" name="pass" class="form-control form-white" placeholder="Email Address">
   					<div class="checkbox-holder text-left">
   						<div class="checkbox">
   							<input type="checkbox" value="None" id="squaredOne" name="check" />
   							<label for="squaredOne"><span>I Agree to the <strong>Terms &amp; Conditions</strong></span></label>
   						</div>
   					</div>
-  					<button type="submit" class="btn btn-submit">Submit</button>
+  					<button type="submit" id="botonLogin" name="botonLogin" value="Login" class="btn btn-submit">Submit</button>
   				</form>
   			</div>
   		</div>
