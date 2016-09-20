@@ -36,6 +36,8 @@
     <![endif]-->
     
    
+   
+   
 </head>
 
 <body id="page-top" class="index">
@@ -206,7 +208,7 @@
                 <div class="col-lg-8 col-lg-offset-2">
                     <!-- To configure the contact form email address, go to mail/contact_me.php and update the email address in the PHP file on line 19. -->
                     <!-- The form should work on most web servers, but if the form is not working you may need to configure your web server differently. -->
-                    <form:form action="registrar.html" data-toggle="validator">
+                    <form:form action="registrar.html" id="formularioReg" onsubmit="return myFunction()" data-toggle="validator">
                         <div class="row control-group">
                             <div class="form-group col-xs-12 floating-label-form-group controls">
                                 <div class="col-xs-6">
@@ -591,6 +593,8 @@
 
     <!-- Theme JavaScript -->
     <script src="././resources/js/freelancer.min.js"></script>
+    
+    <script src="././resources/js/validaciones.js"></script>
 
 </body>
 </html>
