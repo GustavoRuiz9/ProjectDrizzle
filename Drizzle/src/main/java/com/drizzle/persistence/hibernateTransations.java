@@ -150,6 +150,32 @@ public class hibernateTransations {
 
 	}
 	
+	public static boolean actualizarAccount(Account account) {
+		System.out.println("inicia metodo actualizarAccount!");
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		
+		try{
+			
+			//String sentenciaSQL = "update Account as a where a.id_account=:id_account";
+			//Query query = session.createQuery(sentenciaSQL);	
+			//System.out.println("YA TIENE EL QUERY " + query.toString()) ;
+			//query.setParameter("id_account", id_account+"");
+			//int result = query.executeUpdate();
+			
+			session.beginTransaction();		
+			session.update(account);
+			System.out.println("Update Successful");
+			return true;
+			
+		}catch (Exception e) {
+			System.out.println("Error en el metodo actualizarAccount - " + e.getMessage());
+			return false;
+		}finally {
+			session.disconnect();
+		}
+
+	}
+	
 	
 	
 	
