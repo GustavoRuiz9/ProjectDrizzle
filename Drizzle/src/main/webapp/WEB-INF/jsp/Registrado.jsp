@@ -293,46 +293,42 @@ Registro:${registro};
               <!-- Menu Footer-->
               <li class="user-footer">
                 <div class="pull-left"id="leftbar">
-                 	 
-					     <div >
-					       <form id="profileserialize1">
-					       
-      <input type="file" id="changeprofile1" name="files[]" />
-        <br />
-        <output id="list"></output>
-         
-        <script>
-       
-              function archivo(evt) {
-            	  console.log(document.getElementById("list").value);
-                  var files = evt.target.files; // FileList object
-             
-                  // Obtenemos la imagen del campo "file".
-                  for (var i = 0, f; f = files[i]; i++) {
-                    //Solo admitimos imágenes.
-                    if (!f.type.match('image.*')) {
-                        continue;
-                    }
-             
-                    var reader = new FileReader();
-             
-                    reader.onload = (function(theFile) {
-                        return function(e) {
-                          // Insertamos la imagen
-                         document.getElementById("list").innerHTML = ['<img class="thumb" src="', e.target.result,'" title="', escape(theFile.name), '"/>'].join('');
-                        };
-                    })(f);
-             
-                    reader.readAsDataURL(f);
-                  }
-              }
-             
-              document.getElementById('files').addEventListener('change', archivo, false);
-              console.log(document.getElementById("list").src);
-      </script>
-					         
-</form>
-					     </div>
+                    <button id="myBtn" class="btn btn-default btn-flat" ><i class="fa fa-picture-o"></i> Subir foto</button>
+                    <div class="hideform">
+                    <input id="changeprofile1" type="file" name="imageprofile" onchange="cambio()" >
+                    </div>
+                    <script>
+                        document.getElementById("myBtn").onclick = displayfile;
+                        function displayfile() {
+                        document.getElementById("changeprofile1").click();
+                        //var input = document.getElementById ("changeprofile1").value;
+                        //if(input != ""){
+                            //alert(input);
+                        //}
+                        //alert("entro al click");
+                        $('#changeprofile1').change( function(event) {
+                            var tmppath = URL.createObjectURL(event.target.files[0]);
+                            $("img").fadeIn("fast").attr('src',URL.createObjectURL(event.target.files[0]));
+                                
+                                //$("#disp_tmp_path").html("Temporary Path(Copy it and try pasting it in browser address bar) --> <strong>["+tmppath+"]</strong>");
+                                //alert(tmppath);
+                            });
+                        }
+                        //function cambio() {
+                            //var input = document.getElementById ("changeprofile1").value;
+                            //if(input != ""){
+                                //alert(input+"metodocambio");
+                            //}
+                            $('#changeprofile1').change( function(event) {
+                                var tmppath = URL.createObjectURL(event.target.files[0]);
+                                $("img").fadeIn("fast").attr('src',URL.createObjectURL(event.target.files[0]));
+                                    
+                                    //$("#disp_tmp_path").html("Temporary Path(Copy it and try pasting it in browser address bar) --> <strong>["+tmppath+"]</strong>");
+                                    //alert(tmppath);
+                                });
+                        //}
+                        
+                    </script>
                 </div>
                 
                 <div class="pull-right">
