@@ -294,41 +294,14 @@ Registro:${registro};
               <li class="user-footer">
                 <div class="pull-left"id="leftbar">
                     <button id="myBtn" class="btn btn-default btn-flat" ><i class="fa fa-picture-o"></i> Subir foto</button>
-                    <div class="hideform">
+                    <div class="hideform" >
+                    <form action="validarFoto.html" method="post" enctype="multipart/form-data">
                     <input id="changeprofile1" type="file" name="imageprofile" onchange="cambio()" >
-                    </div>
-                    <script>
-                        document.getElementById("myBtn").onclick = displayfile;
-                        function displayfile() {
-                        document.getElementById("changeprofile1").click();
-                        //var input = document.getElementById ("changeprofile1").value;
-                        //if(input != ""){
-                            //alert(input);
-                        //}
-                        //alert("entro al click");
-                        $('#changeprofile1').change( function(event) {
-                            var tmppath = URL.createObjectURL(event.target.files[0]);
-                            $("img").fadeIn("fast").attr('src',URL.createObjectURL(event.target.files[0]));
-                                
-                                //$("#disp_tmp_path").html("Temporary Path(Copy it and try pasting it in browser address bar) --> <strong>["+tmppath+"]</strong>");
-                                //alert(tmppath);
-                            });
-                        }
-                        //function cambio() {
-                            //var input = document.getElementById ("changeprofile1").value;
-                            //if(input != ""){
-                                //alert(input+"metodocambio");
-                            //}
-                            $('#changeprofile1').change( function(event) {
-                                var tmppath = URL.createObjectURL(event.target.files[0]);
-                                $("img").fadeIn("fast").attr('src',URL.createObjectURL(event.target.files[0]));
-                                    
-                                    //$("#disp_tmp_path").html("Temporary Path(Copy it and try pasting it in browser address bar) --> <strong>["+tmppath+"]</strong>");
-                                    //alert(tmppath);
-                                });
-                        //}
-                        
-                    </script>
+                    <input type="submit" id="Btn"/>
+                    </form>
+                    </div> 
+                    
+                   
                 </div>
                 
                 <div class="pull-right">
@@ -1299,6 +1272,7 @@ Registro:${registro};
 <!-- AdminLTE for demo purposes -->
 <script src="././resources/js/demo.js"></script>
 <script src="././resources/js/sau3member.js"></script>
+<script src="././resources/js/validaciones.js"></script>
 
 
 

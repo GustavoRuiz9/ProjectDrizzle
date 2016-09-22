@@ -97,9 +97,8 @@ public class hibernateTransations {
 		
 		try{
 			
-			File photo = new File("/home/asus/Escritorio/images.jpeg");
+			File photo = new File("C:/Users/RICARDO OSPINA/WorkspaceSpring/ProjectDrizzle/Drizzle/src/main/webapp/resources/img/perfil/avatar.png");
 			byte[] photoBytes = new byte[(int)photo.length()];
-			
 			
 			FileInputStream fs = new FileInputStream(photo);
 			fs.read(photoBytes);
@@ -130,15 +129,12 @@ public class hibernateTransations {
 		
 		try{
 			
-			String sentenciaSQL = "delete FROM Account as a where a.id_account=:id_account";
-			Query query = session.createQuery(sentenciaSQL);	
-			System.out.println("YA TIENE EL QUERY " + query.toString()) ;
-			query.setParameter("id_account", id_account+"");
-			int result = query.executeUpdate();
-			
-			//session.beginTransaction();		
-			//session.delete(id_account);
-			System.out.println("Delete Successful "	+result);
+			Account account = new Account();
+			account.setId_account(id_account);
+			session.beginTransaction();		
+			session.delete(id_account);
+			session.getTransaction().commit();
+			System.out.println("Delete Successful ");
 			return true;
 			
 		}catch (Exception e) {
@@ -150,29 +146,22 @@ public class hibernateTransations {
 
 	}
 	
-	public static boolean actualizarAccount(Account account) {
+	public static boolean actualizarProfile(Profile profile) {
 		System.out.println("inicia metodo actualizarAccount!");
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		
-		try{
-			
-			//String sentenciaSQL = "update Account as a where a.id_account=:id_account";
-			//Query query = session.createQuery(sentenciaSQL);	
-			//System.out.println("YA TIENE EL QUERY " + query.toString()) ;
-			//query.setParameter("id_account", id_account+"");
-			//int result = query.executeUpdate();
-			
-			session.beginTransaction();		
-			session.update(account);
-			System.out.println("Update Successful");
-			return true;
-			
-		}catch (Exception e) {
-			System.out.println("Error en el metodo actualizarAccount - " + e.getMessage());
-			return false;
-		}finally {
-			session.disconnect();
-		}
+			try{
+				session.beginTransaction();		
+				session.update(profile);
+				session.getTransaction().commit();
+				return true;
+				
+			}catch (Exception e) {
+				System.out.println("Error en el metodo actualizarAccount - " + e.getMessage());
+				return false;
+			}finally {
+				session.disconnect();
+			}
 
 	}
 	
