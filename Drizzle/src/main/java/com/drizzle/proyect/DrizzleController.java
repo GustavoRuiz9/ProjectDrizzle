@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
@@ -27,6 +28,7 @@ import com.drizzle.persistence.hibernateTransations;
 public class DrizzleController {
 	
 	
+	
 	@RequestMapping("index")
 	public ModelAndView redireccionPrincipal() {
 		return new ModelAndView("Index", "command", new Account());
@@ -38,15 +40,24 @@ public class DrizzleController {
 
 	@RequestMapping(value = "/registrar", method = { RequestMethod.GET, RequestMethod.POST })
 	public String redireccionregistro(@ModelAttribute Account account, HttpServletRequest request) {
-
+		HttpSession sesion = request.getSession();
 		
 		String login = request.getParameter("botonLogin");
 
 		if (login == null) {
 
-			if (hibernateTransations.consultarAccount(account.getEmail())) {
+			if ((hibernateTransations.consultarAccount(account.getEmail())).isEmpty()) {
 				if (hibernateTransations.registrarAccount(account)) {
 					hibernateTransations.registrarProfile(account.getId_account());
+					
+					List<Object> Dts;
+					Dts=hibernateTransations.consultarDatosSesion(account.getEmail());
+					
+					//sesion.setAttribute("usuario", Dts.get(0));
+					//sesion.setAttribute("nombres", Dts.get(1)+" "+Dts.get(2));
+					//sesion.setAttribute("photo", datosSesion.get());
+					//System.out.println(Dts.toArray()+" "+Dts.get(0));
+					
 					return "Registrado";
 				}else{
 					return "redirect:/index.html#contact";
@@ -56,18 +67,33 @@ public class DrizzleController {
 			}
 
 		} else {
-			
+			//HttpSession sesion = request.getSession();
 			String usu = request.getParameter("user_name");
 			String pass = request.getParameter("pass");
+			List<Account> results;  
 			
-			if(!hibernateTransations.consultarAccount(usu)){
-				return "Registrado";
+			if(!(hibernateTransations.consultarAccount(usu).isEmpty())){
+				System.out.println("Entro el consul tenia algo!");
+				results=(hibernateTransations.consultarAccount(usu));
+				//System.out.println(results.get(0));
+				
+				
+				if(usu.equals(results.get(0).getEmail()) && pass.equals(results.get(0).getPassword())){
+					return "Registrado";	
+				}else{
+					//alert
+					System.out.println("Usuario o Password incorrectos");
+					return "redirect:/index.html#";
+					
+				}
+				
 			}else{
 				return "redirect:/index.html#contact";
 			}
 		}
 
 	}
+	
 	
 		
 		@RequestMapping(value = "/validarFoto", method = { RequestMethod.GET, RequestMethod.POST })

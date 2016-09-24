@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.util.List;
 
 import javax.persistence.Query;
+import javax.servlet.http.HttpSession;
 
 import org.hibernate.Session;
 
@@ -36,7 +37,7 @@ public class hibernateTransations {
 	
 	
 	@SuppressWarnings("finally")
-	public static boolean consultarAccount(String emailAccount) {
+	public static List consultarAccount(String emailAccount) {
 
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		List<Account> results;
@@ -48,12 +49,16 @@ public class hibernateTransations {
 			Query query = session.createQuery(sentenciaSQL);			
 			query.setParameter(0,emailAccount);
 			results = query.getResultList();
-			System.out.println("Select Successful");	
-			return results.isEmpty();
+			//System.out.println(query.getResultList()+"");
+			System.out.println("Select Successful");
+			//if(results.isEmpty())
+				return results;
+			
+			
 			
 		}catch (Exception e) {
 			System.out.println("Error en el metodo consultarAccount - " + e.getMessage());
-			return false;
+			return null;
 		}finally {
 			session.disconnect();
 		}
@@ -154,6 +159,7 @@ public class hibernateTransations {
 				session.beginTransaction();		
 				session.update(profile);
 				session.getTransaction().commit();
+				session.disconnect();
 				return true;
 				
 			}catch (Exception e) {
@@ -162,6 +168,34 @@ public class hibernateTransations {
 			}finally {
 				session.disconnect();
 			}
+
+	}
+	
+	
+	@SuppressWarnings("finally")
+	public static List consultarDatosSesion(String emailAccount) {
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		List<Object> results;
+		String sentenciaSQL = "Select a.id_account,a.name,a.last_name,p.photo FROM Account a,Profile p Where p.profile_account = a.id_account and a.email = ?";
+		
+		try{
+			//HttpSession sesion = request.getSession();
+			
+			session.beginTransaction();
+			Query query = session.createQuery(sentenciaSQL);
+			System.out.println("entro hay");
+			query.setParameter(0,emailAccount.toString());
+			results = query.getResultList();
+			System.out.println("Select Successful");
+			return results;
+			
+
+		}catch (Exception e) {
+			System.out.println("Error en el metodo consultarDatosUsuario - " + e.getMessage());
+			return null;
+		}finally {
+			session.disconnect();
+		}
 
 	}
 	
