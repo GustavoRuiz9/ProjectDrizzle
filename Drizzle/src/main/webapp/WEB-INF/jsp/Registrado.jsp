@@ -34,7 +34,7 @@
   <link rel="stylesheet" href="././resources/css/bootstrap3-wysihtml5.min.css">
   <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'>
   <link href="././resources/css/style.css" rel="stylesheet">
-  
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -80,7 +80,7 @@ Registro:${registro};
                   <li><!-- start message -->
                     <a href="#">
                       <div class="pull-left">
-                        <img src="././resources/img/perfil/avatar.png" class="img-circle" alt="User Image">
+                        <img src="data:image/jpg;base64,<% out.print(session.getAttribute("photo")); %>" class="img-circle" alt="User Image">
                       </div>
                       <h4>
                         Support Team
@@ -262,16 +262,18 @@ Registro:${registro};
           <!-- User Account: style can be found in dropdown.less -->
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <img src="././resources/img/perfil/avatar.png" class="user-image" alt="User Image">
-              <span class="hidden-xs">Gustavo Ruiz</span>
+              <img src="data:image/jpg;base64,<% out.print(session.getAttribute("photo")); %>" class="user-image" alt="User Image">
+              <span class="hidden-xs">
+				<% out.println(session.getAttribute("nombres")); %>
+			</span>
             </a>
             <ul class="dropdown-menu">
               <!-- User image -->
               <li class="user-header">
-                <img src="././resources/img/perfil/avatar.png" class="img-circle" alt="User Image">
+                <img src="data:image/jpg;base64,<% out.print(session.getAttribute("photo")); %>" class="img-circle" alt="User Image">
 
                 <p>
-                  Gustavo Ruiz - Web Developer
+                  <% out.println(session.getAttribute("nombres")); %>
                   <small>Member since Nov. 2012</small>
                 </p>
               </li>
@@ -305,7 +307,14 @@ Registro:${registro};
                 </div>
                 
                 <div class="pull-right">
-                  <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                		<form action="index.html" method="post">
+                		<input type="submit" class="btn btn-default btn-flat" name="Sign_out" id="Sing_out" value="Sign out"></input>
+                		<!-- Alert Para salir -->
+                		<!--<a href="#" class="btn btn-default btn-flat"></a>-->
+                		</form>
+                
+                
+                  <!--<a href="#" class="btn btn-default btn-flat">Sign out</a>-->
                 </div>
               </li>
             </ul>
@@ -325,10 +334,12 @@ Registro:${registro};
       <!-- Sidebar user panel -->
       <div class="user-panel">
         <div class="pull-left image">
-          <img src="././resources/img/perfil/avatar.png" class="img-circle" alt="User Image">
+          <img src="data:image/jpg;base64,<% out.print(session.getAttribute("photo")); %>" class="img-circle" alt="User Image">
         </div>
         <div class="pull-left info">
-          <p>Gustavo ruiz</p>
+          <p>
+			<% out.println(session.getAttribute("nombres")); %>
+		  </p>
           <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
         </div>
       </div>
@@ -534,69 +545,7 @@ Registro:${registro};
 
     <!-- Main content -->
     <section class="content">
-      <!-- Small boxes (Stat box) -->
-      <div class="row">
-        <div class="col-lg-3 col-xs-6">
-          <!-- small box -->
-          <div class="small-box bg-aqua">
-            <div class="inner">
-              <h3>150</h3>
-
-              <p>New Orders</p>
-            </div>
-            <div class="icon">
-              <i class="ion ion-bag"></i>
-            </div>
-            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-          </div>
-        </div>
-        <!-- ./col -->
-        <div class="col-lg-3 col-xs-6">
-          <!-- small box -->
-          <div class="small-box bg-green">
-            <div class="inner">
-              <h3>53<sup style="font-size: 20px">%</sup></h3>
-
-              <p>Bounce Rate</p>
-            </div>
-            <div class="icon">
-              <i class="ion ion-stats-bars"></i>
-            </div>
-            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-          </div>
-        </div>
-        <!-- ./col -->
-        <div class="col-lg-3 col-xs-6">
-          <!-- small box -->
-          <div class="small-box bg-yellow">
-            <div class="inner">
-              <h3>44</h3>
-
-              <p>User Registrations</p>
-            </div>
-            <div class="icon">
-              <i class="ion ion-person-add"></i>
-            </div>
-            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-          </div>
-        </div>
-        <!-- ./col -->
-        <div class="col-lg-3 col-xs-6">
-          <!-- small box -->
-          <div class="small-box bg-red">
-            <div class="inner">
-              <h3>65</h3>
-
-              <p>Unique Visitors</p>
-            </div>
-            <div class="icon">
-              <i class="ion ion-pie-graph"></i>
-            </div>
-            <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-          </div>
-        </div>
-        <!-- ./col -->
-      </div>
+      
       <!-- /.row -->
       <!-- Main row -->
       <div class="row">
@@ -612,8 +561,45 @@ Registro:${registro};
             </ul>
             <div class="tab-content no-padding">
               <!-- Morris chart - Sales -->
-              <div class="chart tab-pane active" id="revenue-chart" style="position: relative; height: 300px;"></div>
-              <div class="chart tab-pane" id="sales-chart" style="position: relative; height: 300px;"></div>
+              
+              <canvas id="lineChart" height="300px" width="560px"></canvas>
+                <script language="JavaScript">
+                displayLineChart();
+					  function displayLineChart() {
+					    var data = {
+					        labels: [1, 2, 3, 3,4, 6, 7, 8, 9, 10],
+					        datasets: [
+					            {
+					                label: "Prime and Fibonacci",
+					                fillColor: "rgba(220,220,220,0.2)",
+					                strokeColor: "rgba(220,220,220,1)",
+					                pointColor: "rgba(220,220,220,1)",
+					                pointStrokeColor: "#fff",
+					                pointHighlightFill: "#fff",
+					                pointHighlightStroke: "rgba(220,220,220,1)",
+					                data: [2, 3, 5, 7, 11, 13, 17, 19, 23, 29]
+					            },
+					            {
+					                label: "My Second dataset",
+					                fillColor: "rgba(151,187,205,0.2)",
+					                strokeColor: "rgba(151,187,205,1)",
+					                pointColor: "rgba(151,187,205,1)",
+					                pointStrokeColor: "#fff",
+					                pointHighlightFill: "#fff",
+					                pointHighlightStroke: "rgba(151,187,205,1)",
+					                data: [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
+					            }
+					        ]
+					    };
+					    var ctx = document.getElementById("lineChart").getContext("2d");
+					    var options = {};
+					    var lineChart = new Chart(ctx).Line(data, options);
+					  }
+  				</script>
+              
+              
+              
+              
             </div>
           </div>
           <!-- /.nav-tabs-custom -->
@@ -663,12 +649,13 @@ Registro:${registro};
               <!-- /.item -->
               <!-- chat item -->
               <div class="item">
-                <img src="././resources/img/perfil/avatar.png" alt="user image" class="offline">
+                <img src="data:image/jpg;base64,<% out.print(session.getAttribute("photo")); %>" alt="user image" class="offline" id = "imagen1">
+              
 
                 <p class="message">
                   <a href="#" class="name">
                     <small class="text-muted pull-right"><i class="fa fa-clock-o"></i> 5:15</small>
-                    Gustavo Ruiz
+                    <% out.println(session.getAttribute("nombres")); %>
                   </a>
                   I would like to meet you to discuss the latest news about
                   the arrival of the new theme. They say it is going to be one the
@@ -678,7 +665,7 @@ Registro:${registro};
               <!-- /.item -->
               <!-- chat item -->
               <div class="item">
-                <img src="././resources/img/perfil/avatar2.png" alt="user image" class="offline">
+                <img src="././resources/img/perfil/avatar04.png" alt="user image" class="offline">
 
                 <p class="message">
                   <a href="#" class="name">
@@ -707,113 +694,7 @@ Registro:${registro};
 
           <!-- TO DO List -->
           <div class="box box-primary">
-            <div class="box-header">
-              <i class="ion ion-clipboard"></i>
-
-              <h3 class="box-title">To Do List</h3>
-
-              <div class="box-tools pull-right">
-                <ul class="pagination pagination-sm inline">
-                  <li><a href="#">&laquo;</a></li>
-                  <li><a href="#">1</a></li>
-                  <li><a href="#">2</a></li>
-                  <li><a href="#">3</a></li>
-                  <li><a href="#">&raquo;</a></li>
-                </ul>
-              </div>
-            </div>
-            <!-- /.box-header -->
-            <div class="box-body">
-              <ul class="todo-list">
-                <li>
-                  <!-- drag handle -->
-                      <span class="handle">
-                        <i class="fa fa-ellipsis-v"></i>
-                        <i class="fa fa-ellipsis-v"></i>
-                      </span>
-                  <!-- checkbox -->
-                  <input type="checkbox" value="">
-                  <!-- todo text -->
-                  <span class="text">Design a nice theme</span>
-                  <!-- Emphasis label -->
-                  <small class="label label-danger"><i class="fa fa-clock-o"></i> 2 mins</small>
-                  <!-- General tools such as edit or delete-->
-                  <div class="tools">
-                    <i class="fa fa-edit"></i>
-                    <i class="fa fa-trash-o"></i>
-                  </div>
-                </li>
-                <li>
-                      <span class="handle">
-                        <i class="fa fa-ellipsis-v"></i>
-                        <i class="fa fa-ellipsis-v"></i>
-                      </span>
-                  <input type="checkbox" value="">
-                  <span class="text">Make the theme responsive</span>
-                  <small class="label label-info"><i class="fa fa-clock-o"></i> 4 hours</small>
-                  <div class="tools">
-                    <i class="fa fa-edit"></i>
-                    <i class="fa fa-trash-o"></i>
-                  </div>
-                </li>
-                <li>
-                      <span class="handle">
-                        <i class="fa fa-ellipsis-v"></i>
-                        <i class="fa fa-ellipsis-v"></i>
-                      </span>
-                  <input type="checkbox" value="">
-                  <span class="text">Let theme shine like a star</span>
-                  <small class="label label-warning"><i class="fa fa-clock-o"></i> 1 day</small>
-                  <div class="tools">
-                    <i class="fa fa-edit"></i>
-                    <i class="fa fa-trash-o"></i>
-                  </div>
-                </li>
-                <li>
-                      <span class="handle">
-                        <i class="fa fa-ellipsis-v"></i>
-                        <i class="fa fa-ellipsis-v"></i>
-                      </span>
-                  <input type="checkbox" value="">
-                  <span class="text">Let theme shine like a star</span>
-                  <small class="label label-success"><i class="fa fa-clock-o"></i> 3 days</small>
-                  <div class="tools">
-                    <i class="fa fa-edit"></i>
-                    <i class="fa fa-trash-o"></i>
-                  </div>
-                </li>
-                <li>
-                      <span class="handle">
-                        <i class="fa fa-ellipsis-v"></i>
-                        <i class="fa fa-ellipsis-v"></i>
-                      </span>
-                  <input type="checkbox" value="">
-                  <span class="text">Check your messages and notifications</span>
-                  <small class="label label-primary"><i class="fa fa-clock-o"></i> 1 week</small>
-                  <div class="tools">
-                    <i class="fa fa-edit"></i>
-                    <i class="fa fa-trash-o"></i>
-                  </div>
-                </li>
-                <li>
-                      <span class="handle">
-                        <i class="fa fa-ellipsis-v"></i>
-                        <i class="fa fa-ellipsis-v"></i>
-                      </span>
-                  <input type="checkbox" value="">
-                  <span class="text">Let theme shine like a star</span>
-                  <small class="label label-default"><i class="fa fa-clock-o"></i> 1 month</small>
-                  <div class="tools">
-                    <i class="fa fa-edit"></i>
-                    <i class="fa fa-trash-o"></i>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <!-- /.box-body -->
-            <div class="box-footer clearfix no-border">
-              <button type="button" class="btn btn-default pull-right"><i class="fa fa-plus"></i> Add item</button>
-            </div>
+           
           </div>
           <!-- /.box -->
 
@@ -869,28 +750,73 @@ Registro:${registro};
               <i class="fa fa-map-marker"></i>
 
               <h3 class="box-title">
-                Visitors
+                Estado Del Clima
               </h3>
             </div>
             <div class="box-body">
               <div id="world-map" style="height: 250px; width: 100%;"></div>
+              
+			
+			<script type="text/javascript">
+			cargarmap();
+			//var x=document.getElementById("demo");
+			function cargarmap(){
+			navigator.geolocation.getCurrentPosition(showPosition,showError);
+			function showPosition(position)
+			  {
+			  lat=position.coords.latitude;
+			  lon=position.coords.longitude;
+			  latlon=new google.maps.LatLng(lat, lon)
+			  mapholder=document.getElementById('world-map')
+			  mapholder.style.height='250px';
+			  mapholder.style.width='100%';
+			  var myOptions={
+			  center:latlon,zoom:13,
+			  mapTypeId:google.maps.MapTypeId.ROADMAP,
+			  mapTypeControl:false,
+			  navigationControlOptions:{style:google.maps.NavigationControlStyle.SMALL}
+			  };
+			  var map=new google.maps.Map(document.getElementById("world-map"),myOptions);
+			  var marker=new google.maps.Marker({position:latlon,map:map,title:"You are here!"});
+			  }
+			function showError(error)
+			  {
+			  switch(error.code) 
+			    {
+			    case error.PERMISSION_DENIED:
+			      x.innerHTML="Denegada la peticion de Geolocalización en el navegador."
+			      break;
+			    case error.POSITION_UNAVAILABLE:
+			      x.innerHTML="La información de la localización no esta disponible."
+			      break;
+			    case error.TIMEOUT:
+			      x.innerHTML="El tiempo de petición ha expirado."
+			      break;
+			    case error.UNKNOWN_ERROR:
+			      x.innerHTML="Ha ocurrido un error desconocido."
+			      break;
+			    }
+			  }}
+			</script>
+
+    
             </div>
             <!-- /.box-body-->
             <div class="box-footer no-border">
               <div class="row">
                 <div class="col-xs-4 text-center" style="border-right: 1px solid #f4f4f4">
                   <div id="sparkline-1"></div>
-                  <div class="knob-label">Visitors</div>
+                  <div class="knob-label" >Ciudad</div>
                 </div>
                 <!-- ./col -->
                 <div class="col-xs-4 text-center" style="border-right: 1px solid #f4f4f4">
                   <div id="sparkline-2"></div>
-                  <div class="knob-label">Online</div>
+                  <div class="knob-label">Comuna</div>
                 </div>
                 <!-- ./col -->
                 <div class="col-xs-4 text-center">
                   <div id="sparkline-3"></div>
-                  <div class="knob-label">Exists</div>
+                  <div class="knob-label">Barrio</div>
                 </div>
                 <!-- ./col -->
               </div>
@@ -898,6 +824,9 @@ Registro:${registro};
             </div>
           </div>
           <!-- /.box -->
+          
+          
+          
 
           <!-- solid sales graph -->
           <div class="box box-solid bg-teal-gradient">
@@ -916,6 +845,7 @@ Registro:${registro};
             <div class="box-body border-radius-none">
               <div class="chart" id="line-chart" style="height: 250px;"></div>
             </div>
+           
             <!-- /.box-body -->
             <div class="box-footer no-border">
               <div class="row">
@@ -946,78 +876,7 @@ Registro:${registro};
 
           <!-- Calendar -->
           <div class="box box-solid bg-green-gradient">
-            <div class="box-header">
-              <i class="fa fa-calendar"></i>
-
-              <h3 class="box-title">Calendar</h3>
-              <!-- tools box -->
-              <div class="pull-right box-tools">
-                <!-- button with a dropdown -->
-                <div class="btn-group">
-                  <button type="button" class="btn btn-success btn-sm dropdown-toggle" data-toggle="dropdown">
-                    <i class="fa fa-bars"></i></button>
-                  <ul class="dropdown-menu pull-right" role="menu">
-                    <li><a href="#">Add new event</a></li>
-                    <li><a href="#">Clear events</a></li>
-                    <li class="divider"></li>
-                    <li><a href="#">View calendar</a></li>
-                  </ul>
-                </div>
-                <button type="button" class="btn btn-success btn-sm" data-widget="collapse"><i class="fa fa-minus"></i>
-                </button>
-                <button type="button" class="btn btn-success btn-sm" data-widget="remove"><i class="fa fa-times"></i>
-                </button>
-              </div>
-              <!-- /. tools -->
-            </div>
-            <!-- /.box-header -->
-            <div class="box-body no-padding">
-              <!--The calendar -->
-              <div id="calendar" style="width: 100%"></div>
-            </div>
-            <!-- /.box-body -->
-            <div class="box-footer text-black">
-              <div class="row">
-                <div class="col-sm-6">
-                  <!-- Progress bars -->
-                  <div class="clearfix">
-                    <span class="pull-left">Task #1</span>
-                    <small class="pull-right">90%</small>
-                  </div>
-                  <div class="progress xs">
-                    <div class="progress-bar progress-bar-green" style="width: 90%;"></div>
-                  </div>
-
-                  <div class="clearfix">
-                    <span class="pull-left">Task #2</span>
-                    <small class="pull-right">70%</small>
-                  </div>
-                  <div class="progress xs">
-                    <div class="progress-bar progress-bar-green" style="width: 70%;"></div>
-                  </div>
-                </div>
-                <!-- /.col -->
-                <div class="col-sm-6">
-                  <div class="clearfix">
-                    <span class="pull-left">Task #3</span>
-                    <small class="pull-right">60%</small>
-                  </div>
-                  <div class="progress xs">
-                    <div class="progress-bar progress-bar-green" style="width: 60%;"></div>
-                  </div>
-
-                  <div class="clearfix">
-                    <span class="pull-left">Task #4</span>
-                    <small class="pull-right">40%</small>
-                  </div>
-                  <div class="progress xs">
-                    <div class="progress-bar progress-bar-green" style="width: 40%;"></div>
-                  </div>
-                </div>
-                <!-- /.col -->
-              </div>
-              <!-- /.row -->
-            </div>
+            
           </div>
           <!-- /.box -->
 
@@ -1273,6 +1132,11 @@ Registro:${registro};
 <script src="././resources/js/demo.js"></script>
 <script src="././resources/js/sau3member.js"></script>
 <script src="././resources/js/validaciones.js"></script>
+
+<script src="././resources/chartjs/Chart.min.js"></script>
+<!-- Api Google maps JavaScritp -->
+ 
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCPYXQMu5fcr5_SiKfxyjO7auJdUl4lOTM &callback=initMap"></script>
 
 
 

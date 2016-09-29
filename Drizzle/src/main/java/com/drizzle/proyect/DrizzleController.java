@@ -1,11 +1,16 @@
 package com.drizzle.proyect;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.ObjectOutputStream;
 import java.util.List;
+import java.util.Objects;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.fileupload.FileItem;
@@ -20,28 +25,39 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.drizzle.model.Account;
 import com.drizzle.model.Profile;
+import com.drizzle.persistence.HibernateUtil;
 import com.drizzle.persistence.hibernateTransations;
+import com.mysql.jdbc.Blob;
 
+import org.apache.soap.encoding.soapenc.Base64;
+import org.hibernate.Session;
 
 @MultipartConfig
 @Controller
 public class DrizzleController {
-	
-	
-	
-	@RequestMapping("index")
-	public ModelAndView redireccionPrincipal() {
+
+	@RequestMapping(value = "/index", method = { RequestMethod.GET, RequestMethod.POST })
+	public ModelAndView redireccionPrincipal(HttpServletRequest request) {
+		HttpSession sesion = request.getSession();
+		if(request.getParameter("Sign_out")!=null){
+			sesion.invalidate();
+		}
+		
 		return new ModelAndView("Index", "command", new Account());
 	}
-	@RequestMapping("volverregistrar")
-	public ModelAndView volverRegistrar() {
+
+	@RequestMapping(value = "/volveregistrar", method = { RequestMethod.GET, RequestMethod.POST })
+	public ModelAndView volverRegistrar(@ModelAttribute Account account,HttpServletRequest request) {
+		
+		
 		return new ModelAndView("Registrado", "command", new Account());
 	}
-
+	
 	@RequestMapping(value = "/registrar", method = { RequestMethod.GET, RequestMethod.POST })
 	public String redireccionregistro(@ModelAttribute Account account, HttpServletRequest request) {
 		HttpSession sesion = request.getSession();
 		
+		Object[] Dts;
 		String login = request.getParameter("botonLogin");
 
 		if (login == null) {
@@ -50,13 +66,18 @@ public class DrizzleController {
 				if (hibernateTransations.registrarAccount(account)) {
 					hibernateTransations.registrarProfile(account.getId_account());
 					
-					List<Object> Dts;
-					Dts=hibernateTransations.consultarDatosSesion(account.getEmail());
 					
-					//sesion.setAttribute("usuario", Dts.get(0));
-					//sesion.setAttribute("nombres", Dts.get(1)+" "+Dts.get(2));
-					//sesion.setAttribute("photo", datosSesion.get());
-					//System.out.println(Dts.toArray()+" "+Dts.get(0));
+					Dts=hibernateTransations.consultarDatosSesion(account.getEmail());
+					byte[] photo = (byte[])Dts[3];			
+					
+					String photoBase64 = Base64.encode(photo);
+					
+					sesion.setAttribute("usuario", Dts[0]);
+					sesion.setAttribute("nombres", Dts[1]+" "+Dts[2]);
+					sesion.setAttribute("photo",photoBase64);
+					
+					//Limpiar el Objeto!
+					Dts=null;
 					
 					return "Registrado";
 				}else{
@@ -79,6 +100,18 @@ public class DrizzleController {
 				
 				
 				if(usu.equals(results.get(0).getEmail()) && pass.equals(results.get(0).getPassword())){
+					
+					Dts=hibernateTransations.consultarDatosSesion(results.get(0).getEmail());
+					byte[] photo = (byte[])Dts[3];			
+					
+					String photoBase64 = Base64.encode(photo);
+					
+					sesion.setAttribute("usuario", Dts[0]);
+					sesion.setAttribute("nombres", Dts[1]+" "+Dts[2]);
+					sesion.setAttribute("photo",photoBase64);
+					
+					//Limpiar el Objeto!
+					Dts=null;
 					return "Registrado";	
 				}else{
 					//alert
@@ -93,49 +126,46 @@ public class DrizzleController {
 		}
 
 	}
-	
-	
+
+	@RequestMapping(value = "/validarFoto", method = { RequestMethod.GET, RequestMethod.POST })
+	public String cargarImg(@ModelAttribute Profile profile, HttpServletRequest request) {
+		// PrintWriter out = response.getWriter();
+		HttpSession sesion = request.getSession();
 		
-		@RequestMapping(value = "/validarFoto", method = { RequestMethod.GET, RequestMethod.POST })
-		public String cargarImg(@ModelAttribute Profile profile, HttpServletRequest request) {
-			//PrintWriter out = response.getWriter();
-			try{
-			              
-			       FileItemFactory Interfaz = new DiskFileItemFactory();
-			       ServletFileUpload servlet_up = new ServletFileUpload(Interfaz);
-			       List objetos =servlet_up.parseRequest(request);
-				    String ruta ="C://Users//RICARDO OSPINA//WorkspaceSpring//ProjectDrizzle//IMG//";
-				   for(int i=0;i<objetos.size();i++){
-				       FileItem item = (FileItem) objetos.get(i);
-				       if(item.getFieldName().equals("imageprofile")){
-					      if (!item.isFormField()){
-					          File archivo= new File(ruta+item.getName());
-					          item.write(archivo);
-					          //p.setVc_foto(item.getName());
-					          byte[] b = new byte[(int) archivo.length()];
-					          FileInputStream fs = new FileInputStream(archivo);
-					          fs.read(b);
-					          fs.close();
-					          profile.setPhoto(b);
-					          profile.setProfile_account(3);
-					          profile.setReputation(7);
-					          
-					          System.out.println(b+"");
-					          if(hibernateTransations.actualizarProfile(profile)){
-					        	  System.out.println("Actualizo la Foto de perfil");
-					          }
-					          
-					      }
-				       	}
-				    }
+		try {
 			
-				}catch(Exception e){
-			        System.out.print("<p>"+e.getMessage()+"</p>");
-			        }
-			//return "redirect:/index.html#contact";
-			return "redirect:/volverregistrar.html";
+			FileItemFactory Interfaz = new DiskFileItemFactory();
+			ServletFileUpload servlet_up = new ServletFileUpload(Interfaz);
+			List objetos = servlet_up.parseRequest(request);
+			String ruta = "C://Users//RICARDO OSPINA//WorkspaceSpring//ProjectDrizzle//IMG//";
+			for (int i = 0; i < objetos.size(); i++) {
+				FileItem item = (FileItem) objetos.get(i);
+				if (item.getFieldName().equals("imageprofile")) {
+					if (!item.isFormField()) {
+						File archivo = new File(ruta + item.getName());
+						item.write(archivo);
+						byte[] b = new byte[(int) archivo.length()];
+						FileInputStream fs = new FileInputStream(archivo);
+						fs.read(b);
+						fs.close();
+						int Id_Usu= Integer.parseInt(sesion.getAttribute("usuario").toString());
+						//profile.setProfile_account(3);
+						//profile =(Profile)session.get(Profile.class, Id_Usu);
+						//profile.setProfile_account(Id_Usu);
+						//profile.setPhoto(b);
+						//System.out.println(b + "");
+						if (hibernateTransations.actualizarProfile(b,Id_Usu)) {
+							System.out.println("Actualizo la Foto de perfil");
+						}
+
+					}
+				}
+			}
+
+		} catch (Exception e) {
+			System.out.print("<p>" + e.getMessage() + "</p>");
 		}
-	
-	
+		return "redirect:/volveregistrar.html";
+	}
 
 }
