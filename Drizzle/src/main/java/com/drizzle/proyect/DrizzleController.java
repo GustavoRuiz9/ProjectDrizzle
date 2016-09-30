@@ -1,16 +1,11 @@
 package com.drizzle.proyect;
-
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.ObjectOutputStream;
+import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.fileupload.FileItem;
@@ -25,12 +20,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.drizzle.model.Account;
 import com.drizzle.model.Profile;
-import com.drizzle.persistence.HibernateUtil;
+import com.drizzle.model.Publication;
 import com.drizzle.persistence.hibernateTransations;
-import com.mysql.jdbc.Blob;
+import com.drizzle.persistence.mongoConfig;
+import com.drizzle.persistence.mongoTransations;
 
 import org.apache.soap.encoding.soapenc.Base64;
-import org.hibernate.Session;
+
 
 @MultipartConfig
 @Controller
@@ -78,6 +74,14 @@ public class DrizzleController {
 					
 					//Limpiar el Objeto!
 					Dts=null;
+					
+					//Registrar primera publicacion
+					Publication pub = new Publication();
+					pub.setAuthor(Integer.parseInt(sesion.getAttribute("usuario")+""));
+					pub.setId_publication(1);
+					pub.setDate(new Date()+"");
+					pub.setWeather("Lluvia Fuerte");
+					mongoTransations.registrarPublication(pub);
 					
 					return "Registrado";
 				}else{
@@ -137,7 +141,7 @@ public class DrizzleController {
 			FileItemFactory Interfaz = new DiskFileItemFactory();
 			ServletFileUpload servlet_up = new ServletFileUpload(Interfaz);
 			List objetos = servlet_up.parseRequest(request);
-			String ruta = "C://Users//RICARDO OSPINA//WorkspaceSpring//ProjectDrizzle//IMG//";
+			String ruta = "/home/tavoruiz/git/ProjectDrizzle/IMG/";
 			for (int i = 0; i < objetos.size(); i++) {
 				FileItem item = (FileItem) objetos.get(i);
 				if (item.getFieldName().equals("imageprofile")) {
