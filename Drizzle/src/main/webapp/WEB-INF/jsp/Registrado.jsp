@@ -35,6 +35,7 @@
   <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'>
   <link href="././resources/css/style.css" rel="stylesheet">
    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
+   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCPYXQMu5fcr5_SiKfxyjO7auJdUl4lOTM &callback=initMap"></script>
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -299,7 +300,7 @@ Registro:${registro};
                     <div class="hideform" >
                     <form action="validarFoto.html" method="post" enctype="multipart/form-data">
                     <input id="changeprofile1" type="file" name="imageprofile" onchange="cambio()" >
-                    <input type="submit" id="Btn"/>
+                    <input type="submit" id="Btn" name="botonperfil" value="Btnperfil"/>
                     </form>
                     </div> 
                     
@@ -754,52 +755,8 @@ Registro:${registro};
               </h3>
             </div>
             <div class="box-body">
-              <div id="world-map" style="height: 250px; width: 100%;"></div>
+              <div id="world-map" style="height: 400px; width: 100%;"></div>
               
-			
-			<script type="text/javascript">
-			cargarmap();
-			//var x=document.getElementById("demo");
-			function cargarmap(){
-			navigator.geolocation.getCurrentPosition(showPosition,showError);
-			function showPosition(position)
-			  {
-			  lat=position.coords.latitude;
-			  lon=position.coords.longitude;
-			  latlon=new google.maps.LatLng(lat, lon)
-			  mapholder=document.getElementById('world-map')
-			  mapholder.style.height='250px';
-			  mapholder.style.width='100%';
-			  var myOptions={
-			  center:latlon,zoom:13,
-			  mapTypeId:google.maps.MapTypeId.ROADMAP,
-			  mapTypeControl:false,
-			  navigationControlOptions:{style:google.maps.NavigationControlStyle.SMALL}
-			  };
-			  var map=new google.maps.Map(document.getElementById("world-map"),myOptions);
-			  var marker=new google.maps.Marker({position:latlon,map:map,title:"You are here!"});
-			  }
-			function showError(error)
-			  {
-			  switch(error.code) 
-			    {
-			    case error.PERMISSION_DENIED:
-			      x.innerHTML="Denegada la peticion de Geolocalización en el navegador."
-			      break;
-			    case error.POSITION_UNAVAILABLE:
-			      x.innerHTML="La información de la localización no esta disponible."
-			      break;
-			    case error.TIMEOUT:
-			      x.innerHTML="El tiempo de petición ha expirado."
-			      break;
-			    case error.UNKNOWN_ERROR:
-			      x.innerHTML="Ha ocurrido un error desconocido."
-			      break;
-			    }
-			  }}
-			</script>
-
-    
             </div>
             <!-- /.box-body-->
             <div class="box-footer no-border">
@@ -1136,7 +1093,7 @@ Registro:${registro};
 <script src="././resources/chartjs/Chart.min.js"></script>
 <!-- Api Google maps JavaScritp -->
  
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCPYXQMu5fcr5_SiKfxyjO7auJdUl4lOTM &callback=initMap"></script>
+
 
 
 

@@ -270,7 +270,8 @@
                         <div class="row">
                             <div class="form-group col-xs-12">
                             	<div class="col-xs-11">
-                                <button type="submit" class="btn btn-success btn-lg">Registrarme</button>
+                                <button type="submit" class="btn btn-success btn-lg" name="botoningreso" value="Btningreso">Registrarme</button>
+                               
                                 </div>
                             </div>
                         </div>
@@ -293,7 +294,7 @@
   							<label for="squaredOne"><span>I Agree to the <strong>Terms &amp; Conditions</strong></span></label>
   						</div>
   					</div>
-  					<button type="submit" id="botonLogin" name="botonLogin" value="Login" class="btn btn-submit">Submit</button>
+  					<button type="submit" id="botonLogin" name="botonLogin" value="Btnlogin" class="btn btn-submit">Submit</button>
   				</form>
   			</div>
   		</div>

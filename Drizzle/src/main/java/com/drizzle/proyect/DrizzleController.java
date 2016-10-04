@@ -31,7 +31,9 @@ import org.apache.soap.encoding.soapenc.Base64;
 @MultipartConfig
 @Controller
 public class DrizzleController {
-
+	
+	byte[] b;
+	boolean BtnPerfil;
 	@RequestMapping(value = "/index", method = { RequestMethod.GET, RequestMethod.POST })
 	public ModelAndView redireccionPrincipal(HttpServletRequest request) {
 		HttpSession sesion = request.getSession();
@@ -55,12 +57,14 @@ public class DrizzleController {
 		
 		Object[] Dts;
 		String login = request.getParameter("botonLogin");
+		String ingreso = request.getParameter("botoningreso");
+		String Cmbfoto = request.getParameter("botonperfil");
+		System.out.println("Login: "+login+" ingreso: "+ingreso+" cambioFoto: "+BtnPerfil);
 
-		if (login == null) {
-
+		if (ingreso!=null) {
 			if ((hibernateTransations.consultarAccount(account.getEmail())).isEmpty()) {
 				if (hibernateTransations.registrarAccount(account)) {
-					hibernateTransations.registrarProfile(account.getId_account());
+						hibernateTransations.registrarProfile(account.getId_account());
 					
 					
 					Dts=hibernateTransations.consultarDatosSesion(account.getEmail());
@@ -71,7 +75,6 @@ public class DrizzleController {
 					sesion.setAttribute("usuario", Dts[0]);
 					sesion.setAttribute("nombres", Dts[1]+" "+Dts[2]);
 					sesion.setAttribute("photo",photoBase64);
-					
 					//Limpiar el Objeto!
 					Dts=null;
 					
@@ -87,23 +90,25 @@ public class DrizzleController {
 				}else{
 					return "redirect:/index.html#contact";
 				}
-			} else {
+			}else{
 				return "redirect:/index.html#contact";
-			}
+				 }
 
-		} else {
-			//HttpSession sesion = request.getSession();
+		}else 
+			if(login!=null){
+			
+			System.out.println("entro al BtnLogin");
 			String usu = request.getParameter("user_name");
 			String pass = request.getParameter("pass");
 			List<Account> results;  
 			
-			if(!(hibernateTransations.consultarAccount(usu).isEmpty())){
+				if(!(hibernateTransations.consultarAccount(usu).isEmpty())){
 				System.out.println("Entro el consul tenia algo!");
 				results=(hibernateTransations.consultarAccount(usu));
 				//System.out.println(results.get(0));
 				
 				
-				if(usu.equals(results.get(0).getEmail()) && pass.equals(results.get(0).getPassword())){
+					if(usu.equals(results.get(0).getEmail()) && pass.equals(results.get(0).getPassword())){
 					
 					Dts=hibernateTransations.consultarDatosSesion(results.get(0).getEmail());
 					byte[] photo = (byte[])Dts[3];			
@@ -117,17 +122,27 @@ public class DrizzleController {
 					//Limpiar el Objeto!
 					Dts=null;
 					return "Registrado";	
-				}else{
+					}else{
 					//alert
 					System.out.println("Usuario o Password incorrectos");
 					return "redirect:/index.html#";
 					
-				}
+					}
 				
-			}else{
+				}else{
 				return "redirect:/index.html#contact";
-			}
-		}
+				}
+			}else
+				if(BtnPerfil==true){
+					
+					System.out.println("entro en el boton btnperfil");
+					String photoBase64 = Base64.encode(b);
+					sesion.setAttribute("photo",photoBase64);
+					BtnPerfil=false;
+					return "Registrado";
+				}
+		System.out.println("retorno null");
+		return null;
 
 	}
 
@@ -141,14 +156,14 @@ public class DrizzleController {
 			FileItemFactory Interfaz = new DiskFileItemFactory();
 			ServletFileUpload servlet_up = new ServletFileUpload(Interfaz);
 			List objetos = servlet_up.parseRequest(request);
-			String ruta = "/home/tavoruiz/git/ProjectDrizzle/IMG/";
+			String ruta = "C://Users//RICARDO OSPINA//WorkspaceSpring//ProjectDrizzle//IMG//";
 			for (int i = 0; i < objetos.size(); i++) {
 				FileItem item = (FileItem) objetos.get(i);
 				if (item.getFieldName().equals("imageprofile")) {
 					if (!item.isFormField()) {
 						File archivo = new File(ruta + item.getName());
 						item.write(archivo);
-						byte[] b = new byte[(int) archivo.length()];
+						b = new byte[(int) archivo.length()];
 						FileInputStream fs = new FileInputStream(archivo);
 						fs.read(b);
 						fs.close();
@@ -159,7 +174,9 @@ public class DrizzleController {
 						//profile.setPhoto(b);
 						//System.out.println(b + "");
 						if (hibernateTransations.actualizarProfile(b,Id_Usu)) {
-							System.out.println("Actualizo la Foto de perfil");
+							BtnPerfil = true;
+							System.out.println("Actualizo la Foto de perfil ");
+							
 						}
 
 					}
@@ -168,8 +185,9 @@ public class DrizzleController {
 
 		} catch (Exception e) {
 			System.out.print("<p>" + e.getMessage() + "</p>");
+			return null;
 		}
-		return "redirect:/volveregistrar.html";
+		return "redirect:/registrar.html";
 	}
 
 }
