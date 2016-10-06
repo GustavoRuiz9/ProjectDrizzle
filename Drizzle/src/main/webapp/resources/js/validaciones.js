@@ -19,7 +19,7 @@ function displayfile() {
         var tmppath = URL.createObjectURL(event.target.files[0]);
         document.getElementById("Btn").click();
         
-        //$("img").fadeIn("fast").attr('src',URL.createObjectURL(event.target.files[0]));
+        //$("#imagen1").fadeIn("fast").attr('src',URL.createObjectURL(event.target.files[0]));
         //alert(document.getElementById("Imagen").value);
         
         });

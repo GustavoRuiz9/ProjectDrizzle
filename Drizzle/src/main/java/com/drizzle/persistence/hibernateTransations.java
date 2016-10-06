@@ -180,8 +180,7 @@ public class hibernateTransations {
 	
 	@SuppressWarnings("finally")
 	public static Object [] consultarDatosSesion(String emailAccount) {
-		Session session = HibernateUtil.getSessionFactory().openSession();
-		List<Object> results;
+		Session session = HibernateUtil.getSessionFactory().openSession();		
 		Object [] datos;
 		String sentenciaSQL = "Select a.id_account,a.name,a.last_name,p.photo FROM Account a,Profile p Where p.profile_account = a.id_account and a.email = ?";
 		
@@ -208,6 +207,36 @@ public class hibernateTransations {
 		}
 
 	}
+	
+	@SuppressWarnings("finally")
+	public static Object [] consultarDatos(int id_Author) {
+
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		Object [] datos;
+		String sentenciaSQL = "Select a.name,a.last_name,p.photo FROM Account a,Profile p Where p.profile_account = a.id_account and a.id_account = ?";
+		
+		try{
+		
+			session.beginTransaction();
+			Query query = session.createQuery(sentenciaSQL);
+			query.setParameter(0,id_Author);
+			List<Object[]> results = query.getResultList();
+			datos=results.get(0);
+			System.out.println("Select Successful Datos");
+			//System.out.println(datos[0] + "--" + datos[1] + "--" + datos[2] + "--");
+			
+			return datos;
+			
+			
+		}catch (Exception e) {
+			System.out.println("Error en el metodo consultarAccount - " + e.getMessage());
+			return null;
+		}finally {
+			session.disconnect();
+		}
+		
+	}
+	
 	
 	
 	

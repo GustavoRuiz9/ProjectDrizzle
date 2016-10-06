@@ -1,3 +1,11 @@
+<%@page import="com.drizzle.model.Publication"%>
+<%@page import="com.drizzle.persistence.mongoTransations"%>
+<%@page import="org.apache.soap.encoding.soapenc.Base64"%>
+<%@page import="com.drizzle.model.Profile"%>
+<%@page import="java.util.List"%>
+<%@page import="java.util.Objects"%>
+<%@page import="com.drizzle.model.Account"%>
+<%@page import="com.drizzle.persistence.hibernateTransations"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
@@ -81,7 +89,7 @@ Registro:${registro};
                   <li><!-- start message -->
                     <a href="#">
                       <div class="pull-left">
-                        <img src="data:image/jpg;base64,<% out.print(session.getAttribute("photo")); %>" class="img-circle" alt="User Image">
+                        <img src="data:image/jpg;base64,<% out.print(session.getAttribute("photo")); %>" class="img-circle" alt="User Image" id="imagen1">
                       </div>
                       <h4>
                         Support Team
@@ -263,7 +271,7 @@ Registro:${registro};
           <!-- User Account: style can be found in dropdown.less -->
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <img src="data:image/jpg;base64,<% out.print(session.getAttribute("photo")); %>" class="user-image" alt="User Image">
+              <img src="data:image/jpg;base64,<% out.print(session.getAttribute("photo")); %>" class="user-image" alt="User Image" id="imagen1">
               <span class="hidden-xs">
 				<% out.println(session.getAttribute("nombres")); %>
 			</span>
@@ -271,7 +279,7 @@ Registro:${registro};
             <ul class="dropdown-menu">
               <!-- User image -->
               <li class="user-header">
-                <img src="data:image/jpg;base64,<% out.print(session.getAttribute("photo")); %>" class="img-circle" alt="User Image">
+                <img src="data:image/jpg;base64,<% out.print(session.getAttribute("photo")); %>" class="img-circle" alt="User Image" id="imagen1">
 
                 <p>
                   <% out.println(session.getAttribute("nombres")); %>
@@ -335,7 +343,7 @@ Registro:${registro};
       <!-- Sidebar user panel -->
       <div class="user-panel">
         <div class="pull-left image">
-          <img src="data:image/jpg;base64,<% out.print(session.getAttribute("photo")); %>" class="img-circle" alt="User Image">
+          <img src="data:image/jpg;base64,<% out.print(session.getAttribute("photo")); %>" class="img-circle" alt="User Image" id="imagen1">
         </div>
         <div class="pull-left info">
           <p>
@@ -610,7 +618,7 @@ Registro:${registro};
             <div class="box-header">
               <i class="fa fa-comments-o"></i>
 
-              <h3 class="box-title">Chat</h3>
+              <h3 class="box-title">Publicaciones</h3>
 
               <div class="box-tools pull-right" data-toggle="tooltip" title="Status">
                 <div class="btn-group" data-toggle="btn-toggle">
@@ -622,6 +630,35 @@ Registro:${registro};
             </div>
             <div class="box-body chat" id="chat-box">
               <!-- chat item -->
+              
+             <%
+             	List<Publication> lista = mongoTransations.ConsultarPublicationes();
+				
+				for (int i=0;i<lista.size();i++)
+				{
+					Object[] Datos=hibernateTransations.consultarDatos(lista.get(i).getAuthor());
+				
+				%>
+					 <div class="item">
+					 <img src="data:image/jpg;base64,<%out.print(Base64.encode((byte[])Datos[2]));%>" alt="user image" class="online">
+					 <p class="message">
+                  	<p class="message">
+                  	<a href="#" class="name">
+                    <small class="text-muted pull-right"><i class="fa fa-clock-o"></i><% out.print(lista.get(i).getDate());%></small>
+                    <%out.print(Datos[0]+" "+Datos[1]);%>
+                  </a>
+					<% out.print(lista.get(i).getWeather());%><br><% out.print(lista.get(i).getDescripcion()+"");%>
+                </p>
+                <div class="attachment">
+                  <img src="data:image/jpg;base64,<%out.print(Base64.encode((byte[])lista.get(i).getPhoto()));%>" alt="user image" class="online">
+                </div>
+                <!-- /.attachment -->
+              	</div>
+					 
+			<%}%>
+			 
+              
+              
               <div class="item">
                 <img src="././resources/img/perfil/avatar04.png" alt="user image" class="online">
 

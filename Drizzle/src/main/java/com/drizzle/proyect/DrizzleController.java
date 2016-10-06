@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
@@ -55,6 +56,10 @@ public class DrizzleController {
 	public String redireccionregistro(@ModelAttribute Account account, HttpServletRequest request) {
 		HttpSession sesion = request.getSession();
 		
+		
+		
+		
+		
 		Object[] Dts;
 		String login = request.getParameter("botonLogin");
 		String ingreso = request.getParameter("botoningreso");
@@ -80,10 +85,18 @@ public class DrizzleController {
 					
 					//Registrar primera publicacion
 					Publication pub = new Publication();
+					
+					File filephoto = new File("C:/Users/RICARDO OSPINA/Desktop/cali.png");
+					byte[] photoBytes = new byte[(int)filephoto.length()];
+					
+					Date fecha = new Date();
+					Date ayer = new Date( fecha.getTime()-86400000);
 					pub.setAuthor(Integer.parseInt(sesion.getAttribute("usuario")+""));
 					pub.setId_publication(1);
-					pub.setDate(new Date()+"");
+					pub.setDate(fecha+"");
 					pub.setWeather("Lluvia Fuerte");
+					pub.setDescripcion("fuerte lluvia llevar paraguas si desea salir");
+					pub.setPhoto(photoBytes);
 					mongoTransations.registrarPublication(pub);
 					
 					return "Registrado";
@@ -96,7 +109,7 @@ public class DrizzleController {
 
 		}else 
 			if(login!=null){
-			
+			//hibernateTransations.consultarDatos(93);
 			System.out.println("entro al BtnLogin");
 			String usu = request.getParameter("user_name");
 			String pass = request.getParameter("pass");

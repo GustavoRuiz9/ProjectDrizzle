@@ -8,6 +8,8 @@ import javax.persistence.Table;
 
 import org.springframework.beans.factory.annotation.Required;
 
+import com.mysql.jdbc.Blob;
+
 @Entity
 @Table (name="publication")
 public class Publication {
@@ -16,12 +18,20 @@ public class Publication {
 		
 	}
 	
-	public Publication(int id_publication, String date, int author, String weather) {
+
+	
+
+
+	public Publication(int id_publication, String date, int author, String weather, String descripcion, byte[] photo) {
+		super();
 		this.id_publication = id_publication;
 		this.date = date;
 		this.author = author;
 		this.weather = weather;
+		Descripcion = descripcion;
+		this.photo = photo;
 	}
+
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -29,6 +39,24 @@ public class Publication {
 	String date;
 	int author;
 	String weather;
+	String Descripcion;
+	byte[] photo;
+	
+	public String getDescripcion() {
+		return Descripcion;
+	}
+
+	public void setDescripcion(String descripcion) {
+		Descripcion = descripcion;
+	}
+	
+	public byte[] getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(byte[] photo) {
+		this.photo = photo;
+	}
 
 	public int getId_publication() {
 		return id_publication;
@@ -66,10 +94,11 @@ public class Publication {
 		this.weather = weather;
 	}
 
+
 	@Override
 	public String toString() {
 		return "Publication [id_publication=" + id_publication + ", date=" + date + ", author=" + author + ", weather="
-				+ weather + "]";
+				+ weather + ", Descripcion=" + Descripcion + ", photo=" + photo + "]";
 	}
 
 }
