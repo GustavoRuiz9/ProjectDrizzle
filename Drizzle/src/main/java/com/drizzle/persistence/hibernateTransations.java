@@ -107,7 +107,7 @@ public class hibernateTransations {
 		
 		try{
 			
-			File photo = new File("C:/Users/RICARDO OSPINA/WorkspaceSpring/ProjectDrizzle/IMG/avatar.png");
+			File photo = new File("/home/tavoruiz/git/ProjectDrizzle/IMG/profile.png");
 			byte[] photoBytes = new byte[(int)photo.length()];
 			
 			FileInputStream fs = new FileInputStream(photo);

@@ -26,6 +26,98 @@ function displayfile() {
     }
 
 
+$('.modal').on('hidden.bs.modal', function () {
+    $(this).find('form').trigger('reset');
+    removeAllOptions(document.getElementById("comboboxTipoClima"));
+    document.getElementById("list").value=" ";
+    //var now = new Date().toJSON().slice(0,10);
+    /*$("#myModal").find(".modal-title").text("Publicacion del Clima " + now.getDate()+"/"+(now.getMonth()+1)+"/"+now.getFullYear()
+    		+ " " + now.getHours()+":"+ now.getMinutes());*/
+});
+
+function removeAllOptions(selectbox)
+{
+	var i;
+	for(i=selectbox.options.length-1;i>=0;i--)
+	{
+		selectbox.remove(i);
+	}
+}
+
+function cargar(type) {
+    var x = document.getElementById("comboboxTipoClima");
+    var y = document.getElementById("formPublication");
+    
+    if(type == "1"){
+    	y.clima2.checked=false;
+    	y.clima3.checked=false;
+    	removeAllOptions(x);
+    	var opc = ["...","Lluvia Debil","Lluvia Moderada","Lluvia Fuerte"];
+    	for (val in opc){
+	    	var option = document.createElement("option");
+	    	option.text = opc[val];
+	    	option.value = opc[val];
+	    	option.id = "opt";
+	        x.add(option);	
+	    }
+    }else{
+    	if(type == "2"){
+    		y.clima1.checked=false;
+        	y.clima3.checked=false;
+        	removeAllOptions(x);
+        	var opc = ["...","Soleado","Sol Abrasador"];
+        	for (val in opc){
+    	    	var option = document.createElement("option");
+    	    	option.text = opc[val];
+    	        x.add(option);	
+    	    }	
+    	}else{
+    		y.clima1.checked=false;
+        	y.clima2.checked=false;
+        	removeAllOptions(x);
+        	var opc = ["...","Promedio"];
+        	for (val in opc){
+    	    	var option = document.createElement("option");
+    	    	option.text = opc[val];
+    	        x.add(option);	
+    	    }
+    	}
+    }
+    
+}
+
+function archivo(evt) {
+    var files = evt.target.files; // FileList object
+
+    // Obtenemos la imagen del campo "file".
+    for (var i = 0, f; f = files[i]; i++) {
+      //Solo admitimos imágenes.
+      if (!f.type.match('image.*')) {
+          continue;
+      }
+
+      var reader = new FileReader();
+
+      reader.onload = (function(theFile) {
+          return function(e) {
+            // Insertamos la imagen
+           document.getElementById("list").innerHTML = ['<img id="imagenPublicacion" name="imagenPublicacion" class="img-responsive center-block" src="', e.target.result,'" title="', escape(theFile.name), '"/>'].join('');
+          };
+      })(f);
+
+      reader.readAsDataURL(f);
+    }
+}
+
+document.getElementById('files').addEventListener('change', archivo, false);
+
+$("#files").fileinput({
+	showCaption: false,
+	browseClass: "btn btn-primary btn-lg",
+	fileType: "any"
+	});
+
+
 
 function cargarmap(){
 	

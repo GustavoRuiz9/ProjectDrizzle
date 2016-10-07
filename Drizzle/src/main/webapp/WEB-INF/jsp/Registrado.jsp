@@ -55,7 +55,67 @@
 <body class="hold-transition skin-blue sidebar-mini">
 <%--hibernateTransations.registrar(new Account("fabian","ruiz","fabia.an@hotmail.com","dr1ssl3","05/02/1999",4458745));--%>
 
-Registro:${registro};
+<!-- Trigger the modal with a button -->
+	<button type="button" class="btn btn-info btn-lg" data-toggle="modal"
+		data-target="#myModal">Publicar</button>
+	<!-- Modal -->
+	<div id="myModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title" id="tituloh4">
+						Publicacion del Clima 
+						<!--<%-->
+						/*SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+						Date fecha = new Date();
+						out.print(dateFormat.format(fecha));*/
+						<--%>-->
+					</h4>
+				</div>
+				
+				<form action="registrarPublicacion.html" id="formPublication" name="formPublication" method="post" enctype="multipart/form-data" >
+				<div class="modal-body">
+				
+						<input type="radio" name="clima1" id="clima1" value="1" onClick="cargar(this.value)" > Lluvia 
+						<input type="radio" name="clima2" id="clima2" value="2" onClick="cargar(this.value)" > Soleado
+						<input type="radio" name="clima3" id="clima3" value="3" onClick="cargar(this.value)" > Normal
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						
+						<select style="width:150px" name="comboboxTipoClima" id="comboboxTipoClima">
+							<option value=""></option>
+						</select> 
+						
+						<BR><BR><BR>
+						
+							  <div class="form-group">
+						      	<input type="file" id="files" name="files" />
+						      </div>
+						      
+						      <br/>
+						      
+						      <output height="100px" width = "150px" name="list" id="list"></output>
+							  
+						<BR><BR><BR>
+					
+						
+					
+				</div>
+				
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button class="btn btn-primary">Save</button>
+					
+				</div>
+				</form>
+			</div>
+
+		</div>
+	</div>
+
+
 <div class="wrapper">
 
   <header class="main-header">

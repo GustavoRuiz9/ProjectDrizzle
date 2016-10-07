@@ -86,7 +86,7 @@ public class DrizzleController {
 					//Registrar primera publicacion
 					Publication pub = new Publication();
 					
-					File filephoto = new File("C:/Users/RICARDO OSPINA/Desktop/cali.png");
+					File filephoto = new File("/home/tavoruiz/git/ProjectDrizzle/Drizzle/src/main/webapp/resources/img/perfil/avatar.png");
 					byte[] photoBytes = new byte[(int)filephoto.length()];
 					
 					Date fecha = new Date();
@@ -169,7 +169,7 @@ public class DrizzleController {
 			FileItemFactory Interfaz = new DiskFileItemFactory();
 			ServletFileUpload servlet_up = new ServletFileUpload(Interfaz);
 			List objetos = servlet_up.parseRequest(request);
-			String ruta = "C://Users//RICARDO OSPINA//WorkspaceSpring//ProjectDrizzle//IMG//";
+			String ruta = "/home/tavoruiz/git/ProjectDrizzle/IMG/";
 			for (int i = 0; i < objetos.size(); i++) {
 				FileItem item = (FileItem) objetos.get(i);
 				if (item.getFieldName().equals("imageprofile")) {
@@ -201,6 +201,52 @@ public class DrizzleController {
 			return null;
 		}
 		return "redirect:/registrar.html";
+	}
+
+
+@RequestMapping(value = "/registrarPublicacion", method = { RequestMethod.GET, RequestMethod.POST })
+	public String registrarPub(@ModelAttribute Publication publication, HttpServletRequest request) {
+		HttpSession sesion = request.getSession();
+		Publication pub = new Publication();
+		
+			try {
+					
+					FileItemFactory Interfaz = new DiskFileItemFactory();
+					ServletFileUpload servlet_up = new ServletFileUpload(Interfaz);
+					List objetos = servlet_up.parseRequest(request);
+					String ruta = "/home/tavoruiz/git/ProjectDrizzle/IMGPublicaciones/";
+					for (int i = 0; i < objetos.size(); i++) {
+						FileItem item = (FileItem) objetos.get(i);
+						if (item.getFieldName().equals("files")) {
+							if (!item.isFormField()) {
+								File archivo = new File(ruta + item.getName());
+								item.write(archivo);
+								byte[] b = new byte[(int) archivo.length()];
+								FileInputStream fs = new FileInputStream(archivo);
+								fs.read(b);
+								fs.close();
+								pub.setPhoto(b);
+							}
+						}
+						if (item.getFieldName().equals("comboboxTipoClima")) {
+							FileItem weather = (FileItem) objetos.get(i);
+							pub.setWeather(weather.getString());
+						}
+					}
+					
+					int id = Integer.parseInt(sesion.getAttribute("usuario").toString());
+					pub.setAuthor(id);
+					pub.setDate(new Date().toString());
+					pub.setId_publication(0);
+					pub.setDescripcion("Empezo a llover");
+					
+				} catch (Exception e) {
+					System.out.print("<p>" + e.getMessage() + "</p>");
+				}
+			
+				mongoTransations.registrarPublication(pub);
+			
+		return "redirect:/volveregistrar.html";
 	}
 
 }
