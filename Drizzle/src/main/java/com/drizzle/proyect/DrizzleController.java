@@ -58,8 +58,6 @@ public class DrizzleController {
 		
 		
 		
-		
-		
 		Object[] Dts;
 		String login = request.getParameter("botonLogin");
 		String ingreso = request.getParameter("botoningreso");
@@ -84,20 +82,20 @@ public class DrizzleController {
 					Dts=null;
 					
 					//Registrar primera publicacion
-					Publication pub = new Publication();
+					//Publication pub = new Publication();
 					
-					File filephoto = new File("/home/tavoruiz/git/ProjectDrizzle/Drizzle/src/main/webapp/resources/img/perfil/avatar.png");
-					byte[] photoBytes = new byte[(int)filephoto.length()];
+					//File filephoto = new File("/home/tavoruiz/git/ProjectDrizzle/Drizzle/src/main/webapp/resources/img/perfil/avatar.png");
+					//byte[] photoBytes = new byte[(int)filephoto.length()];
 					
-					Date fecha = new Date();
-					Date ayer = new Date( fecha.getTime()-86400000);
-					pub.setAuthor(Integer.parseInt(sesion.getAttribute("usuario")+""));
+					//Date fecha = new Date();
+					//Date ayer = new Date( fecha.getTime()-86400000);
+					/*pub.setAuthor(Integer.parseInt(sesion.getAttribute("usuario")+""));
 					pub.setId_publication(1);
 					pub.setDate(fecha+"");
 					pub.setWeather("Lluvia Fuerte");
 					pub.setDescripcion("fuerte lluvia llevar paraguas si desea salir");
 					pub.setPhoto(photoBytes);
-					mongoTransations.registrarPublication(pub);
+					mongoTransations.registrarPublication(pub);*/
 					
 					return "Registrado";
 				}else{
@@ -228,7 +226,12 @@ public class DrizzleController {
 								pub.setPhoto(b);
 							}
 						}
-						if (item.getFieldName().equals("comboboxTipoClima")) {
+						if (item.getFieldName().equals("textareaPublicacion")) {
+							FileItem Descripcion = (FileItem) objetos.get(i);
+							pub.setDescripcion(Descripcion.getString());
+						}
+						
+						if (item.getFieldName().equals("weather")) {
 							FileItem weather = (FileItem) objetos.get(i);
 							pub.setWeather(weather.getString());
 						}
@@ -236,9 +239,9 @@ public class DrizzleController {
 					
 					int id = Integer.parseInt(sesion.getAttribute("usuario").toString());
 					pub.setAuthor(id);
-					pub.setDate(new Date().toString());
-					pub.setId_publication(0);
-					pub.setDescripcion("Empezo a llover");
+					pub.setDate(new Date());
+					pub.setId_publication(1);
+
 					
 				} catch (Exception e) {
 					System.out.print("<p>" + e.getMessage() + "</p>");

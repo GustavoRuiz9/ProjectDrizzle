@@ -1,0 +1,31 @@
+.cc-selector input{
+    margin:0;padding:0;
+    -webkit-appearance:none;
+       -moz-appearance:none;
+            appearance:none;
+}
+
+.rain{background-image:url(../img/perfil/rain.png);}
+.sunny{background-image:url(../img/perfil/sun-512.png);}
+.tempered{background-image:url(../img/perfil/templado.png);}
+.storm{background-image:url(../img/perfil/storm.png);}
+
+.cc-selector input:checked +.drinkcard-cc{
+    -webkit-filter: none;
+       -moz-filter: none;
+            filter: none;
+}
+
+.drinkcard-cc{
+    cursor:pointer;
+    background-size:contain;
+    background-repeat:no-repeat;
+    display:inline-block;
+    width:100px;height:70px;
+    -webkit-transition: all 100ms ease-in;
+       -moz-transition: all 100ms ease-in;
+            transition: all 100ms ease-in;
+    -webkit-filter: brightness(1.8) grayscale(1) opacity(.9);
+       -moz-filter: brightness(1.8) grayscale(1) opacity(.9);
+            filter: brightness(1.8) grayscale(1) opacity(.9);
+}

@@ -1,5 +1,6 @@
 package com.drizzle.model;
 
+import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -19,10 +20,7 @@ public class Publication {
 	}
 	
 
-	
-
-
-	public Publication(int id_publication, String date, int author, String weather, String descripcion, byte[] photo) {
+	public Publication(int id_publication, Date date, int author, String weather, String descripcion, byte[] photo) {
 		super();
 		this.id_publication = id_publication;
 		this.date = date;
@@ -32,11 +30,10 @@ public class Publication {
 		this.photo = photo;
 	}
 
-
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	int id_publication;
-	String date;
+	Date date;
 	int author;
 	String weather;
 	String Descripcion;
@@ -67,12 +64,11 @@ public class Publication {
 		this.id_publication = id_publication;
 	}
 
-	public String getDate() {
+	public Date getDate() {
 		return date;
 	}
 
-	@Required
-	public void setDate(String date) {
+	public void setDate(Date date) {
 		this.date = date;
 	}
 

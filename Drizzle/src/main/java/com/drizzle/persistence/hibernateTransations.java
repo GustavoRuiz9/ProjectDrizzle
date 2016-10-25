@@ -142,7 +142,7 @@ public class hibernateTransations {
 			Account account = new Account();
 			account.setId_account(id_account);
 			session.beginTransaction();		
-			session.delete(id_account);
+			session.delete(account);
 			session.getTransaction().commit();
 			System.out.println("Delete Successful ");
 			return true;

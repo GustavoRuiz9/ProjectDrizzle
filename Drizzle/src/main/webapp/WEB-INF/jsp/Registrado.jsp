@@ -1,4 +1,5 @@
 <%@page import="com.drizzle.model.Publication"%>
+<%@page import="java.util.Date"%>
 <%@page import="com.drizzle.persistence.mongoTransations"%>
 <%@page import="org.apache.soap.encoding.soapenc.Base64"%>
 <%@page import="com.drizzle.model.Profile"%>
@@ -44,6 +45,7 @@
   <link href="././resources/css/style.css" rel="stylesheet">
    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCPYXQMu5fcr5_SiKfxyjO7auJdUl4lOTM &callback=initMap"></script>
+  <link href="././resources/css/styleinput.css" rel="stylesheet">
 
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -79,28 +81,41 @@
 				<form action="registrarPublicacion.html" id="formPublication" name="formPublication" method="post" enctype="multipart/form-data" >
 				<div class="modal-body">
 				
-						<input type="radio" name="clima1" id="clima1" value="1" onClick="cargar(this.value)" > Lluvia 
+						<!--<input type="radio" name="clima1" id="clima1" value="1" onClick="cargar(this.value)" > Lluvia 
 						<input type="radio" name="clima2" id="clima2" value="2" onClick="cargar(this.value)" > Soleado
-						<input type="radio" name="clima3" id="clima3" value="3" onClick="cargar(this.value)" > Normal
+						<input type="radio" name="clima3" id="clima3" value="3" onClick="cargar(this.value)" > Normal-->
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 						
-						<select style="width:150px" name="comboboxTipoClima" id="comboboxTipoClima">
-							<option value=""></option>
-						</select> 
 						
-						<BR><BR><BR>
+					    <div align="center" class="cc-selector">
+					        <input id="rain" type="radio" name="weather" value="rain" />
+					        <label class="drinkcard-cc rain" for="rain"></label>
+					        
+					        <input id="tempered" type="radio" name="weather"value="tempered" />
+					        <label class="drinkcard-cc tempered" for="tempered"></label>
+					        
+					        <input id="storm" type="radio" name="weather"value="storm" />
+					        <label class="drinkcard-cc storm" for="storm"></label>
+					        
+					        <input id="sunny" type="radio" name="weather"value="sunny" />
+					        <label class="drinkcard-cc sunny" for="sunny"></label>
+					    </div>
+					    
+					    
+						<BR><BR>
 						
 							  <div class="form-group">
-						      	<input type="file" id="files" name="files" />
+						      	<!-- <input type="file" id="files" name="files" /> -->
+								<input id="files" accept="image/*" name="files" capture="" type="file">
 						      </div>
 						      
 						      <br/>
 						      
 						      <output height="100px" width = "150px" name="list" id="list"></output>
+						      
+							  <textarea name="textareaPublicacion" id="textareaPublicacion" style="overflow:auto;resize:none;min-width: 100%" placeholder="Describe tu publicación..." rows="4" cols="80" maxlength = "160"></textarea>
 							  
-						<BR><BR><BR>
-					
-						
+						<BR><BR>
 					
 				</div>
 				
@@ -403,7 +418,7 @@
       <!-- Sidebar user panel -->
       <div class="user-panel">
         <div class="pull-left image">
-          <img src="data:image/jpg;base64,<% out.print(session.getAttribute("photo")); %>" class="img-circle" alt="User Image" id="imagen1">
+          <img src="data:image/jpg;base64,<% out.print(session.getAttribute("photo")); %>" class="img-circle " alt="User Image" id="imagen1">
         </div>
         <div class="pull-left info">
           <p>
@@ -693,24 +708,26 @@
               
              <%
              	List<Publication> lista = mongoTransations.ConsultarPublicationes();
+             	
 				
 				for (int i=0;i<lista.size();i++)
 				{
 					Object[] Datos=hibernateTransations.consultarDatos(lista.get(i).getAuthor());
-				
+					Date date= new Date();
+					date=lista.get(i).getDate();
 				%>
 					 <div class="item">
-					 <img src="data:image/jpg;base64,<%out.print(Base64.encode((byte[])Datos[2]));%>" alt="user image" class="online">
+					 <img src="data:image/jpg;base64,<%out.print(Base64.encode((byte[])Datos[2]));%>" class="img-responsive" alt="user image" class="online">
 					 <p class="message">
                   	<p class="message">
                   	<a href="#" class="name">
-                    <small class="text-muted pull-right"><i class="fa fa-clock-o"></i><% out.print(lista.get(i).getDate());%></small>
+                    <small class="text-muted pull-right"><i class="fa fa-clock-o"></i><% out.print(date.getHours()+":"+date.getMinutes());%></small>
                     <%out.print(Datos[0]+" "+Datos[1]);%>
                   </a>
 					<% out.print(lista.get(i).getWeather());%><br><% out.print(lista.get(i).getDescripcion()+"");%>
                 </p>
                 <div class="attachment">
-                  <img src="data:image/jpg;base64,<%out.print(Base64.encode((byte[])lista.get(i).getPhoto()));%>" alt="user image" class="online">
+                  <img src="data:image/jpg;base64,<%out.print(Base64.encode((byte[])lista.get(i).getPhoto()));%>" class="img-responsive" alt="user image" class="online">
                 </div>
                 <!-- /.attachment -->
               	</div>
@@ -747,7 +764,7 @@
               <!-- /.item -->
               <!-- chat item -->
               <div class="item">
-                <img src="data:image/jpg;base64,<% out.print(session.getAttribute("photo")); %>" alt="user image" class="offline" id = "imagen1">
+                <img src="data:image/jpg;base64,<% out.print(session.getAttribute("photo")); %>" alt="user image img-responsive center-block" class="offline" id = "imagen1">
               
 
                 <p class="message">

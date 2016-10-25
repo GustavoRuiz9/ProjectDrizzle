@@ -52,10 +52,9 @@ public class mongoTransations {
 		fecha.setSeconds(0);
 		String dateAsString = sdf.format(fecha); //"08.01.2013"
 		//Date dateFromString = sdf.parse(dateAsString);
-		System.out.println(fecha);
 		//Date ayer = new Date( fecha.getTime()-86400000);
 		List<Publication> q1s = operation.find(
-		new Query((Criteria.where("date").gte(fecha.toString()))),
+		new Query((Criteria.where("date").gte(fecha))),
 		Publication.class);
 		//System.out.println((sdf.getDateInstance().format(fecha)));
 		return q1s;
