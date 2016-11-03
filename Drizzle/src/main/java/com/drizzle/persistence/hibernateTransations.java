@@ -106,8 +106,8 @@ public class hibernateTransations {
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		
 		try{
-			
-			File photo = new File("/home/tavoruiz/git/ProjectDrizzle/IMG/profile.png");
+			//File photo = new File("/opt/tomcat/webapps/drizzleweb/resources/img/perfil/profile.png");
+			File photo = new File("C:/Users/RICARDO OSPINA/WorkspaceSpring/ProjectDrizzle/IMG/avatar.png");
 			byte[] photoBytes = new byte[(int)photo.length()];
 			
 			FileInputStream fs = new FileInputStream(photo);
@@ -142,7 +142,7 @@ public class hibernateTransations {
 			Account account = new Account();
 			account.setId_account(id_account);
 			session.beginTransaction();		
-			session.delete(account);
+			session.delete(id_account);
 			session.getTransaction().commit();
 			System.out.println("Delete Successful ");
 			return true;

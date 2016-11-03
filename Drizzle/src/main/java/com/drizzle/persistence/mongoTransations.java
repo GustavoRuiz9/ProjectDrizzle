@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.helpers.ISO8601DateFormat;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.data.mongodb.core.MongoOperations;
@@ -50,13 +51,16 @@ public class mongoTransations {
 		fecha.setHours(0);
 		fecha.setMinutes(0);
 		fecha.setSeconds(0);
+		Date date = new Date(fecha.getTime()-18000000);
 		String dateAsString = sdf.format(fecha); //"08.01.2013"
 		//Date dateFromString = sdf.parse(dateAsString);
+		System.out.println("fecha del query"+fecha);
+		//System.out.println(dateAsString);
 		//Date ayer = new Date( fecha.getTime()-86400000);
 		List<Publication> q1s = operation.find(
 		new Query((Criteria.where("date").gte(fecha))),
 		Publication.class);
-		//System.out.println((sdf.getDateInstance().format(fecha)));
+		//System.out.println(fecha.toString());
 		return q1s;
 	}
 

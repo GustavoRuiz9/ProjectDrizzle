@@ -1,9 +1,15 @@
 package com.drizzle.proyect;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Objects;
+import java.util.SimpleTimeZone;
 
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
@@ -13,8 +19,10 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.log4j.helpers.ISO8601DateFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -27,7 +35,14 @@ import com.drizzle.persistence.mongoConfig;
 import com.drizzle.persistence.mongoTransations;
 
 import org.apache.soap.encoding.soapenc.Base64;
+import org.bson.types.Binary;
 
+import java.util.Locale;
+import java.util.TimeZone;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
 
 @MultipartConfig
 @Controller
@@ -44,6 +59,49 @@ public class DrizzleController {
 		
 		return new ModelAndView("Index", "command", new Account());
 	}
+	
+	
+	@RequestMapping(value = "/AjaxImage",  method = { RequestMethod.GET, RequestMethod.POST })
+	public String TestAjax(HttpServletRequest request) {
+		HttpSession sesion = request.getSession();
+		
+		try {
+			
+			FileItemFactory Interfaz = new DiskFileItemFactory();
+			ServletFileUpload servlet_up = new ServletFileUpload(Interfaz);
+			List objetos = servlet_up.parseRequest(request);
+			//String ruta = "/opt/tomcat/webapps/drizzleweb/resources/img/perfil/";
+			String ruta = "C://Users//RICARDO OSPINA//WorkspaceSpring//ProjectDrizzle//IMG//";
+			for (int i = 0; i < objetos.size(); i++) {
+				FileItem item = (FileItem) objetos.get(i);
+				if (item.getFieldName().equals("imageprofile")) {
+					if (!item.isFormField()) {
+						File archivo = new File(ruta + item.getName());
+						item.write(archivo);
+						b = new byte[(int) archivo.length()];
+						FileInputStream fs = new FileInputStream(archivo);
+						fs.read(b);
+						fs.close();
+						int Id_Usu= Integer.parseInt(sesion.getAttribute("usuario").toString());
+						if (hibernateTransations.actualizarProfile(b,Id_Usu)) {
+							BtnPerfil = true;
+							System.out.println("Actualizo la Foto de perfil ");
+							
+						}
+
+					}
+				}
+			}
+
+		} catch (Exception e) {
+			System.out.print("<p>" + e.getMessage() + "</p>");
+			return null;
+		}
+		
+		return null;
+		
+		}
+	
 
 	@RequestMapping(value = "/volveregistrar", method = { RequestMethod.GET, RequestMethod.POST })
 	public ModelAndView volverRegistrar(@ModelAttribute Account account,HttpServletRequest request) {
@@ -56,12 +114,10 @@ public class DrizzleController {
 	public String redireccionregistro(@ModelAttribute Account account, HttpServletRequest request) {
 		HttpSession sesion = request.getSession();
 		
-		
-		
 		Object[] Dts;
 		String login = request.getParameter("botonLogin");
 		String ingreso = request.getParameter("botoningreso");
-		String Cmbfoto = request.getParameter("botonperfil");
+		//String Cmbfoto = request.getParameter("botonperfil");
 		System.out.println("Login: "+login+" ingreso: "+ingreso+" cambioFoto: "+BtnPerfil);
 
 		if (ingreso!=null) {
@@ -81,22 +137,6 @@ public class DrizzleController {
 					//Limpiar el Objeto!
 					Dts=null;
 					
-					//Registrar primera publicacion
-					//Publication pub = new Publication();
-					
-					//File filephoto = new File("/home/tavoruiz/git/ProjectDrizzle/Drizzle/src/main/webapp/resources/img/perfil/avatar.png");
-					//byte[] photoBytes = new byte[(int)filephoto.length()];
-					
-					//Date fecha = new Date();
-					//Date ayer = new Date( fecha.getTime()-86400000);
-					/*pub.setAuthor(Integer.parseInt(sesion.getAttribute("usuario")+""));
-					pub.setId_publication(1);
-					pub.setDate(fecha+"");
-					pub.setWeather("Lluvia Fuerte");
-					pub.setDescripcion("fuerte lluvia llevar paraguas si desea salir");
-					pub.setPhoto(photoBytes);
-					mongoTransations.registrarPublication(pub);*/
-					
 					return "Registrado";
 				}else{
 					return "redirect:/index.html#contact";
@@ -107,16 +147,19 @@ public class DrizzleController {
 
 		}else 
 			if(login!=null){
-			//hibernateTransations.consultarDatos(93);
 			System.out.println("entro al BtnLogin");
 			String usu = request.getParameter("user_name");
 			String pass = request.getParameter("pass");
 			List<Account> results;  
+			Date fecha = new Date();
+			Calendar cal = Calendar.getInstance();
+			Date date = new Date(fecha.getTime()-18000000);
+			
+			System.out.println("Esta fecha menos 5 Horas: "+date );
 			
 				if(!(hibernateTransations.consultarAccount(usu).isEmpty())){
 				System.out.println("Entro el consul tenia algo!");
 				results=(hibernateTransations.consultarAccount(usu));
-				//System.out.println(results.get(0));
 				
 				
 					if(usu.equals(results.get(0).getEmail()) && pass.equals(results.get(0).getPassword())){
@@ -129,10 +172,10 @@ public class DrizzleController {
 					sesion.setAttribute("usuario", Dts[0]);
 					sesion.setAttribute("nombres", Dts[1]+" "+Dts[2]);
 					sesion.setAttribute("photo",photoBase64);
-					
 					//Limpiar el Objeto!
 					Dts=null;
-					return "Registrado";	
+					login=null;
+					return "Registrado";
 					}else{
 					//alert
 					System.out.println("Usuario o Password incorrectos");
@@ -141,68 +184,15 @@ public class DrizzleController {
 					}
 				
 				}else{
-				return "redirect:/index.html#contact";
+					return "redirect:/index.html#contact";
 				}
-			}else
-				if(BtnPerfil==true){
-					
-					System.out.println("entro en el boton btnperfil");
-					String photoBase64 = Base64.encode(b);
-					sesion.setAttribute("photo",photoBase64);
-					BtnPerfil=false;
-					return "Registrado";
-				}
+			}
 		System.out.println("retorno null");
 		return null;
 
 	}
-
-	@RequestMapping(value = "/validarFoto", method = { RequestMethod.GET, RequestMethod.POST })
-	public String cargarImg(@ModelAttribute Profile profile, HttpServletRequest request) {
-		// PrintWriter out = response.getWriter();
-		HttpSession sesion = request.getSession();
-		
-		try {
-			
-			FileItemFactory Interfaz = new DiskFileItemFactory();
-			ServletFileUpload servlet_up = new ServletFileUpload(Interfaz);
-			List objetos = servlet_up.parseRequest(request);
-			String ruta = "/home/tavoruiz/git/ProjectDrizzle/IMG/";
-			for (int i = 0; i < objetos.size(); i++) {
-				FileItem item = (FileItem) objetos.get(i);
-				if (item.getFieldName().equals("imageprofile")) {
-					if (!item.isFormField()) {
-						File archivo = new File(ruta + item.getName());
-						item.write(archivo);
-						b = new byte[(int) archivo.length()];
-						FileInputStream fs = new FileInputStream(archivo);
-						fs.read(b);
-						fs.close();
-						int Id_Usu= Integer.parseInt(sesion.getAttribute("usuario").toString());
-						//profile.setProfile_account(3);
-						//profile =(Profile)session.get(Profile.class, Id_Usu);
-						//profile.setProfile_account(Id_Usu);
-						//profile.setPhoto(b);
-						//System.out.println(b + "");
-						if (hibernateTransations.actualizarProfile(b,Id_Usu)) {
-							BtnPerfil = true;
-							System.out.println("Actualizo la Foto de perfil ");
-							
-						}
-
-					}
-				}
-			}
-
-		} catch (Exception e) {
-			System.out.print("<p>" + e.getMessage() + "</p>");
-			return null;
-		}
-		return "redirect:/registrar.html";
-	}
-
-
-@RequestMapping(value = "/registrarPublicacion", method = { RequestMethod.GET, RequestMethod.POST })
+	
+	@RequestMapping(value = "/registrarPublicacion", method = { RequestMethod.GET, RequestMethod.POST })
 	public String registrarPub(@ModelAttribute Publication publication, HttpServletRequest request) {
 		HttpSession sesion = request.getSession();
 		Publication pub = new Publication();
@@ -212,7 +202,8 @@ public class DrizzleController {
 					FileItemFactory Interfaz = new DiskFileItemFactory();
 					ServletFileUpload servlet_up = new ServletFileUpload(Interfaz);
 					List objetos = servlet_up.parseRequest(request);
-					String ruta = "/home/tavoruiz/git/ProjectDrizzle/IMGPublicaciones/";
+					//String ruta = "/opt/tomcat/webapps/drizzleweb/resources/img/perfil/";
+					String ruta = "C://Users//RICARDO OSPINA//WorkspaceSpring//ProjectDrizzle//IMG//";
 					for (int i = 0; i < objetos.size(); i++) {
 						FileItem item = (FileItem) objetos.get(i);
 						if (item.getFieldName().equals("files")) {
@@ -251,5 +242,7 @@ public class DrizzleController {
 			
 		return "redirect:/volveregistrar.html";
 	}
+
+
 
 }

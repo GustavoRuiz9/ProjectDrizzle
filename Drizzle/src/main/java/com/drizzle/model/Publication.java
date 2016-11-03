@@ -1,13 +1,16 @@
 package com.drizzle.model;
 
 import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.bson.types.Binary;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.mysql.jdbc.Blob;
 
@@ -20,6 +23,9 @@ public class Publication {
 	}
 	
 
+	
+
+
 	public Publication(int id_publication, Date date, int author, String weather, String descripcion, byte[] photo) {
 		super();
 		this.id_publication = id_publication;
@@ -30,15 +36,19 @@ public class Publication {
 		this.photo = photo;
 	}
 
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	int id_publication;
+	@DateTimeFormat(style="yyyyMMdd'T'HHmmss.SSS")
 	Date date;
 	int author;
 	String weather;
 	String Descripcion;
 	byte[] photo;
 	
+	
+
 	public String getDescripcion() {
 		return Descripcion;
 	}
@@ -68,6 +78,7 @@ public class Publication {
 		return date;
 	}
 
+	@Required
 	public void setDate(Date date) {
 		this.date = date;
 	}

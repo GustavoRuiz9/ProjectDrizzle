@@ -13,6 +13,7 @@ public class mongoConfig {
 
 	public @Bean
 	MongoDbFactory mongoDbFactory() throws Exception {
+		//return new SimpleMongoDbFactory(new MongoClient("node19762-drizzle.j.facilcloud.com"), "Drizzle_Social");
 		return new SimpleMongoDbFactory(new MongoClient(), "Drizzle_Social");
 	}
 

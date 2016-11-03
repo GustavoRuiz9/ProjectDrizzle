@@ -1,5 +1,5 @@
-<%@page import="com.drizzle.model.Publication"%>
 <%@page import="java.util.Date"%>
+<%@page import="com.drizzle.model.Publication"%>
 <%@page import="com.drizzle.persistence.mongoTransations"%>
 <%@page import="org.apache.soap.encoding.soapenc.Base64"%>
 <%@page import="com.drizzle.model.Profile"%>
@@ -40,13 +40,14 @@
   <!-- Daterange picker -->
   <link rel="stylesheet" href="././resources/css/daterangepicker.css">
   <!-- bootstrap wysihtml5 - text editor -->
+  <link href="././resources/css/styleinput.css" rel="stylesheet">
   <link rel="stylesheet" href="././resources/css/bootstrap3-wysihtml5.min.css">
   <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'>
   <link href="././resources/css/style.css" rel="stylesheet">
    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCPYXQMu5fcr5_SiKfxyjO7auJdUl4lOTM &callback=initMap"></script>
-  <link href="././resources/css/styleinput.css" rel="stylesheet">
-
+   
+	<script src="././resources/jquery/jquery-2.2.3.min.js"></script>
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>
@@ -55,7 +56,6 @@
   <![endif]-->
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
-<%--hibernateTransations.registrar(new Account("fabian","ruiz","fabia.an@hotmail.com","dr1ssl3","05/02/1999",4458745));--%>
 
 <!-- Trigger the modal with a button -->
 	<button type="button" class="btn btn-info btn-lg" data-toggle="modal"
@@ -164,7 +164,7 @@
                   <li><!-- start message -->
                     <a href="#">
                       <div class="pull-left">
-                        <img src="data:image/jpg;base64,<% out.print(session.getAttribute("photo")); %>" class="img-circle" alt="User Image" id="imagen1">
+                        <img  id="imagen" src="data:image/jpg;base64,<% out.print(session.getAttribute("photo")); %>" class="img-circle" alt="User Image">
                       </div>
                       <h4>
                         Support Team
@@ -346,7 +346,7 @@
           <!-- User Account: style can be found in dropdown.less -->
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <img src="data:image/jpg;base64,<% out.print(session.getAttribute("photo")); %>" class="user-image" alt="User Image" id="imagen1">
+              <img src="data:image/jpg;base64,<% out.print(session.getAttribute("photo")); %>" class="user-image" alt="User Image" id="image0">
               <span class="hidden-xs">
 				<% out.println(session.getAttribute("nombres")); %>
 			</span>
@@ -354,7 +354,7 @@
             <ul class="dropdown-menu">
               <!-- User image -->
               <li class="user-header">
-                <img src="data:image/jpg;base64,<% out.print(session.getAttribute("photo")); %>" class="img-circle" alt="User Image" id="imagen1">
+                <img src="data:image/jpg;base64,<% out.print(session.getAttribute("photo")); %>" class="img-circle" alt="User Image" id="image1">
 
                 <p>
                   <% out.println(session.getAttribute("nombres")); %>
@@ -381,17 +381,17 @@
                 <div class="pull-left"id="leftbar">
                     <button id="myBtn" class="btn btn-default btn-flat" ><i class="fa fa-picture-o"></i> Subir foto</button>
                     <div class="hideform" >
-                    <form action="validarFoto.html" method="post" enctype="multipart/form-data">
-                    <input id="changeprofile1" type="file" name="imageprofile" onchange="cambio()" >
-                    <input type="submit" id="Btn" name="botonperfil" value="Btnperfil"/>
+                    <form enctype="multipart/form-data" id="formuploadajax" method="post">
+                    <input id="changeprofile1" type="file" name="imageprofile" >
+                    <input type="button" id="Btn" name="botonperfil" value="Btnperfil"/>
                     </form>
                     </div> 
-                    
                    
                 </div>
                 
                 <div class="pull-right">
                 		<form action="index.html" method="post">
+                		<span id="salida"></span>
                 		<input type="submit" class="btn btn-default btn-flat" name="Sign_out" id="Sing_out" value="Sign out"></input>
                 		<!-- Alert Para salir -->
                 		<!--<a href="#" class="btn btn-default btn-flat"></a>-->
@@ -418,7 +418,7 @@
       <!-- Sidebar user panel -->
       <div class="user-panel">
         <div class="pull-left image">
-          <img src="data:image/jpg;base64,<% out.print(session.getAttribute("photo")); %>" class="img-circle " alt="User Image" id="imagen1">
+          <img src="data:image/jpg;base64,<% out.print(session.getAttribute("photo")); %>" class="img-circle" alt="User Image" id="image2">
         </div>
         <div class="pull-left info">
           <p>
@@ -695,45 +695,44 @@
 
               <h3 class="box-title">Publicaciones</h3>
 
-              <div class="box-tools pull-right" data-toggle="tooltip" title="Status">
-                <div class="btn-group" data-toggle="btn-toggle">
-                  <button type="button" class="btn btn-default btn-sm active"><i class="fa fa-square text-green"></i>
-                  </button>
-                  <button type="button" class="btn btn-default btn-sm"><i class="fa fa-square text-red"></i></button>
-                </div>
-              </div>
             </div>
             <div class="box-body chat" id="chat-box">
               <!-- chat item -->
-              
-             <%
+              <%
              	List<Publication> lista = mongoTransations.ConsultarPublicationes();
-             	
-				
-				for (int i=0;i<lista.size();i++)
-				{
-					Object[] Datos=hibernateTransations.consultarDatos(lista.get(i).getAuthor());
-					Date date= new Date();
-					date=lista.get(i).getDate();
-				%>
-					 <div class="item">
-					 <img src="data:image/jpg;base64,<%out.print(Base64.encode((byte[])Datos[2]));%>" class="img-responsive" alt="user image" class="online">
-					 <p class="message">
-                  	<p class="message">
-                  	<a href="#" class="name">
-                    <small class="text-muted pull-right"><i class="fa fa-clock-o"></i><% out.print(date.getHours()+":"+date.getMinutes());%></small>
-                    <%out.print(Datos[0]+" "+Datos[1]);%>
-                  </a>
-					<% out.print(lista.get(i).getWeather());%><br><% out.print(lista.get(i).getDescripcion()+"");%>
-                </p>
-                <div class="attachment">
-                  <img src="data:image/jpg;base64,<%out.print(Base64.encode((byte[])lista.get(i).getPhoto()));%>" class="img-responsive" alt="user image" class="online">
-                </div>
-                <!-- /.attachment -->
-              	</div>
-					 
-			<%}%>
-			 
+              
+              	if(lista.isEmpty()){%>
+              		<div id="noposts" class="alert alert-info alert-dismissible fade in" role="alert"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button> <i class="fa fa-files-o"></i> <strong>Aun no hay publicaciones por aqui..</strong></div>
+              	<% 	
+              	}else{
+              		for (int i=0;i<lista.size();i++)
+    				{
+    					Object[] Datos=hibernateTransations.consultarDatos(lista.get(i).getAuthor());
+    					Date date= new Date();
+    					date=lista.get(i).getDate();
+    					//System.out.println("imagen perfil "+Base64.encode((byte[])Datos[2]));
+    					System.out.println("imagen public "+(Base64.encode((byte[])lista.get(i).getPhoto())));
+    			%>
+    					 <div class="item">
+    					 <img src="data:image/jpg;base64,<%out.print(Base64.encode((byte[])Datos[2]));%>"  alt="user image" class="online">
+                      	<p class="message">
+                      	<a href="#" class="name">
+                        <small class="text-muted pull-right"><i class="fa fa-clock-o"></i><% out.print(date.getHours()+":"+date.getMinutes());%></small>
+                        <%out.print(Datos[0]+" "+Datos[1]);%>
+                      </a>
+    					<% out.print(lista.get(i).getWeather());%><br><% out.print(lista.get(i).getDescripcion()+"");%>
+                    	</p>
+                    <div class="attachment">
+                      <img src="data:image/png;base64,<%out.print(Base64.encode((byte[])lista.get(i).getPhoto()));%>" class="img-responsive">
+                    </div>
+                    
+                    <!-- /.attachment -->
+                  	</div>
+    					 
+    				<%}%>
+              	<%}%>
+              
+              	
               
               
               <div class="item">
@@ -764,7 +763,7 @@
               <!-- /.item -->
               <!-- chat item -->
               <div class="item">
-                <img src="data:image/jpg;base64,<% out.print(session.getAttribute("photo")); %>" alt="user image img-responsive center-block" class="offline" id = "imagen1">
+                <img src="data:image/jpg;base64,<% out.print(session.getAttribute("photo")); %>" alt="user image" class="offline" id = "image3">
               
 
                 <p class="message">
@@ -787,7 +786,7 @@
                     <small class="text-muted pull-right"><i class="fa fa-clock-o"></i> 5:30</small>
                     Susan Doe
                   </a>
-                  I would like to meet you to discuss the latest news about
+                  I would like to meet you to discuss the latest news afbout
                   the arrival of the new theme. They say it is going to be one the
                   best themes on the market
                 </p>
@@ -1165,7 +1164,6 @@
 <!-- ./wrapper -->
 
 <!-- jQuery 2.2.3 -->
-<script src="././resources/jquery/jquery-2.2.3.min.js"></script>
 <!-- jQuery UI 1.11.4 -->
 <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
@@ -1203,6 +1201,9 @@
 <script src="././resources/js/demo.js"></script>
 <script src="././resources/js/sau3member.js"></script>
 <script src="././resources/js/validaciones.js"></script>
+<script src="././resources/js/mapa.js"></script>
+
+
 
 <script src="././resources/chartjs/Chart.min.js"></script>
 <!-- Api Google maps JavaScritp -->
