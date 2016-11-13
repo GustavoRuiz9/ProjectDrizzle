@@ -1,5 +1,6 @@
 package com.drizzle.model;
 
+import java.util.Arrays;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -9,42 +10,43 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.bson.types.Binary;
+import org.bson.types.ObjectId;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.beans.factory.annotation.Required;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.mysql.jdbc.Blob;
 
 @Entity
-@Table (name="publication")
+@Document (collection="publication")
 public class Publication {
 
 	public Publication() {
-		
+		 this.id_publication = new ObjectId()._time();
 	}
 	
-
-	
-
-
-	public Publication(int id_publication, Date date, int author, String weather, String descripcion, byte[] photo) {
+	public Publication(int id_publication, Date date, int author, String weather, String descripcion,String id_barrio, byte[] photo) {
 		super();
 		this.id_publication = id_publication;
 		this.date = date;
 		this.author = author;
 		this.weather = weather;
 		Descripcion = descripcion;
+		this.Id_Barrio=id_barrio;
 		this.photo = photo;
 	}
 
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GenericGenerator(name="generator", strategy="increment")
 	int id_publication;
 	@DateTimeFormat(style="yyyyMMdd'T'HHmmss.SSS")
 	Date date;
 	int author;
 	String weather;
 	String Descripcion;
+	String Id_Barrio;
 	byte[] photo;
 	
 	
@@ -100,12 +102,24 @@ public class Publication {
 	public void setWeather(String weather) {
 		this.weather = weather;
 	}
+	
+	
+	public String getId_Barrio() {
+		return Id_Barrio;
+	}
 
+	@Required
+	public void setId_Barrio(String id_Barrio) {
+		Id_Barrio = id_Barrio;
+	}
 
 	@Override
 	public String toString() {
 		return "Publication [id_publication=" + id_publication + ", date=" + date + ", author=" + author + ", weather="
-				+ weather + ", Descripcion=" + Descripcion + ", photo=" + photo + "]";
+				+ weather + ", Descripcion=" + Descripcion + ", Id_Barrio=" + Id_Barrio + ", photo="
+				+ Arrays.toString(photo) + "]";
 	}
+
+	
 
 }

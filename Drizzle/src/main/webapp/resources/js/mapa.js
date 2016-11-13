@@ -2,7 +2,7 @@ cargarmap();
 function cargarmap(){
 	
 	navigator.geolocation.getCurrentPosition(showPosition,showError);
-	var geocoder = new google.maps.Geocoder();
+	//var geocoder = new google.maps.Geocoder();
 	function showPosition(position)
 	  {
 	  lat=position.coords.latitude;
@@ -17,7 +17,6 @@ function cargarmap(){
 	  mapholder.style.width='100%';
 	  var myOptions={
 	  center:latlon,zoom:12,
-	  //draggable: false,
 	  mapTypeId:google.maps.MapTypeId.ROADMAP,
 	  mapTypeControl:false,
 	  navigationControlOptions:{style:google.maps.NavigationControlStyle.SMALL}
@@ -57,8 +56,7 @@ function cargarmap(){
 	  
 	   var opt = { minZoom: 11, maxZoom: 14 };
 	   map.setOptions(opt);
-	   geocoder.geocode({ 'latLng': latlonmarker },processGeocoder);
-	   
+	   //geocoder.geocode({ 'latLng': latlonmarker },processGeocoder);
 
 	  }
 		function showError(error)
@@ -83,33 +81,7 @@ function cargarmap(){
 		
 	
 	}
-		function processGeocoder(results, status){
-		
-			if (status == google.maps.GeocoderStatus.OK) {
-			if (results[0]) {
-			//document.forms[0].dir.value=results[0].formatted_address;
-			//alert(results[0].address_components[2].long_name);
-			var ciudad= results[0].address_components[4].long_name;
-			var codigo= results[0].address_components[7].long_name;
-			var Direccion=results[0].address_components[1].long_name;
-			var BarrioSplt=(results[1].formatted_address).split(',');
-			//comunasplt = (results[0].address_components[2].long_name);
-			//var comuna="Comuna "+comunasplt[1];
-			//alert(comuna);
-			//alert(comunasplt);
-			alert(ciudad);
-			alert(Direccion);
-			alert(BarrioSplt[0]);
-			alert(codigo);
-			
-			
-			} else {
-			error('Google no retorno resultado alguno.');
-			}
-			} else {
-			error("Geocoding fallo debido a : " + status);
-			}
-			}
+
 	
 	
 	

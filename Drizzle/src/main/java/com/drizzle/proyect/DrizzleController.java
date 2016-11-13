@@ -2,8 +2,10 @@ package com.drizzle.proyect;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -25,14 +27,17 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.drizzle.model.Account;
 import com.drizzle.model.Profile;
 import com.drizzle.model.Publication;
+import com.drizzle.model.Ubication;
 import com.drizzle.persistence.hibernateTransations;
 import com.drizzle.persistence.mongoConfig;
 import com.drizzle.persistence.mongoTransations;
+import com.mysql.fabric.xmlrpc.base.Array;
 
 import org.apache.soap.encoding.soapenc.Base64;
 import org.bson.types.Binary;
@@ -105,9 +110,8 @@ public class DrizzleController {
 
 	@RequestMapping(value = "/volveregistrar", method = { RequestMethod.GET, RequestMethod.POST })
 	public ModelAndView volverRegistrar(@ModelAttribute Account account,HttpServletRequest request) {
-		
-		
-		return new ModelAndView("Registrado", "command", new Account());
+		//MODIFICAR PARA QUE ACTUALICE EL DIV DE LAS PUBLICACIONES Y NO TODO REGISTRADO.jsp
+		return new ModelAndView("Registrado", "valorCombobox",request.getParameter("comuna"));
 	}
 	
 	@RequestMapping(value = "/registrar", method = { RequestMethod.GET, RequestMethod.POST })
@@ -193,7 +197,7 @@ public class DrizzleController {
 	}
 	
 	@RequestMapping(value = "/registrarPublicacion", method = { RequestMethod.GET, RequestMethod.POST })
-	public String registrarPub(@ModelAttribute Publication publication, HttpServletRequest request) {
+	public @ResponseBody String registrarPub(HttpServletRequest request) {
 		HttpSession sesion = request.getSession();
 		Publication pub = new Publication();
 		
@@ -226,12 +230,16 @@ public class DrizzleController {
 							FileItem weather = (FileItem) objetos.get(i);
 							pub.setWeather(weather.getString());
 						}
+						if (item.getFieldName().equals("Id_")) {
+							FileItem Id_Barrio = (FileItem) objetos.get(i);
+							pub.setId_Barrio(Id_Barrio.getString());
+						}
+						
 					}
 					
 					int id = Integer.parseInt(sesion.getAttribute("usuario").toString());
 					pub.setAuthor(id);
 					pub.setDate(new Date());
-					pub.setId_publication(1);
 
 					
 				} catch (Exception e) {
@@ -240,7 +248,25 @@ public class DrizzleController {
 			
 				mongoTransations.registrarPublication(pub);
 			
-		return "redirect:/volveregistrar.html";
+		return "Registro Publicacion!";
+	}
+	
+	@RequestMapping(value = "/Public", method = { RequestMethod.GET, RequestMethod.POST })
+	public @ResponseBody String Publication(HttpServletRequest request) {
+		//HttpSession sesion = request.getSession();
+		String Barrio = request.getParameter("Barrio1");
+		String Barrio2 = request.getParameter("Barrio2");
+		String dato;
+		
+		
+		List<Ubication> list = mongoTransations.ConsultarPosition(Barrio, Barrio2);
+		if(list.isEmpty()){
+			dato="error al consultar tu posicion,";
+		}else{
+			dato=list.get(0).getBar()+","+list.get(0).getId_();
+			System.out.println(dato);
+		}
+		return dato;
 	}
 
 

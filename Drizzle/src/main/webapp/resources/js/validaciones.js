@@ -1,4 +1,5 @@
 document.getElementById("myBtn").onclick = displayfile;
+
 function ImageAjax(formData){
 	alert("entro al ajax");
 	$.ajax({
@@ -63,13 +64,6 @@ function archivo(evt) {
 }
 
 document.getElementById('files').addEventListener('change', archivo, false);
-
-$("#files").fileinput({
-	showCaption: false,
-	browseClass: "btn btn-primary btn-lg",
-	fileType: "any"
-	});
-
 $('.modal').on('hidden.bs.modal', function () {
     $(this).find('form').trigger('reset');
     removeAllOptions(document.getElementById("comboboxTipoClima"));
@@ -78,6 +72,14 @@ $('.modal').on('hidden.bs.modal', function () {
     /*$("#myModal").find(".modal-title").text("Publicacion del Clima " + now.getDate()+"/"+(now.getMonth()+1)+"/"+now.getFullYear()
     		+ " " + now.getHours()+":"+ now.getMinutes());*/
 });
+
+$("#files").fileinput({
+	showCaption: false,
+	browseClass: "btn btn-primary btn-lg",
+	fileType: "any"
+	});
+
+
 
 
 

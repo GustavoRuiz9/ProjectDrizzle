@@ -9,6 +9,8 @@
 <%@page import="com.drizzle.persistence.hibernateTransations"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
+    <%List<Publication> lista;%>
 
 <!DOCTYPE html>
 <html>
@@ -55,21 +57,23 @@
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
   <![endif]-->
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-blue sidebar-mini" onload="document.forms['formComuna']['comuna'].value = '${valorCombobox}'">
 
 <!-- Trigger the modal with a button -->
-	<button type="button" class="btn btn-info btn-lg" data-toggle="modal"
+	<button id="BtnModal" type="button" class="btn btn-info btn-lg" data-toggle="modal"
 		data-target="#myModal">Publicar</button>
 	<!-- Modal -->
-	<div id="myModal" class="modal fade" role="dialog">
+	<div id="myModal" name="myModal" class="modal fade" role="dialog">
 		<div class="modal-dialog">
 
 			<!-- Modal content-->
 			<div class="modal-content">
 				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<button id="BtnModal" type="button" class="close" data-dismiss="modal">&times;</button>
 					<h4 class="modal-title" id="tituloh4">
 						Publicacion del Clima 
+						<br>
+						
 						<!--<%-->
 						/*SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 						Date fecha = new Date();
@@ -78,9 +82,10 @@
 					</h4>
 				</div>
 				
-				<form action="registrarPublicacion.html" id="formPublication" name="formPublication" method="post" enctype="multipart/form-data" >
+				<form id="formPublication" name="formPublication" method="post" enctype="multipart/form-data" >
 				<div class="modal-body">
-				
+						<input id="Id_" Name="Id_" type="hidden" />
+					
 						<!--<input type="radio" name="clima1" id="clima1" value="1" onClick="cargar(this.value)" > Lluvia 
 						<input type="radio" name="clima2" id="clima2" value="2" onClick="cargar(this.value)" > Soleado
 						<input type="radio" name="clima3" id="clima3" value="3" onClick="cargar(this.value)" > Normal-->
@@ -108,6 +113,9 @@
 						      	<!-- <input type="file" id="files" name="files" /> -->
 								<input id="files" accept="image/*" name="files" capture="" type="file">
 						      </div>
+						     <i class="fa fa-location-arrow"   aria-hidden="true" ></i>
+						      <h5 align="left" id="Barrio"> </h5>
+						      
 						      
 						      <br/>
 						      
@@ -121,7 +129,7 @@
 				
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-					<button class="btn btn-primary">Save</button>
+					<button id="BtnPub" name="BtnPub" type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
 					
 				</div>
 				</form>
@@ -150,6 +158,42 @@
 
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
+        
+        		        <li >
+							<form action="volveregistrar.html" id="formComuna" name="formComuna">
+								<select id="comuna" name="comuna" class="form-control" onchange="this.form.submit()">
+									<option value="0">TODAS</option>
+									<option value="1">COMUNA 1</option>
+									<option value="2">COMUNA 2</option>
+									<option value="3">COMUNA 3</option>
+									<option value="4">COMUNA 4</option>
+									<option value="5">COMUNA 5</option>
+									<option value="6">COMUNA 6</option>
+									<option value="7">COMUNA 7</option>
+									<option value="8">COMUNA 8</option>
+									<option value="9">COMUNA 9</option>
+									<option value="10">COMUNA 10</option>
+									<option value="11">COMUNA 11</option>
+									<option value="12">COMUNA 12</option>
+									<option value="13">COMUNA 13</option>
+									<option value="14">COMUNA 14</option>
+									<option value="15">COMUNA 15</option>
+									<option value="16">COMUNA 16</option>
+									<option value="17">COMUNA 17</option>
+									<option value="18">COMUNA 18</option>
+									<option value="19">COMUNA 19</option>
+									<option value="20">COMUNA 20</option>
+									<option value="21">COMUNA 21</option>
+									<option value="22">COMUNA 22</option>
+									<option value="23">COMUNA 23</option>
+									<option value="24">COMUNA 24</option>
+									
+									
+								</select>
+							</form>
+						</li>
+        
+        
           <!-- Messages: style can be found in dropdown.less-->
           <li class="dropdown messages-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -699,7 +743,7 @@
             <div class="box-body chat" id="chat-box">
               <!-- chat item -->
               <%
-             	List<Publication> lista = mongoTransations.ConsultarPublicationes();
+              		lista = mongoTransations.ConsultarPublicationes(request.getParameter("comuna"));
               
               	if(lista.isEmpty()){%>
               		<div id="noposts" class="alert alert-info alert-dismissible fade in" role="alert"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button> <i class="fa fa-files-o"></i> <strong>Aun no hay publicaciones por aqui..</strong></div>
@@ -1201,6 +1245,7 @@
 <script src="././resources/js/demo.js"></script>
 <script src="././resources/js/sau3member.js"></script>
 <script src="././resources/js/validaciones.js"></script>
+<script src="././resources/js/publicacion.js"></script>
 <script src="././resources/js/mapa.js"></script>
 
 
