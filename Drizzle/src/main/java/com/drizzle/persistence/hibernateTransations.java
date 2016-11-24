@@ -15,6 +15,7 @@ import org.hibernate.Session;
 
 import com.drizzle.model.Account;
 import com.drizzle.model.Profile;
+import org.apache.soap.encoding.soapenc.Base64;
 import com.mysql.jdbc.Blob;
 
 public class hibernateTransations {
@@ -226,6 +227,36 @@ public class hibernateTransations {
 			//System.out.println(datos[0] + "--" + datos[1] + "--" + datos[2] + "--");
 			
 			return datos;
+			
+			
+		}catch (Exception e) {
+			System.out.println("Error en el metodo consultarAccount - " + e.getMessage());
+			return null;
+		}finally {
+			session.disconnect();
+		}
+		
+	}
+	
+	public static String consultarAuthor(int IdAccount) {
+
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		Object [] datos;
+		String sentenciaSQL = "Select a.name,a.last_name,p.photo FROM Account a,Profile p Where p.profile_account = a.id_account and a.id_account = ?";
+		
+		try{
+		
+			session.beginTransaction();
+			Query query = session.createQuery(sentenciaSQL);			
+			query.setParameter(0,IdAccount);
+			List<Object[]> results = query.getResultList();
+			datos=results.get(0);
+			//System.out.println(query.getResultList()+"");
+			System.out.println("Select Successful Author");
+			//if(results.isEmpty())
+			String datosAuthor = ",\"nombre_author\":\""+ datos[0] + " " + datos[1] + "\",\"profile\":\"" + Base64.encode((byte[])datos[2]) + "\"}";
+			
+			return datosAuthor;
 			
 			
 		}catch (Exception e) {

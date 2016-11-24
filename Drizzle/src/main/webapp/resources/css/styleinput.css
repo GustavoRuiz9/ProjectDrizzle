@@ -29,3 +29,6 @@
        -moz-filter: brightness(1.8) grayscale(1) opacity(.9);
             filter: brightness(1.8) grayscale(1) opacity(.9);
 }
+.localizacion div{
+float:left;
+}

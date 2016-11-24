@@ -1,4 +1,7 @@
 document.getElementById("myBtn").onclick = displayfile;
+document.getElementById('files').addEventListener('change', archivo, false);
+
+
 
 function ImageAjax(formData){
 	alert("entro al ajax");
@@ -12,6 +15,7 @@ function ImageAjax(formData){
         processData: false
     	});
 }
+
 
 function myFunction() {
 	if(document.getElementById("password").value != (document.getElementById("password2")).value){
@@ -63,22 +67,22 @@ function archivo(evt) {
     }
 }
 
-document.getElementById('files').addEventListener('change', archivo, false);
+
 $('.modal').on('hidden.bs.modal', function () {
     $(this).find('form').trigger('reset');
-    removeAllOptions(document.getElementById("comboboxTipoClima"));
     document.getElementById("list").value=" ";
+    document.getElementById("files").value=" ";
     //var now = new Date().toJSON().slice(0,10);
     /*$("#myModal").find(".modal-title").text("Publicacion del Clima " + now.getDate()+"/"+(now.getMonth()+1)+"/"+now.getFullYear()
     		+ " " + now.getHours()+":"+ now.getMinutes());*/
 });
+
 
 $("#files").fileinput({
 	showCaption: false,
 	browseClass: "btn btn-primary btn-lg",
 	fileType: "any"
 	});
-
 
 
 

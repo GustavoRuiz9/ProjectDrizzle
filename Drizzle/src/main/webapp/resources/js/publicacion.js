@@ -81,7 +81,17 @@ function ValPublication() {
         
         var formData = new FormData(document.getElementById("formPublication"));
         
-        $.ajax({
+         //obtener div
+         var parent = document.querySelector('#chat-box');
+         // Cantidad de div
+	     var divs = parent.querySelectorAll('div');
+	     firtsdiv=(divs[0].id).split('v');
+	     if(firtsdiv[1]=="-1"){
+	    	 
+	    	 document.getElementById(divs[0].id).remove();
+	     }
+	     formData.append("Id_Pb",firtsdiv[1]);
+	     $.ajax({
             url: "registrarPublicacion.html",
             type: "POST",
             dataType: "html",
@@ -104,10 +114,67 @@ function ValPublication() {
     
     }
 function ShowPublication(data) {
-	alert(data);
+	dato=JSON.parse(data);
+	cont = 0;
 	
-	$('#').html(data);
+	while (cont < dato.length){
+		//console.log(dato[cont].Descripcion);
+		
+		//var ImgBin=dato[cont].photo;
+		//var base64String = btoa(String.fromCharCode.apply(null, new Uint8Array(ImgBin)));
+		//var otro= btoa([].reduce.call(new Uint8Array(ImgBin),function(p,c){return p+String.fromCharCode(c)},''));
+		
+		
+		 var newTextBoxDiv = $(document.createElement('div'))
+		    .attr("id", 'TextBoxDiv'+dato[cont].id_publication).attr("class", 'item');
+		 
+
+		 /*var att = document.createAttribute("class");
+		    att.value = "item";
+		    newTextBoxDiv.setAttributeNode(att);*/
+		 	var Btn="";
+		 	if(dato[cont].author=="true"){
+		 		Btn='<div class="attachment">'+
+	        	'<button type="button" data-toggle="confirmation" name="remove" id="remove" class="btn btn-default btn-xs remove" onclick="return confirm("estas seguro?")">'+
+				'<span class="glyphicon glyphicon-trash" data-toggle="tooltip" title="Hooray!"></span>'+
+				'</button>'+
+				'</div>';
+		 	}else{
+		 		Btn='<div class="attachment">'+
+	        	'<button type="button" data-toggle="confirmation" name="remove" id="remove" class="btn btn-default btn-xs remove" onclick="return confirm("estas seguro?")">'+
+				'<span class="fa fa-heart"></span>'+
+				'</button>'+
+				'</div>';
+		 	}
+		    
+		   newTextBoxDiv.before().html('<img src="data:image/png;base64,'+ dato[cont].profile + '"  alt="user image" class="online">'+
+				    '<p class="message">'+
+					'<a href="#" class="name">'+
+					'<small class="text-muted pull-right"><i class="fa fa-clock-o"></i>'+dato[cont].date.substring(13, 17)+'</small>'+ dato[cont].nombre_author +
+					'</a>'+
+					dato[cont].weather+
+					'<br>'+
+					dato[cont].Descripcion+
+					'</p> <div class="attachment">'+
+					'<img src="data:image/png;base64,'+dato[cont].photo+'" class="img-responsive">'+
+					'</div>'+Btn);
+
+		   $("#chat-box").prepend(newTextBoxDiv);
+		   cont = cont + 1;
+	}
+		
+	}
+function AlertDrop(clicked_id) {
+	$('.confirmation-callback').confirmation({
+		onConfirm: function() { alert("Es: "+id) },
+		onCancel: function() { }
+	});
 }
+
+
+
+
+
 function tildes_unicode(str){
 	str = str.replace('á','a');
 	str = str.replace('é','e');

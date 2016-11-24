@@ -10,7 +10,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     
-    <%List<Publication> lista;%>
+    <%List<Publication> lista;
+    lista = mongoTransations.ConsultarPublicationes(request.getParameter("comuna"));
+	boolean Dta=true;
+    
+    %>
 
 <!DOCTYPE html>
 <html>
@@ -48,8 +52,12 @@
   <link href="././resources/css/style.css" rel="stylesheet">
    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCPYXQMu5fcr5_SiKfxyjO7auJdUl4lOTM &callback=initMap"></script>
+   <script src="././resources/js/validaciones.js"></script>
+   
+  <!-- Stylo del alert Eliminar// -->
    
 	<script src="././resources/jquery/jquery-2.2.3.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>
@@ -132,6 +140,7 @@
 					<button id="BtnPub" name="BtnPub" type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
 					
 				</div>
+
 				</form>
 			</div>
 
@@ -741,12 +750,15 @@
 
             </div>
             <div class="box-body chat" id="chat-box">
+            
               <!-- chat item -->
               <%
-              		lista = mongoTransations.ConsultarPublicationes(request.getParameter("comuna"));
+              		
               
-              	if(lista.isEmpty()){%>
-              		<div id="noposts" class="alert alert-info alert-dismissible fade in" role="alert"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button> <i class="fa fa-files-o"></i> <strong>Aun no hay publicaciones por aqui..</strong></div>
+              	if(lista.isEmpty()){
+              		Dta=false;
+              	%>
+              		<div id="TextBoxDiv-1" name="divprmero"class="alert alert-info alert-dismissible fade in" role="alert"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true"></span></button> <i class="fa fa-files-o"></i> <strong>Aun no hay publicaciones por aqui..</strong></div>
               	<% 	
               	}else{
               		for (int i=0;i<lista.size();i++)
@@ -754,10 +766,8 @@
     					Object[] Datos=hibernateTransations.consultarDatos(lista.get(i).getAuthor());
     					Date date= new Date();
     					date=lista.get(i).getDate();
-    					//System.out.println("imagen perfil "+Base64.encode((byte[])Datos[2]));
-    					System.out.println("imagen public "+(Base64.encode((byte[])lista.get(i).getPhoto())));
     			%>
-    					 <div class="item">
+    					 <div class="item" id="TextBoxDiv<%out.print(lista.get(i).getId_publication());%>" name="divttsg">
     					 <img src="data:image/jpg;base64,<%out.print(Base64.encode((byte[])Datos[2]));%>"  alt="user image" class="online">
                       	<p class="message">
                       	<a href="#" class="name">
@@ -770,83 +780,29 @@
                       <img src="data:image/png;base64,<%out.print(Base64.encode((byte[])lista.get(i).getPhoto()));%>" class="img-responsive">
                     </div>
                     
+                    <div class="attachment">
+	                    <button id="<%out.print(lista.get(i).getId_publication());%>" class="btn btn-default confirmation-callback" onclick="AlertDrop(this.id)" >
+							 <span class="glyphicon glyphicon-trash"></span>
+						</button>
+						
+                    </div>
+                    
+                    
                     <!-- /.attachment -->
                   	</div>
-    					 
-    				<%}%>
-              	<%}%>
+              	<%}
+				}
+              	if(Dta==true){
+              	%>
+              	<input id="Ult_Pb" name="Ult_Pb" type="hidden" value="<%out.print(lista.get(0).getId_publication());%>">
+              	<%}else{
+              	%>
+              	<input id="Ult_Pb" name="Ult_Pb" type="hidden" value="0">
+              	<%}
+              	%>
               
               	
-              
-              
-              <div class="item">
-                <img src="././resources/img/perfil/avatar04.png" alt="user image" class="online">
-
-                <p class="message">
-                  <a href="#" class="name">
-                    <small class="text-muted pull-right"><i class="fa fa-clock-o"></i> 2:15</small>
-                    Mike Doe
-                  </a>
-                  I would like to meet you to discuss the latest news about
-                  the arrival of the new theme. They say it is going to be one the
-                  best themes on the market
-                </p>
-                <div class="attachment">
-                  <h4>Attachments:</h4>
-
-                  <p class="filename">
-                    Theme-thumbnail-image.jpg
-                  </p>
-
-                  <div class="pull-right">
-                    <button type="button" class="btn btn-primary btn-sm btn-flat">Open</button>
-                  </div>
-                </div>
-                <!-- /.attachment -->
-              </div>
-              <!-- /.item -->
-              <!-- chat item -->
-              <div class="item">
-                <img src="data:image/jpg;base64,<% out.print(session.getAttribute("photo")); %>" alt="user image" class="offline" id = "image3">
-              
-
-                <p class="message">
-                  <a href="#" class="name">
-                    <small class="text-muted pull-right"><i class="fa fa-clock-o"></i> 5:15</small>
-                    <% out.println(session.getAttribute("nombres")); %>
-                  </a>
-                  I would like to meet you to discuss the latest news about
-                  the arrival of the new theme. They say it is going to be one the
-                  best themes on the market
-                </p>
-              </div>
-              <!-- /.item -->
-              <!-- chat item -->
-              <div class="item">
-                <img src="././resources/img/perfil/avatar04.png" alt="user image" class="offline">
-
-                <p class="message">
-                  <a href="#" class="name">
-                    <small class="text-muted pull-right"><i class="fa fa-clock-o"></i> 5:30</small>
-                    Susan Doe
-                  </a>
-                  I would like to meet you to discuss the latest news afbout
-                  the arrival of the new theme. They say it is going to be one the
-                  best themes on the market
-                </p>
-              </div>
-              <!-- /.item -->
-            </div>
-            <!-- /.chat -->
-            <div class="box-footer">
-              <div class="input-group">
-                <input class="form-control" placeholder="Type message...">
-
-                <div class="input-group-btn">
-                  <button type="button" class="btn btn-success"><i class="fa fa-plus"></i></button>
-                </div>
-              </div>
-            </div>
+             
           </div>
           <!-- /.box (chat box) -->
 
@@ -1244,11 +1200,11 @@
 <!-- AdminLTE for demo purposes -->
 <script src="././resources/js/demo.js"></script>
 <script src="././resources/js/sau3member.js"></script>
-<script src="././resources/js/validaciones.js"></script>
+ <script src="././resources/js/validaciones.js"></script>
 <script src="././resources/js/publicacion.js"></script>
 <script src="././resources/js/mapa.js"></script>
 
-
+<script src="././resources/js/bootstrap-confirmation.min.js" type="text/javascript"></script>
 
 <script src="././resources/chartjs/Chart.min.js"></script>
 <!-- Api Google maps JavaScritp -->
