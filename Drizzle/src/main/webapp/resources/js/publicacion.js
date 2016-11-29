@@ -70,9 +70,6 @@ function display(data) {
 	}else{
 		document.getElementById("BtnPub").disabled=true;
 	}
-	
-	var json = "<h4>Ajax Response</h4><pre>"
-			+ datos[0] + "</pre>";
 	$('#Barrio').html(datos[0]);
 }
 
@@ -102,6 +99,7 @@ function ValPublication() {
     			success : function(response) {
     				console.log("SUCCESS: ", response);
     				ShowPublication(response);
+    				//llamar el ShowPublication
     			},
     			error : function(e) {
     				console.log("ERROR: ", e);
@@ -135,16 +133,28 @@ function ShowPublication(data) {
 		 	var Btn="";
 		 	if(dato[cont].author=="true"){
 		 		Btn='<div class="attachment">'+
-	        	'<button type="button" data-toggle="confirmation" name="remove" id="remove" class="btn btn-default btn-xs remove" onclick="return confirm("estas seguro?")">'+
-				'<span class="glyphicon glyphicon-trash" data-toggle="tooltip" title="Hooray!"></span>'+
+		 		'<button id="'+dato[cont].id_publication+'" class="btn btn-default confirmation-callback" onclick="AlertDrop(this.id)">'+
+				'<span class="glyphicon glyphicon-trash"></span>'+
 				'</button>'+
 				'</div>';
 		 	}else{
-		 		Btn='<div class="attachment">'+
-	        	'<button type="button" data-toggle="confirmation" name="remove" id="remove" class="btn btn-default btn-xs remove" onclick="return confirm("estas seguro?")">'+
-				'<span class="fa fa-heart"></span>'+
-				'</button>'+
-				'</div>';
+		 		if(dato[cont].author=="false"){
+		 			Btn='<div class="attachment">'+
+		        	'<button id="'+dato[cont].id_publication+'" class="btn btn-default" onclick="Like(this.id)" >'+
+					'<span class="glyphicon glyphicon-heart-empty"></span>'+
+					'</button>'+
+					'</div>';	
+		 		}else{
+		 			Btn='<div class="attachment">'+
+		        	'<button id="'+dato[cont].id_publication+'" class="btn btn-default" onclick="Like(this.id)" >'+
+					'<span class="glyphicon glyphicon-heart"></span>'+
+					'</button>'+
+					'</div>';	
+
+		 			
+		 		}
+		 		
+		 		
 		 	}
 		    
 		   newTextBoxDiv.before().html('<img src="data:image/png;base64,'+ dato[cont].profile + '"  alt="user image" class="online">'+
@@ -165,14 +175,148 @@ function ShowPublication(data) {
 		
 	}
 function AlertDrop(clicked_id) {
+	div="TextBoxDiv"+clicked_id;
+	//obtener div
+    var parent = document.querySelector('#chat-box');
+    // Cantidad de div
+    var divs = parent.querySelectorAll('div');
+    firtsdiv=(divs[0].id).split('v');
+	
 	$('.confirmation-callback').confirmation({
-		onConfirm: function() { alert("Es: "+id) },
+		onConfirm: function() { 
+			$.ajax({
+	            url: "DeletePublicacion.html",
+	            type: "GET",
+	            dataType: "html",
+	            data:"id_Pbl="+clicked_id+"&UltDiv="+firtsdiv[1],
+	            cache: false,
+	            contentType: false,
+	            processData: false,
+	    			success : function(response) {
+	    				console.log("SUCCESS: ", response);
+	    				document.getElementById(div).remove();
+	    				BarraSnPb(response);
+	    			},
+	    			error : function(e) {
+	    				console.log("ERROR: ", e);
+	    				display(e);
+	    			},
+	    			done : function(e) {
+	    				console.log("DONE");
+	    			}
+	    		});
+			
+		},
 		onCancel: function() { }
 	});
 }
 
 
+function Like(clicked_id) {
+	var parent = document.querySelector('#TextBoxDiv'+clicked_id);
+    // Cantidad de div
+    var Span = parent.querySelectorAll('span');
+		$.ajax({
+	            url: "LikePublicacion.html",
+	            type: "GET",
+	            dataType: "html",
+	            data:"Lk_Pbl="+clicked_id +"&SpanCls="+Span[0].className,
+	            cache: false,
+	            contentType: false,
+	            processData: false,
+	    			success : function(response) {
+	    				console.log("SUCCESS: ", response);
+	    				 AlertLike(response ,clicked_id);
+	    			},
+	    			error : function(e) {
+	    				console.log("ERROR: ", e);
+	    				display(e);
+	    			},
+	    			done : function(e) {
+	    				console.log("DONE");
+	    			}
+	    		});
+			
+		
+	
+}
 
+
+function BarraSnPb(response){
+	dato=JSON.parse(response);
+	 //obtener div
+    var parent = document.querySelector('#chat-box');
+    // Cantidad de div
+    var divs = parent.querySelectorAll('div');
+
+	console.log('datos.legt: '+dato.length+'divs.legt: '+divs.length);
+	//si el json esta vacio y en chat-box no hay ningun div pongalo
+	if(dato.length==0 && divs.length==0 ){
+		var newTextBoxDiv = $(document.createElement('div'))
+	    .attr("id", 'TextBoxDiv-1').attr("class", 'alert alert-info alert-dismissible fade in').attr("role", 'alert');
+		newTextBoxDiv.before().html('<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true"></span></button> <i class="fa fa-files-o"></i> <strong>Aun no hay publicaciones por aqui..</strong>');
+		$("#chat-box").prepend(newTextBoxDiv);
+		}else{
+			ShowPublication(response);
+		}
+}
+function  AlertLike(varLk ,idPl){
+	if(varLk=="false"){
+		sweetAlert('Oops...', 'Publicacion Fue Eliminada!', 'error');
+		document.getElementById("TextBoxDiv"+idPl).remove();
+		//alert("Esta Publicacion a sido eliminada");
+		var parent = document.querySelector('#chat-box');
+	    // Cantidad de div
+	    var divs = parent.querySelectorAll('div');
+		//si en chat-box no hay ningun div pongalo
+		if(divs.length==0){
+			var newTextBoxDiv = $(document.createElement('div'))
+		    .attr("id", 'TextBoxDiv-1').attr("class", 'alert alert-info alert-dismissible fade in').attr("role", 'alert');
+			newTextBoxDiv.before().html('<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true"></span></button> <i class="fa fa-files-o"></i> <strong>Aun no hay publicaciones por aqui..</strong>');
+			$("#chat-box").prepend(newTextBoxDiv);
+			}
+		
+	}else{
+		 //obtener div
+	    var parent = document.querySelector('#TextBoxDiv'+idPl);
+		var Span = parent.querySelectorAll('span');
+		if(Span[0].className=="glyphicon glyphicon-heart"){
+			Span[0].className="glyphicon glyphicon-heart-empty";
+			console.log("No me gusta!");
+			
+		}else{
+			Span[0].className="glyphicon glyphicon-heart";
+			console.log("Gracias por darle Me gusta!");
+		}
+
+	    	
+	}
+}
+
+function Filtro(Vr){
+	
+	$.ajax({
+        url: "FiltroPb.html",
+        type: "GET",
+        dataType: "html",
+        data:"Comuna="+Vr,
+        cache: false,
+        contentType: false,
+        processData: false,
+			success : function(response) {
+				console.log("SUCCESS: ", response);
+				$("div").remove(".item");
+				ShowPublication(response);
+			},
+			error : function(e) {
+				console.log("ERROR: ", e);
+				display(e);
+			},
+			done : function(e) {
+				console.log("DONE");
+			}
+		});
+}
 
 
 function tildes_unicode(str){

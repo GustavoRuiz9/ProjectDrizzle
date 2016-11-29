@@ -1,9 +1,13 @@
+<%@page import="org.apache.jasper.tagplugins.jstl.core.ForEach"%>
+<%@page import="com.drizzle.model.Like"%>
+<%@page import="java.text.ParseException"%>
 <%@page import="java.util.Date"%>
 <%@page import="com.drizzle.model.Publication"%>
 <%@page import="com.drizzle.persistence.mongoTransations"%>
 <%@page import="org.apache.soap.encoding.soapenc.Base64"%>
 <%@page import="com.drizzle.model.Profile"%>
 <%@page import="java.util.List"%>
+<%@page import="java.util.*"%>
 <%@page import="java.util.Objects"%>
 <%@page import="com.drizzle.model.Account"%>
 <%@page import="com.drizzle.persistence.hibernateTransations"%>
@@ -11,7 +15,9 @@
     pageEncoding="UTF-8"%>
     
     <%List<Publication> lista;
+      List<Like> list;
     lista = mongoTransations.ConsultarPublicationes(request.getParameter("comuna"));
+    list= mongoTransations.ConsultarLikes(Integer.parseInt(session.getAttribute("usuario").toString()));
 	boolean Dta=true;
     
     %>
@@ -63,9 +69,15 @@
   <!--[if lt IE 9]>
   <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  
+  <!-- SweetAlert Alertas -->
+	<script  src="././resources/dist12/sweetalert-dev.js"></script>
+    <link rel="stylesheet" href="././resources/dist12/sweetalert.css" />  
+  
+  
   <![endif]-->
 </head>
-<body class="hold-transition skin-blue sidebar-mini" onload="document.forms['formComuna']['comuna'].value = '${valorCombobox}'">
+<body class="hold-transition skin-blue sidebar-mini">
 
 <!-- Trigger the modal with a button -->
 	<button id="BtnModal" type="button" class="btn btn-info btn-lg" data-toggle="modal"
@@ -169,8 +181,8 @@
         <ul class="nav navbar-nav">
         
         		        <li >
-							<form action="volveregistrar.html" id="formComuna" name="formComuna">
-								<select id="comuna" name="comuna" class="form-control" onchange="this.form.submit()">
+							<form id="formComuna" name="formComuna">
+								<select id="comuna" name="comuna" class="form-control" onchange="Filtro(this.value)">
 									<option value="0">TODAS</option>
 									<option value="1">COMUNA 1</option>
 									<option value="2">COMUNA 2</option>
@@ -750,6 +762,7 @@
 
             </div>
             <div class="box-body chat" id="chat-box">
+       
             
               <!-- chat item -->
               <%
@@ -779,14 +792,42 @@
                     <div class="attachment">
                       <img src="data:image/png;base64,<%out.print(Base64.encode((byte[])lista.get(i).getPhoto()));%>" class="img-responsive">
                     </div>
-                    
-                    <div class="attachment">
+                    <% 
+                    if (Integer.parseInt(session.getAttribute("usuario").toString())==(lista.get(i).getAuthor())){
+                    %>
+                     <div class="attachment">
 	                    <button id="<%out.print(lista.get(i).getId_publication());%>" class="btn btn-default confirmation-callback" onclick="AlertDrop(this.id)" >
 							 <span class="glyphicon glyphicon-trash"></span>
 						</button>
 						
                     </div>
-                    
+                    <%}else{
+                    	
+                    	boolean islike = false; 
+                    	
+                    	for (Like like : list) {
+                			
+                    		if (lista.get(i).getId_publication() == like.getId_publicacion()){%>
+                    			<div class="attachment">
+	                    		<button id="<%out.print(lista.get(i).getId_publication());%>"class="btn btn-default"  onclick="Like(this.id)">
+							 	<span class="glyphicon glyphicon-heart"></span>
+								</button>
+								</div>
+                    		
+                    			<%islike = true;
+                    			break;
+                    		}
+                    		}
+                    	if(islike)continue;
+                    	%>
+	                   	<div class="attachment">
+		                    <button id="<%out.print(lista.get(i).getId_publication());%>"class="btn btn-default"  onclick="Like(this.id)">
+								 <span class="glyphicon glyphicon-heart-empty"></span>
+							</button>
+							
+	                    </div>
+                    <%}
+                    %>
                     
                     <!-- /.attachment -->
                   	</div>

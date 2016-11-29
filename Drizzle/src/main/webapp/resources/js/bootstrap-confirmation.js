@@ -89,7 +89,6 @@
 		btnCancelClass 	: 'btn btn-sm btn-default',
 		btnCancelLabel 	: ' ',
 		btnCancelIcon 	: 'glyphicon glyphicon-remove',
-		href 			: '#',
 		target 			: '_self',
 		singleton 		: true,
 		popout 			: true,

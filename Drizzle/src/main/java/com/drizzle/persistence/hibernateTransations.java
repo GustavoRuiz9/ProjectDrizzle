@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import org.hibernate.Session;
 
 import com.drizzle.model.Account;
+import com.drizzle.model.Like;
 import com.drizzle.model.Profile;
 import org.apache.soap.encoding.soapenc.Base64;
 import com.mysql.jdbc.Blob;
@@ -268,6 +269,30 @@ public class hibernateTransations {
 		
 	}
 	
+	public static boolean actualizarReputacion(int author,String Ptn) {
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		
+		//String sentenciaSQL = "Update a.reputation FROM Profile p Where p.profile_account = a.id_account and a.id_account = " + IdAccount;
+		
+		//Profile profile = (Profile)session.get(Profile.class, IdAccount);
+		
+			try{
+				session.beginTransaction();
+				
+				String sentenciaSQL=("UPDATE profile SET profile.reputation = profile.reputation "+Ptn+ " where profile.profile_account = "+author);
+				session.createSQLQuery(sentenciaSQL).executeUpdate();
+				session.getTransaction().commit();
+				return true;
+		
+			
+		}catch (Exception e) {
+			System.out.println("Error en el metodo actualizarReputacion - " + e.getMessage());
+			return false;
+		}finally {
+			session.disconnect();
+		}
+		
+	}
 	
 	
 	

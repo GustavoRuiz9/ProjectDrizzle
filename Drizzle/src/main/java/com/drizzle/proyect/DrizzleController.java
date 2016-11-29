@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.drizzle.model.Account;
+import com.drizzle.model.Like;
 import com.drizzle.model.Profile;
 import com.drizzle.model.Publication;
 import com.drizzle.model.Ubication;
@@ -125,6 +126,8 @@ public class DrizzleController {
 		return new ModelAndView("Registrado", "valorCombobox",request.getParameter("comuna"));
 	}
 	
+	
+	
 	@RequestMapping(value = "/registrar", method = { RequestMethod.GET, RequestMethod.POST })
 	public String redireccionregistro(@ModelAttribute Account account, HttpServletRequest request) {
 		HttpSession sesion = request.getSession();
@@ -211,8 +214,8 @@ public class DrizzleController {
 	public @ResponseBody String registrarPub(HttpServletRequest request) {
 		HttpSession sesion = request.getSession();
 		Publication pub = new Publication();
-		String Dta="";
-		String jsonCompleto = "";
+		String UltDiv="";
+		
 		
 			try {
 					
@@ -255,7 +258,7 @@ public class DrizzleController {
 						}
 						if (item.getFieldName().equals("Id_Pb")) {
 							FileItem Id_Pb = (FileItem) objetos.get(i);
-							Dta=Id_Pb.getString();
+							UltDiv=Id_Pb.getString();
 						}
 						
 					}
@@ -269,53 +272,116 @@ public class DrizzleController {
 			
 			
 				mongoTransations.registrarPublication(pub);
-				System.out.println("Dta: "+Dta);
-				List<Publication> ListPub;
-				if(Dta.equals("0")){
-					ListPub=mongoTransations.ConsultarPublicationes(Dta);	
-				}else{
-					int Id_Pb=Integer.parseInt(Dta);
-					ListPub=mongoTransations.ActualizarPublic(Id_Pb);
-					
-				}
-			
-				 
-				int Usuario=Integer.parseInt(sesion.getAttribute("usuario").toString());
 				
-				for (Publication publication : ListPub) {
-					
-					JsonObject object = new JsonObject();
-					object.addProperty("id_publication",publication.getId_publication());
-					object.addProperty("weather", publication.getWeather());
-					object.addProperty("date", publication.getDate().toString());
-					object.addProperty("Descripcion", publication.getDescripcion());
-					object.addProperty("photo", Base64.encode(publication.getPhoto()));
-					int author = publication.getAuthor();
-					if(Usuario==author){
-						object.addProperty("author", "true");
-					}else{
-						object.addProperty("author", "false");
-					}
-					//consulta en mysql
-					String datosAuthor = hibernateTransations.consultarAuthor(author);
-					
-					
-					if(ListPub.get(ListPub.size()-1).getId_publication() == publication.getId_publication()){
-						jsonCompleto += object.toString().substring(0,object.toString().length()-1) + datosAuthor;
-					}else{
-						jsonCompleto += object.toString().substring(0,object.toString().length()-1) + datosAuthor+",";
-					}
-					
-					object = null;
-					
-				}
 				
-				jsonCompleto = "[" + jsonCompleto + "]";
-				System.out.println("ASI con Auhtor " + jsonCompleto);
+				System.out.println("Dta: "+UltDiv);
+
 				
-		return jsonCompleto;
+				
+				
+			return UpdateDiv(Integer.parseInt(sesion.getAttribute("usuario").toString()),UltDiv);
 				
 	}
+	
+	public String UpdateDiv(int Usuario ,String UltDiv) {
+		String jsonCompleto = "";
+		
+		List<Publication> ListPub;
+		if(UltDiv.equals("0")){
+			ListPub=mongoTransations.ConsultarPublicationes(UltDiv);	
+		}else{
+			int Id_Pb=Integer.parseInt(UltDiv);
+			ListPub=mongoTransations.ActualizarPublic(Id_Pb);
+			
+		}
+		
+		/*for (Publication publication : ListPub) {
+			
+			JsonObject object = new JsonObject();
+			object.addProperty("id_publication",publication.getId_publication());
+			object.addProperty("weather", publication.getWeather());
+			object.addProperty("date", publication.getDate().toString());
+			object.addProperty("Descripcion", publication.getDescripcion());
+			object.addProperty("photo", Base64.encode(publication.getPhoto()));
+			int author = publication.getAuthor();
+			if(Usuario==author){
+				object.addProperty("author", "true");
+			}else{
+				object.addProperty("author", "false");
+			}
+			//consulta en mysql
+			String datosAuthor = hibernateTransations.consultarAuthor(author);
+			
+			
+			if(ListPub.get(ListPub.size()-1).getId_publication() == publication.getId_publication()){
+				jsonCompleto += object.toString().substring(0,object.toString().length()-1) + datosAuthor;
+			}else{
+				jsonCompleto += object.toString().substring(0,object.toString().length()-1) + datosAuthor+",";
+			}
+			
+			object = null;
+			
+		}
+		
+		jsonCompleto = "[" + jsonCompleto + "]";
+		System.out.println("ASI con Auhtor " + jsonCompleto);*/
+		
+		return crearJson(ListPub, Usuario);
+		
+	}
+	
+	
+	public String crearJson(List<Publication> ListPub, int Usuario) {
+		String jsonCompleto = "";
+		
+		
+		for (Publication publication : ListPub) {
+			
+			JsonObject object = new JsonObject();
+			object.addProperty("id_publication",publication.getId_publication());
+			object.addProperty("weather", publication.getWeather());
+			object.addProperty("date", publication.getDate().toString());
+			object.addProperty("Descripcion", publication.getDescripcion());
+			object.addProperty("photo", Base64.encode(publication.getPhoto()));
+			int author = publication.getAuthor();
+			
+			
+			if(Usuario==author){
+				object.addProperty("author", "true");
+			}else{
+				Like like= new Like();
+				like.setAuthor(author);
+				like.setUsuario(Usuario);
+				like.setId_publicacion(publication.getId_publication());
+				if(mongoTransations.Consultarlike(like).isEmpty()){
+					object.addProperty("author", "false");
+				}else{
+					object.addProperty("author", "nofalse");
+				}
+				
+				
+			}
+			//consulta en mysql
+			String datosAuthor = hibernateTransations.consultarAuthor(author);
+			
+			
+			if(ListPub.get(ListPub.size()-1).getId_publication() == publication.getId_publication()){
+				jsonCompleto += object.toString().substring(0,object.toString().length()-1) + datosAuthor;
+			}else{
+				jsonCompleto += object.toString().substring(0,object.toString().length()-1) + datosAuthor+",";
+			}
+			
+			object = null;
+			
+		}
+		
+		jsonCompleto = "[" + jsonCompleto + "]";
+		System.out.println("ASI con Auhtor " + jsonCompleto);
+		
+		return jsonCompleto;
+		
+	}
+	
 	
 	@RequestMapping(value = "/Public", method = { RequestMethod.GET, RequestMethod.POST })
 	public @ResponseBody String Publication(HttpServletRequest request) {
@@ -334,6 +400,55 @@ public class DrizzleController {
 		}
 		return dato;
 	}
+	
+	@RequestMapping(value = "/DeletePublicacion", method = { RequestMethod.GET, RequestMethod.POST })
+	public @ResponseBody String DeletePublicacion(HttpServletRequest request) {
+		HttpSession sesion = request.getSession();
+		int Usuario=Integer.parseInt(sesion.getAttribute("usuario").toString());
+		
+		String id_Pbl = request.getParameter("id_Pbl");
+		String UltDiv = request.getParameter("UltDiv");
+		
+		System.out.println("id_publicacion: "+id_Pbl);
+		Publication Pb = new Publication();
+		Pb.setId_publication(Integer.parseInt(id_Pbl));
+		
+		mongoTransations.borrarPublication(Pb);
+		 return UpdateDiv(Usuario,UltDiv);
+	}
+	
+	
+	
+	@RequestMapping(value = "/LikePublicacion", method = { RequestMethod.GET, RequestMethod.POST })
+	public @ResponseBody String LikePublicacion(HttpServletRequest request) {
+		
+		//consulta del author publi..
+		//insertamos con respecto public Mongo
+		//update con respecto a al usuario MysQl
+		//System.out.println("Entro Al like");
+
+		HttpSession sesion = request.getSession();
+		int Usuario=Integer.parseInt(sesion.getAttribute("usuario").toString());
+		String SpanCls=request.getParameter("SpanCls");
+		int id_Pbl = Integer.parseInt(request.getParameter("Lk_Pbl"));
+		System.out.println("clase del span: "+SpanCls);
+		return mongoTransations.actualizarLike(Usuario, id_Pbl,SpanCls)+"";
+	}
+	
+	@RequestMapping(value = "/FiltroPb", method = { RequestMethod.GET, RequestMethod.POST })
+	public @ResponseBody String FiltroPb(HttpServletRequest request) {
+		
+		HttpSession sesion = request.getSession();
+		int Usuario=Integer.parseInt(sesion.getAttribute("usuario").toString());
+		int Comuna = Integer.parseInt(request.getParameter("Comuna"));
+		List <Publication> listaPublicaciones = mongoTransations.ConsultarPublicationes(Comuna+"");
+		
+		String publicacicones = crearJson(listaPublicaciones, Usuario);
+		
+		return publicacicones;
+	}
+	
+
 
 
 
