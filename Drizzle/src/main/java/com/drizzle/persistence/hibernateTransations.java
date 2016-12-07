@@ -293,6 +293,46 @@ public class hibernateTransations {
 		}
 		
 	}
+	public static int ObtVlEdt(int Usuario) {
+		System.out.println("EL usurio es :"+Usuario);
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		int vlr=0;
+		String sentenciaSQL = "Select p FROM Profile p Where p.profile_account = ?";
+							
+		try{
+		
+			session.beginTransaction();
+			Query query = session.createQuery(sentenciaSQL);
+			query.setParameter(0,Usuario);
+			List<Profile> results = query.getResultList();
+			int Rpt=results.get(0).getReputation();
+			System.out.println("Select Successful ObtVlEdt");
+			
+			if(Rpt<=50){
+				vlr=1;
+				System.out.println("Puso 1");
+				
+			}else if(Rpt>50 && Rpt<70){
+				vlr=3;
+				
+			}else if(Rpt>=70 && Rpt<100){
+				vlr=5;
+				
+			}else{
+				vlr=10;
+			}
+			
+			return vlr;
+			
+			
+		}catch (Exception e) {
+			System.out.println("Error en el metodo  -  ObtVlEdt() " + e.getMessage());
+			return -1;
+		}finally {
+			session.disconnect();
+		}
+		
+	}
 	
 	
 	

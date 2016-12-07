@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.drizzle.model.Account;
+import com.drizzle.model.Comment;
 import com.drizzle.model.Like;
 import com.drizzle.model.Profile;
 import com.drizzle.model.Publication;
@@ -217,6 +218,7 @@ public class DrizzleController {
 		String UltDiv="";
 		
 		
+		
 			try {
 					
 					FileItemFactory Interfaz = new DiskFileItemFactory();
@@ -224,6 +226,7 @@ public class DrizzleController {
 					List objetos = servlet_up.parseRequest(request);
 					//String ruta = "/opt/tomcat/webapps/drizzleweb/resources/img/perfil/";
 					String ruta = "C://Users//RICARDO OSPINA//WorkspaceSpring//ProjectDrizzle//IMG//";
+					int Comuna=0;
 					int id = Integer.parseInt(sesion.getAttribute("usuario").toString());
 					pub.setAuthor(id);
 					pub.setDate(new Date());
@@ -263,13 +266,20 @@ public class DrizzleController {
 						
 					}
 					
-					
+					//Actudalizar estadisticas-->
+					if(pub.getId_Barrio().length()==3){
+						 Comuna= Integer.parseInt(pub.getId_Barrio().substring(0, 1));
+					 }else{
+						 Comuna= Integer.parseInt(pub.getId_Barrio().substring(0, 2));
+					 }
+					 
+					 mongoTransations.UpdateEstadistica(Comuna,id,pub.getWeather());
 					
 				} catch (Exception e) {
 					System.out.print("<p>" + e.getMessage() + "</p>");
 				}
 			
-			
+				
 			
 				mongoTransations.registrarPublication(pub);
 				
@@ -282,6 +292,57 @@ public class DrizzleController {
 			return UpdateDiv(Integer.parseInt(sesion.getAttribute("usuario").toString()),UltDiv);
 				
 	}
+	
+	//cambios
+		@RequestMapping(value = "/registrarCommentary", method = { RequestMethod.GET, RequestMethod.POST })
+		public @ResponseBody String registrarComment(HttpServletRequest request) {
+			HttpSession sesion = request.getSession();
+			Comment comment = new Comment();
+			int UltDivCommentary = 0;
+			
+				try {
+						
+						FileItemFactory Interfaz = new DiskFileItemFactory();
+						ServletFileUpload servlet_up = new ServletFileUpload(Interfaz);
+						List objetos = servlet_up.parseRequest(request);
+						int id = Integer.parseInt(sesion.getAttribute("usuario").toString());
+						
+						comment.setAuthor(id);
+						comment.setDate(new Date());
+						
+						
+						for (int i = 0; i < objetos.size(); i++) {
+							FileItem item = (FileItem) objetos.get(i);
+							
+							if (item.getFieldName().equals("descriptionComentary")) {
+								FileItem Descripcion = (FileItem) objetos.get(i);
+							comment.setDescription(Descripcion.getString());
+							}
+							
+							if (item.getFieldName().equals("id_publication")) {
+								FileItem id_Publication = (FileItem) objetos.get(i);
+								comment.setPublication(Integer.parseInt(id_Publication.getString()));
+							}
+							
+							if (item.getFieldName().equals("UltDivCommentary")) {
+								FileItem ultCommentary = (FileItem) objetos.get(i);
+								UltDivCommentary = (Integer.parseInt(ultCommentary.getString()));
+							}
+							
+						}
+							
+						} catch (Exception e) {
+							System.out.print("<p>" + e.getMessage() + "</p>");
+						}
+				
+					//System.out.println("DATA Comment " + comment.toString());
+				
+					mongoTransations.registrarCommentary(comment);
+					String json = "["+UpdateDivCommentary(UltDivCommentary,comment.getPublication())+ "]";
+					System.out.println(json);
+				return json;
+					
+		}
 	
 	public String UpdateDiv(int Usuario ,String UltDiv) {
 		String jsonCompleto = "";
@@ -330,6 +391,23 @@ public class DrizzleController {
 		
 	}
 	
+	//cambios
+		public String UpdateDivCommentary(int UltDiv, int Idpub) {
+			String jsonCompleto = "";
+			System.out.println("traae " + UltDiv);
+			List<Comment> ListComm;
+			if(UltDiv==-1){
+				System.out.println("Consulta de no habia comentarios! comm:" + UltDiv);
+				ListComm=mongoTransations.consultarComentarios(Idpub);	
+			}else{
+				System.out.println("Consulta de habia comentarios! comm:" + UltDiv + " idPb " + Idpub);
+				ListComm=mongoTransations.consultarComentarios(UltDiv,Idpub);
+			}
+			
+			return "{\"comments\":"+crearJsonCommentary(ListComm);
+			
+		}
+	
 	
 	public String crearJson(List<Publication> ListPub, int Usuario) {
 		String jsonCompleto = "";
@@ -376,11 +454,81 @@ public class DrizzleController {
 		}
 		
 		jsonCompleto = "[" + jsonCompleto + "]";
-		System.out.println("ASI con Auhtor " + jsonCompleto);
+		//System.out.println("ASI con Auhtor " + jsonCompleto);
 		
 		return jsonCompleto;
 		
 	}
+	
+	//cambios
+		public String crearJson(Publication publication, List<Comment> listComments) {
+			String jsonCompleto = "";
+			
+			JsonObject object = new JsonObject();
+			object.addProperty("id_publication",publication.getId_publication());
+			object.addProperty("weather", publication.getWeather());
+			object.addProperty("date", publication.getDate().toString());
+			object.addProperty("Descripcion", publication.getDescripcion());
+			//object.addProperty("photo", Base64.encode(publication.getPhoto()));
+			int author = publication.getAuthor();
+			int idbarrio = Integer.parseInt(publication.getId_Barrio());
+			
+			//consulta en mysql
+			String datosAuthor = hibernateTransations.consultarAuthor(author);
+			String datosUbication = mongoTransations.consultarUbication(idbarrio);
+			
+			String comentarios = crearJsonCommentary(listComments);
+			
+			/*comentarios ="[";
+			for(Comment comment : listComments){
+				
+				JsonObject commentJson = new JsonObject();
+				commentJson.addProperty("id_commentary",comment.getId_commentary());
+				commentJson.addProperty("description", comment.getDescription());
+				commentJson.addProperty("date", comment.getDate().toString());
+				String authorComment = hibernateTransations.consultarAuthor(comment.getAuthor());
+				comentarios += commentJson.toString().substring(0,commentJson.toString().length()-1)+authorComment.substring(0,authorComment.length()-1)+"},"; 
+			}
+			
+			if(listComments.isEmpty()){
+				comentarios = comentarios + "]}";
+			}else{
+				comentarios = comentarios.substring(0,comentarios.toString().length()-1) + "]}";
+			}*/
+					
+			//Gson json = new Gson();
+			//comentarios = json.toJson(listComments);
+			
+			jsonCompleto += object.toString().substring(0,object.toString().length()-1) + datosUbication + 
+					datosAuthor.substring(0,datosAuthor.toString().length()-1)  + ",\"comments\":"+comentarios;
+			
+			
+			return "["+jsonCompleto+"]";
+			
+		}
+		
+		//cambios
+		public String crearJsonCommentary(List<Comment> listComments) {
+			
+			String jsoncomentarios = "[";
+			
+			for(Comment comment : listComments){
+						
+				JsonObject commentJson = new JsonObject();
+				commentJson.addProperty("id_commentary",comment.getId_commentary());
+				commentJson.addProperty("description", comment.getDescription());
+				commentJson.addProperty("date", comment.getDate().toString());
+				String authorComment = hibernateTransations.consultarAuthor(comment.getAuthor());
+				jsoncomentarios += commentJson.toString().substring(0,commentJson.toString().length()-1)+authorComment.substring(0,authorComment.length()-1)+"},"; 
+			}
+			if(listComments.isEmpty()){
+				jsoncomentarios = jsoncomentarios + "]}";
+			}else{
+				jsoncomentarios = jsoncomentarios.substring(0,jsoncomentarios.toString().length()-1) + "]}";
+			}
+			
+			return jsoncomentarios;
+		}
 	
 	
 	@RequestMapping(value = "/Public", method = { RequestMethod.GET, RequestMethod.POST })
@@ -446,6 +594,39 @@ public class DrizzleController {
 		String publicacicones = crearJson(listaPublicaciones, Usuario);
 		
 		return publicacicones;
+	}
+	
+	//cambios
+		@RequestMapping(value = "/loadComments", method = { RequestMethod.GET, RequestMethod.POST })
+		public @ResponseBody String loadComments(HttpServletRequest request) {
+			HttpSession sesion = request.getSession();
+			
+			int Usuario=Integer.parseInt(sesion.getAttribute("usuario").toString());
+			
+			int id_pub = Integer.parseInt(request.getParameter("id_pub"));
+			
+			System.out.println("id_publicacion load: "+id_pub);
+			
+			Publication publicacion = null;
+			String json = "";
+			
+			publicacion = mongoTransations.consultarPublication(id_pub);
+			
+			if(publicacion == null){
+				json="false";
+			}else{
+				json = crearJson(publicacion,mongoTransations.consultarComentarios(id_pub));
+			}
+			
+			System.out.println(json);
+			
+			return json;
+		}
+	
+	@RequestMapping(value = "/constaGrafica", method = { RequestMethod.GET, RequestMethod.POST })
+	public @ResponseBody String constaGrafica(HttpServletRequest request) {
+		
+		return "";
 	}
 	
 

@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.apache.log4j.helpers.ISO8601DateFormat;
 import org.hibernate.Hibernate;
+import org.hibernate.query.criteria.internal.expression.function.TrimFunction;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.data.domain.Sort;
@@ -17,6 +18,8 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 
 import com.drizzle.persistence.mongoConfig;
+import com.drizzle.model.Comment;
+import com.drizzle.model.Estadistica;
 import com.drizzle.model.Like;
 import com.drizzle.model.Publication;
 import com.drizzle.model.Ubication;
@@ -47,6 +50,10 @@ public class mongoTransations {
 		operation.save(new_publication);		
 	}
 	
+	//cambios
+	public static void registrarCommentary(Comment new_comment) {
+		operation.save(new_comment);		
+	}
 	
 	public static void registrarLike(Like like) {
 		operation.save(like);
@@ -149,13 +156,20 @@ public class mongoTransations {
 	
 	
 	public static boolean actualizarLike(int usuario, int id_publicacion,String Classpan) {
-		
+		int Comuna=0;
 		try{
 		
-			int author = operation.find(new Query(
+			/*int author = operation.find(new Query(
 				Criteria.where("id_publication").is(id_publicacion)		
 				),Publication.class).get(0).getAuthor();
-					
+			*/
+			 List<Publication> list = operation.find(new Query(
+						Criteria.where("id_publication").is(id_publicacion)		
+						),Publication.class);
+			
+			
+			
+			int author=list.get(0).getAuthor();	
 			Like like = new Like();
 			like.setAuthor(author);
 			like.setId_publicacion(id_publicacion);
@@ -164,12 +178,13 @@ public class mongoTransations {
 			//Insert tabla like - mongodb
 			if(Classpan.equals("glyphicon glyphicon-heart-empty")){
 				 registrarLike(like);
+				 
 				 hibernateTransations.actualizarReputacion(author,"+1");
 			}else{
 				Eliminarlike(like);
 				hibernateTransations.actualizarReputacion(author,"-1");
 			}
-			
+			 
 			
 			return true;
 			
@@ -188,6 +203,156 @@ public class mongoTransations {
 		
 		return list;
 	}
+	
+	//cambios
+		public static Publication consultarPublication(int Id) {
+			List<Publication> list;
+			list =operation.find(
+					new Query((Criteria.where("id_publication").is(Id))),
+					Publication.class);
+			System.out.println("tamaño p: " + list.size());
+		
+			if(list.size()==0){
+				return null;
+			}else{
+				return (Publication)list.get(0);
+			}
+		}
+		
+		//cambios
+		public static String consultarUbication(int IdBarrio) {
+			List<Ubication> list;
+			list =operation.find(new Query(
+					Criteria.where("Id_").is(IdBarrio)),Ubication.class);
+			System.out.println("tamaño b: " + list.size());
+			
+			String ubication = ",\"barrio\":\""+ list.get(0).getBar() + "\",\"comuna\":" + list.get(0).getComuna() + ",\"pto_cardinal\":\"" + 
+			list.get(0).getPunto_cardinal() + "\"";
+			
+			return ubication;
+		}
+		
+		//cambios
+		public static List consultarComentarios(int idPub) {
+			List<Comment> list;
+			list =operation.find(new Query(
+					Criteria.where("publication").is(idPub)).with(new Sort(Sort.Direction.ASC, "date")),Comment.class);
+			
+			System.out.println("tamaño c: " + list.size());
+			
+			
+			return list;
+		}
+		
+		//cambios
+		public static List consultarComentarios(int idComentary,int idPub) {
+			List<Comment> list;
+			list =operation.find(new Query(
+					Criteria.where("publication").is(idPub).andOperator(Criteria.where("id_commentary").gt(idComentary)		
+							)).with(new Sort(Sort.Direction.ASC, "date")),Comment.class);
+			
+			System.out.println("tamaño c: " + list.size());
+			
+			
+			return list;
+		}
 
+		
+	
+	public static boolean UpdateEstadistica(int Comuna,int author,String weather) {
+		
+		Estadistica Etd=new Estadistica();
+		Date fecha = new Date();
+		
+		int Hora=fecha.getHours();
+		Etd.setFecha(trim(fecha));
+		Etd.setTipo(Tiempo(Hora));
+		Etd.setComuna(Comuna);
+		int vlrEstado=hibernateTransations.ObtVlEdt(author);
+		if(ConsultarEstadistica(Etd).isEmpty()){
+			if(weather.equals("rain"))Etd.setRain(1);
+			if(weather.equals("storm"))Etd.setStorm(1);
+			if(weather.equals("tempered"))Etd.setTempered(1);
+			if(weather.equals("sunny"))Etd.setSunny(1);
+			registrarEtd(Etd);
+			System.out.println("Entro en la lista es empty");
+		}else{
+			System.out.println("Esta cargada!");
+			Query query = new Query();
+			query.addCriteria(Criteria.where("fecha").is(trim(fecha)).andOperator(
+							Criteria.where("tipo").is(Tiempo(Hora)).andOperator(
+							Criteria.where("comuna").is(Comuna))
+							));
+
+			Estadistica Etd2 = operation.findOne(query, Estadistica.class);
+			System.out.println("Etd1 - " +Etd2 );
+			Update update=new Update();
+			
+			if(weather.equals("rain"))update.set("rain",Etd2.getRain()+vlrEstado);
+			if(weather.equals("storm"))update.set("storm",Etd2.getStorm()+vlrEstado);
+			if(weather.equals("tempered"))update.set("tempered",Etd2.getTempered()+vlrEstado);
+			if(weather.equals("sunny"))update.set("sunny",Etd2.getSunny()+vlrEstado);
+			
+			operation.updateFirst(query, update, Estadistica.class);
+			
+		}
+		
+		
+		return true;
+	}
+	
+	public static String Tiempo(int Hora) {
+		String resultado = "noche"; 
+		
+		if (Hora > 0 && Hora < 8){ 
+		resultado = "madrugada"; 
+		} else if (Hora > 7 && Hora < 13){ 
+		resultado = "mañana"; 
+		} else if (Hora > 12 && Hora < 19){ 
+		resultado = "tarde"; 
+		} 
+		System.out.println("El momento edl dia es : "+resultado); 
+		 
+	return resultado;
+	}
+	public static Date trim(Date date) {
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.MILLISECOND, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.HOUR, 0);
+        calendar.set(Calendar.HOUR_OF_DAY,0);
+        return calendar.getTime();
+    }
+	
+	public static List ConsultarEstadistica(Estadistica Etd) {
+		List<Estadistica> list= null;
+		
+		
+		try{
+			list = operation.find(new Query(	
+					Criteria.where("fecha").is(Etd.getFecha()).andOperator(
+							Criteria.where("tipo").is(Etd.getTipo()).andOperator(
+							Criteria.where("comuna").is(Etd.getComuna()))
+							)),Estadistica.class);
+			
+			
+		}catch (Exception e) {
+			System.out.println("Error en ConsultarEstadistica " + e.getMessage());
+			
+		}
+		
+		
+	return list;
+	}
+	
+	public static void registrarEtd(Estadistica Etd) {
+		operation.save(Etd);
+		
+		
+	}
+	
 
 }

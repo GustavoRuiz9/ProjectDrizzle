@@ -72,12 +72,16 @@
   
   <!-- SweetAlert Alertas -->
 	<script  src="././resources/dist12/sweetalert-dev.js"></script>
-    <link rel="stylesheet" href="././resources/dist12/sweetalert.css" />  
+    <link rel="stylesheet" href="././resources/dist12/sweetalert.css" /> 
+    
+    <script src="././resources/sources/jscharts.js"></script> 
+    
+    <script src="././resources/js/estadisticas.js"></script> 
   
   
   <![endif]-->
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-blue sidebar-mini" onload="displayLineChart()">
 
 <!-- Trigger the modal with a button -->
 	<button id="BtnModal" type="button" class="btn btn-info btn-lg" data-toggle="modal"
@@ -158,6 +162,46 @@
 
 		</div>
 	</div>
+	
+	
+	<!-- Modal Comments cambios-->
+    <div class="modal fade" id="modalComment" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                
+                	<div class="modal-header" id="myModalLabelTitle">
+                    
+	                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+	                    
+	                    <h3 class="modal-title" >Ubicacion </h3>
+                    
+                    </div>
+                    
+                    
+                    <div class="modal-header" id="myModalLabelPublication">
+	                    
+                    
+                    </div>
+                    
+                    <div class="modal-header" id="myModalLabelComments"  style="overflow: scroll; align:center; height:200px;width:600px; overflow-x:hidden;">
+	                  
+	                  
+                    
+                    </div>
+                    
+                    <div class="modal-body">
+                        <textarea id="textarearDescription" name="textarearDescription" style="overflow:auto;resize:none;min-width: 100%" maxlength = "100" class="form-control col-xs-12"></textarea>
+                    </div>
+                    
+                    
+                    <div class="modal-footer">
+	                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	                    <button id="BtnComment" name="BtnComment" type="button" class="btn btn-danger">Save</button>
+                	</div>
+            </div>
+        </div>
+    </div> 
+	
 
 
 <div class="wrapper">
@@ -706,48 +750,13 @@
             <ul class="nav nav-tabs pull-right">
               <li class="active"><a href="#revenue-chart" data-toggle="tab">Area</a></li>
               <li><a href="#sales-chart" data-toggle="tab">Donut</a></li>
-              <li class="pull-left header"><i class="fa fa-inbox"></i> Sales</li>
+              <li class="pull-left header"><i class="fa fa-inbox"></i> Estado del clima</li>
             </ul>
             <div class="tab-content no-padding">
               <!-- Morris chart - Sales -->
               
-              <canvas id="lineChart" height="300px" width="560px"></canvas>
-                <script language="JavaScript">
-                displayLineChart();
-					  function displayLineChart() {
-					    var data = {
-					        labels: [1, 2, 3, 3,4, 6, 7, 8, 9, 10],
-					        datasets: [
-					            {
-					                label: "Prime and Fibonacci",
-					                fillColor: "rgba(220,220,220,0.2)",
-					                strokeColor: "rgba(220,220,220,1)",
-					                pointColor: "rgba(220,220,220,1)",
-					                pointStrokeColor: "#fff",
-					                pointHighlightFill: "#fff",
-					                pointHighlightStroke: "rgba(220,220,220,1)",
-					                data: [2, 3, 5, 7, 11, 13, 17, 19, 23, 29]
-					            },
-					            {
-					                label: "My Second dataset",
-					                fillColor: "rgba(151,187,205,0.2)",
-					                strokeColor: "rgba(151,187,205,1)",
-					                pointColor: "rgba(151,187,205,1)",
-					                pointStrokeColor: "#fff",
-					                pointHighlightFill: "#fff",
-					                pointHighlightStroke: "rgba(151,187,205,1)",
-					                data: [0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
-					            }
-					        ]
-					    };
-					    var ctx = document.getElementById("lineChart").getContext("2d");
-					    var options = {};
-					    var lineChart = new Chart(ctx).Line(data, options);
-					  }
-  				</script>
-              
-              
-              
+              <!--<canvas id="lineChart" height="300px" width="560px"></canvas>-->
+              <div id="graph" height="300px" width="560px" >Loading graph...</div>
               
             </div>
           </div>
@@ -800,6 +809,11 @@
 							 <span class="glyphicon glyphicon-trash"></span>
 						</button>
 						
+						<!-- cambios -->
+						<button id="<%out.print(lista.get(i).getId_publication());%>" class="btn btn-default"  data-toggle="modal" onclick="DisplayComments(this.id)">
+							 <span class="glyphicon glyphicon-pencil"></span>
+						</button>
+						
                     </div>
                     <%}else{
                     	
@@ -812,8 +826,15 @@
 	                    		<button id="<%out.print(lista.get(i).getId_publication());%>"class="btn btn-default"  onclick="Like(this.id)">
 							 	<span class="glyphicon glyphicon-heart"></span>
 								</button>
+								
+								<!-- cambios -->
+								<button id="<%out.print(lista.get(i).getId_publication());%>" class="btn btn-default"  data-toggle="modal" onclick="DisplayComments(this.id)">
+								 <span class="glyphicon glyphicon-pencil"></span>
+								</button>
+								
 								</div>
-                    		
+                    			</div>
+                    			
                     			<%islike = true;
                     			break;
                     		}
@@ -823,6 +844,11 @@
 	                   	<div class="attachment">
 		                    <button id="<%out.print(lista.get(i).getId_publication());%>"class="btn btn-default"  onclick="Like(this.id)">
 								 <span class="glyphicon glyphicon-heart-empty"></span>
+							</button>
+							
+							<!-- cambios -->
+							<button id="<%out.print(lista.get(i).getId_publication());%>" class="btn btn-default"  data-toggle="modal" onclick="DisplayComments(this.id)">
+								 <span class="glyphicon glyphicon-pencil"></span>
 							</button>
 							
 	                    </div>
@@ -1248,6 +1274,8 @@
 <script src="././resources/js/bootstrap-confirmation.min.js" type="text/javascript"></script>
 
 <script src="././resources/chartjs/Chart.min.js"></script>
+
+
 <!-- Api Google maps JavaScritp -->
  
 
