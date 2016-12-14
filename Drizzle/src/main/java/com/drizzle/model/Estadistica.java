@@ -15,8 +15,7 @@ public class Estadistica {
 		
 	}
 	
-	
-	public Estadistica(Date fecha, String tipo, int comuna, int storm, int sunny, int rain, int tempered) {
+	public Estadistica(Date fecha, int tipo, int comuna, int storm, int sunny, int rain, int tempered) {
 		this.fecha = fecha;
 		this.tipo = tipo;
 		this.comuna = comuna;
@@ -25,15 +24,17 @@ public class Estadistica {
 		this.rain = rain;
 		this.tempered = tempered;
 	}
-	
+
+
 	@DateTimeFormat(style="yyyy-MM-dd HH:mm:ss")
 	Date fecha;
-	String tipo;
+	int tipo;
 	int comuna;
 	int storm;
 	int sunny;
 	int rain;
 	int tempered;
+	
 	public Date getFecha() {
 		return fecha;
 	}
@@ -44,12 +45,12 @@ public class Estadistica {
 	}
 
 
-	public String getTipo() {
+	public int getTipo() {
 		return tipo;
 	}
 
 
-	public void setTipo(String tipo) {
+	public void setTipo(int tipo) {
 		this.tipo = tipo;
 	}
 

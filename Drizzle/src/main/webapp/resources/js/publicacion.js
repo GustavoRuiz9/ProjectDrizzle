@@ -9,8 +9,8 @@ function Geolocation(){
 		var geocoder = new google.maps.Geocoder();
 		lat=position.coords.latitude;
 		lon=position.coords.longitude;
-		//lat = 3.470392618039112;
-		//lon = -76.52765974402428;
+		//lat = 3.46797234440776;
+		//lon = -76.50285601615906 Sena Comuan5
 		
 		latlonmarker= new google.maps.LatLng(lat, lon);
 		geocoder.geocode({ 'latLng': latlonmarker },geocoderact);
@@ -101,6 +101,7 @@ function ValPublication() {
     			success : function(response) {
     				console.log("SUCCESS: ", response);
     				ShowPublication(response);
+    				ConsultaEstadiscticas(document.getElementById("comuna").value);
     				//llamar el ShowPublication
     			},
     			error : function(e) {
@@ -221,8 +222,9 @@ function ShowPublication(data) {
 		 		
 		 		
 		 	}
-		    
-		   newTextBoxDiv.before().html('<img src="data:image/png;base64,'+ dato[cont].profile + '"  alt="user image" class="online">'+
+		 	
+		  onclick="consultaPerfil(this.name,this.id)"
+		   newTextBoxDiv.before().html('<img src="data:image/png;base64,'+ dato[cont].profile + '"  alt="user image" class="online" style="cursor: pointer" id="popoveUser'+dato[cont].id_publication+'" name="'+ dato[cont].authorperfil + '" onclick="consultaPerfil(this.name,this.id)" >'+
 				    '<p class="message">'+
 					'<a href="#" class="name">'+
 					'<small class="text-muted pull-right"><i class="fa fa-clock-o"></i>'+dato[cont].date.substring(13, 17)+'</small>'+ dato[cont].nombre_author +
@@ -340,6 +342,7 @@ function AlertDrop(clicked_id) {
 	    				console.log("SUCCESS: ", response);
 	    				document.getElementById(div).remove();
 	    				BarraSnPb(response);
+	    				ConsultaEstadiscticas(document.getElementById("comuna").value);
 	    			},
 	    			error : function(e) {
 	    				console.log("ERROR: ", e);
@@ -452,6 +455,7 @@ function Filtro(Vr){
 				console.log("SUCCESS: ", response);
 				$("div").remove(".item");
 				ShowPublication(response);
+				ConsultaEstadiscticas(Vr);
 			},
 			error : function(e) {
 				console.log("ERROR: ", e);

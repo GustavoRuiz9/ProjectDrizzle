@@ -81,11 +81,12 @@
   
   <![endif]-->
 </head>
-<body class="hold-transition skin-blue sidebar-mini" onload="displayLineChart()">
+<body class="hold-transition skin-blue sidebar-mini" onload="ConsultaEstadiscticas('0')">
 
 <!-- Trigger the modal with a button -->
 	<button id="BtnModal" type="button" class="btn btn-info btn-lg" data-toggle="modal"
 		data-target="#myModal">Publicar</button>
+		
 	<!-- Modal -->
 	<div id="myModal" name="myModal" class="modal fade" role="dialog">
 		<div class="modal-dialog">
@@ -514,7 +515,7 @@
           </li>
           <!-- Control Sidebar Toggle Button -->
           <li>
-            <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+            <a href="#" id="ControlAjustes" name="ControlAjustes" data-toggle="control-sidebar" onclick="showSettings()"><i class="fa fa-gears"></i></a>
           </li>
         </ul>
       </div>
@@ -790,9 +791,9 @@
     					date=lista.get(i).getDate();
     			%>
     					 <div class="item" id="TextBoxDiv<%out.print(lista.get(i).getId_publication());%>" name="divttsg">
-    					 <img src="data:image/jpg;base64,<%out.print(Base64.encode((byte[])Datos[2]));%>"  alt="user image" class="online">
+    					 <img src="data:image/jpg;base64,<%out.print(Base64.encode((byte[])Datos[2]));%>"  alt="user image" class="online" style="cursor: pointer" id="popoveUser<%out.print(lista.get(i).getId_publication());%>" name="<%out.print(lista.get(i).getAuthor());%>" onclick="consultaPerfil(this.name,this.id)">
                       	<p class="message">
-                      	<a href="#" class="name">
+                      	<a class="name">
                         <small class="text-muted pull-right"><i class="fa fa-clock-o"></i><% out.print(date.getHours()+":"+date.getMinutes());%></small>
                         <%out.print(Datos[0]+" "+Datos[1]);%>
                       </a>
@@ -1154,70 +1155,94 @@
       <!-- /.tab-pane -->
       <!-- Settings tab content -->
       <div class="tab-pane" id="control-sidebar-settings-tab">
-        <form method="post">
-          <h3 class="control-sidebar-heading">General Settings</h3>
+        <form id="formularioAjustes" name="formularioAjustes" method="post" enctype="multipart/form-data" >
+          <h3 class="control-sidebar-heading">Ajustes Generales</h3>
+
+
+		<div class="form-group">
+            <label class="control-sidebar-subheading">
+            <p>
+              Modificar Nombre:
+            </p>
+               <div class="input-group">
+          			<input type="text" id="nombreModificar" name="nombreModificar" placeholder="Nombre..." style="color: #000000">
+        		</div>
+              
+            </label>
+
+          </div>
+          
+          <div class="form-group">
+            <label class="control-sidebar-subheading">
+            <p>
+              Modificar Apellido:
+            </p>
+               <div class="input-group">
+          			<input type="text"  id="apellidoModificar"  name="apellidoModificar" placeholder="Apellido..." style="color: #000000">
+        		</div>
+              
+            </label>
+
+          </div>
+          
+          <div class="form-group">
+            <label class="control-sidebar-subheading">
+            <p>
+              Modificar Contraseña:
+            </p>
+               <div class="input-group">
+          			<input type="password" id="contrasenaModificar" name="contrasenaModificar" style="color: #000000">
+        		</div>
+              
+            </label>
+
+          </div>
 
           <div class="form-group">
             <label class="control-sidebar-subheading">
-              Report panel usage
-              <input type="checkbox" class="pull-right" checked>
+            <p>
+              Modificar telefono:
+            </p>
+               <div class="input-group">
+          			<input type="number" id="telefonoModificar" name="telefonoModificar" placeholder="Telefono..." style="color: #000000">
+              		<span class="input-group-btn">
+                		<input name = "checkTelefono" id = "checkTelefono" type="checkbox" value="off" class="pull-right">
+              		</span>
+        		</div>
+              
             </label>
 
-            <p>
-              Some information about this general settings option
+            <p align="right" style="font-size:11px;">
+              Hacer visible
             </p>
           </div>
-          <!-- /.form-group -->
-
+          
           <div class="form-group">
-            <label class="control-sidebar-subheading">
-              Allow mail redirect
-              <input type="checkbox" class="pull-right" checked>
+            <label class="control-sidebar-subheading">            
+            <p>
+              Correo:
+            </p>
+             <div class="input-group">
+		             <input type="text" id="correoModificar"  name="correoModificar" value="garmbest@hotmail.com" style="color: #000000" readonly>
+             		<span class="input-group-btn">
+               		<input name = "checkCorreo" id = "checkCorreo" type="checkbox" value="off" class="pull-right">
+             		</span>
+       		</div>
+              
             </label>
 
-            <p>
-              Other sets of options are available
+            <p align="right" style="font-size:11px;">
+              Hacer visible
             </p>
           </div>
-          <!-- /.form-group -->
-
-          <div class="form-group">
-            <label class="control-sidebar-subheading">
-              Expose author name in posts
-              <input type="checkbox" class="pull-right" checked>
-            </label>
-
-            <p>
-              Allow the user to show his name in blog posts
-            </p>
+          
+          <br/>
+          <br/>
+          <div>
+          <button id="BtnAjustes" name="BtnAjustes" type="button" onclick="establecerAjustes(this.form)" class="btn btn-info btn-lg">Guardar</button>
           </div>
           <!-- /.form-group -->
 
-          <h3 class="control-sidebar-heading">Chat Settings</h3>
-
-          <div class="form-group">
-            <label class="control-sidebar-subheading">
-              Show me as online
-              <input type="checkbox" class="pull-right" checked>
-            </label>
-          </div>
-          <!-- /.form-group -->
-
-          <div class="form-group">
-            <label class="control-sidebar-subheading">
-              Turn off notifications
-              <input type="checkbox" class="pull-right">
-            </label>
-          </div>
-          <!-- /.form-group -->
-
-          <div class="form-group">
-            <label class="control-sidebar-subheading">
-              Delete chat history
-              <a href="javascript:void(0)" class="text-red pull-right"><i class="fa fa-trash-o"></i></a>
-            </label>
-          </div>
-          <!-- /.form-group -->
         </form>
       </div>
       <!-- /.tab-pane -->

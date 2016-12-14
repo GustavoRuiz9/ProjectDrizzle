@@ -32,3 +32,17 @@
 .localizacion div{
 float:left;
 }
+<!-- Imagen Profile-->
+.usermpU {
+  z-index: 5;
+  height: 90px;
+  width: 90px;
+  border: 3px solid;
+  border-color: transparent;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+.inputtel {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: transparent;
+}
+

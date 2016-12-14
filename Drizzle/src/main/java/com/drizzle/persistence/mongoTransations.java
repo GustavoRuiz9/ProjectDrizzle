@@ -131,6 +131,28 @@ public class mongoTransations {
 		System.out.println("tamaño lista de actualizar : " + list.size());
 		return list;
 	}
+	
+	public static List<Estadistica> consultarEstadisticas(int comuna) {
+		List<Estadistica> list;
+		Date fecha = new Date();
+
+		if(comuna != 0){
+			//cambio2
+			list = operation.find(new Query(
+				Criteria.where("fecha").is(trim(fecha)).andOperator(Criteria.where("comuna").is(comuna)		
+				)).with(new Sort(Sort.Direction.ASC, "comuna")).with(new Sort(Sort.Direction.ASC,"tipo")),Estadistica.class);
+		}else{
+			//cambio2
+			list = operation.find(new Query(
+					//modificar tipo en la BD por numeros y hacer al sort otro sort por tipo
+					Criteria.where("fecha").is(trim(fecha))).with(new Sort(Sort.Direction.ASC, "comuna","tipo")),Estadistica.class);
+					//Criteria.where("fecha").is(trim(fecha))),Estadistica.class); //prueba 
+		}
+		
+		System.out.println("tamaño lista de actualizar : " + list.size());
+		
+		return list;
+	}
 
 	public static void borrarPublication(Publication publication) {
 		operation.remove(new Query(Criteria.where("id_publication").is(publication.getId_publication())), Publication.class);
@@ -301,20 +323,21 @@ public class mongoTransations {
 		return true;
 	}
 	
-	public static String Tiempo(int Hora) {
-		String resultado = "noche"; 
-		
-		if (Hora > 0 && Hora < 8){ 
-		resultado = "madrugada"; 
+	public static int Tiempo(int Hora) {
+		int resultado = 25; 
+		//cambio2
+		if (Hora >= 0 && Hora < 8){ 
+			resultado = 10; 
 		} else if (Hora > 7 && Hora < 13){ 
-		resultado = "mañana"; 
+			resultado = 15; 
 		} else if (Hora > 12 && Hora < 19){ 
-		resultado = "tarde"; 
+			resultado = 20; 
 		} 
 		System.out.println("El momento edl dia es : "+resultado); 
 		 
 	return resultado;
 	}
+	
 	public static Date trim(Date date) {
 
         Calendar calendar = Calendar.getInstance();

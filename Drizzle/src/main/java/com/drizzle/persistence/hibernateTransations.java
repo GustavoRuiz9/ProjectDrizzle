@@ -16,6 +16,8 @@ import org.hibernate.Session;
 import com.drizzle.model.Account;
 import com.drizzle.model.Like;
 import com.drizzle.model.Profile;
+import com.drizzle.model.Setting;
+
 import org.apache.soap.encoding.soapenc.Base64;
 import com.mysql.jdbc.Blob;
 
@@ -333,6 +335,126 @@ public class hibernateTransations {
 		}
 		
 	}
+	
+	public static String consultarDatosProfile(int IdAccount) {
+
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		Object [] datos;
+		String sentenciaSQL = "Select a.name,a.last_name,a.email,a.birth_date,a.number_phone,p.reputation,p.photo FROM Account a,Profile p Where p.profile_account = a.id_account and a.id_account = ?";
+		
+		try{
+		
+			session.beginTransaction();
+			Query query = session.createQuery(sentenciaSQL);			
+			query.setParameter(0,IdAccount);
+			List<Object[]> results = query.getResultList();
+			datos=results.get(0);
+			//System.out.println(query.getResultList()+"");
+			System.out.println("Select Successful Author");
+			//if(results.isEmpty())
+			String datosProfile = "[{\"nombre_author\":\""+ datos[0] + " " + datos[1] + "\", \"email\":\"" + datos[2] + "\", \"birth_date\":\"" + datos[3]    
+					+ "\",\"number_phone\":\"" + datos[4] + "\",\"reputation\":" + datos[5] + ",\"profile\":\"" + Base64.encode((byte[])datos[6]) + 
+					"\",\"id_author\":\"" +IdAccount +"\"}]";
+			
+			return datosProfile;
+			
+			
+		}catch (Exception e) {
+			System.out.println("Error en el metodo consultarProfile - " + e.getMessage());
+			return null;
+		}finally {
+			session.disconnect();
+		}
+		
+	}
+	
+	public static boolean registrarAjustes(Setting new_setting) {
+		System.out.println("Entra a reg ajustes!");
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		
+		try{
+			
+			session.beginTransaction();		
+			session.save(new_setting);
+			session.getTransaction().commit();
+			System.out.println("Insert Successful");
+			return true;
+			
+		}catch (Exception e) {
+			System.out.println("Error en el metodo registrarAjustes - " + e.getMessage());
+			return false;
+		}finally {
+			session.disconnect();
+		}
+
+	}
+	
+	public static boolean actualizarAjustes(int author, boolean checkcorreo , boolean checktelefono, String nombre, String apellido, String contrasena, int telefono ) {
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		
+			try{
+				session.beginTransaction();
+				
+				String sentenciaSQL= ("UPDATE Account INNER JOIN Setting ON Account.id_account = Setting.id_account_profile SET  "+
+						 "Account.name = '" + nombre + "', Account.last_name = '" + apellido + "', Account.password = '" + contrasena + "', Account.number_phone = " + telefono 
+						 + ", Setting.correo = "+checkcorreo + ", Setting.telefono = " + checktelefono + " where Account.id_account = "+author);
+				System.out.println(sentenciaSQL);
+				/*
+				 * 
+				 * UPDATE tabla1
+        INNER JOIN tabla2 ON tabla1.ID = tabla2.ID 
+        INNER JOIN tabla3 ON tabla1.ID = tabla3.ID 
+        SET tabla1.campo1='$...', tabla2.campo2='$...', tabla3.campo3='$...'  
+        WHERE tabla1.ID = '$ID'";
+				 * 
+				 * 
+				 */
+				
+				session.createSQLQuery(sentenciaSQL).executeUpdate();
+				session.getTransaction().commit();
+				return true;
+		
+			
+		}catch (Exception e) {
+			System.out.println("Error en el metodo actualizarAjustes - " + e.getMessage());
+			return false;
+		}finally {
+			session.disconnect();
+		}
+		
+	}
+	
+	public static String consultarSettings(int IdAccount) {
+
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		Object [] datos;
+		String sentenciaSQL = "Select a.name,a.last_name,a.email,a.number_phone, s.correo, s.telefono, a.password FROM Account a, Setting s  Where a.id_account = s.id_account_profile and a.id_account = ?";
+		System.out.println("consulta Settings " + sentenciaSQL);
+		try{
+		
+			session.beginTransaction();
+			Query query = session.createQuery(sentenciaSQL);			
+			query.setParameter(0,IdAccount);
+			List<Object[]> results = query.getResultList();
+			datos=results.get(0);
+			//System.out.println(query.getResultList()+"");
+			System.out.println("Select Successful Settings");
+			//if(results.isEmpty())
+			String datosProfile = "[{\"nombre\":\""+ datos[0] + "\",\"apellido\": \"" + datos[1] + "\", \"email\":\"" + datos[2] + "\", \"number_phone\":" + datos[3]    
+					+ ",\"correo\":" + datos[4] + ",\"telefono\":" + datos[5] + ",\"contrasena\":\"" + datos[6]	+ "\"}]";
+			
+			return datosProfile;
+			
+			
+		}catch (Exception e) {
+			System.out.println("Error en el metodo ConsultarSetings - " + e.getMessage());
+			return null;
+		}finally {
+			session.disconnect();
+		}
+		
+	}
+
 	
 	
 	

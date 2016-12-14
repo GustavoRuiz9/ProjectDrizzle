@@ -33,9 +33,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.drizzle.model.Account;
 import com.drizzle.model.Comment;
+import com.drizzle.model.Estadistica;
 import com.drizzle.model.Like;
 import com.drizzle.model.Profile;
 import com.drizzle.model.Publication;
+import com.drizzle.model.Setting;
 import com.drizzle.model.Ubication;
 import com.drizzle.persistence.hibernateTransations;
 import com.drizzle.persistence.mongoConfig;
@@ -140,8 +142,18 @@ public class DrizzleController {
 		System.out.println("Login: "+login+" ingreso: "+ingreso+" cambioFoto: "+BtnPerfil);
 
 		if (ingreso!=null) {
+			
 			if ((hibernateTransations.consultarAccount(account.getEmail())).isEmpty()) {
+				
 				if (hibernateTransations.registrarAccount(account)) {
+					
+					Setting new_setting = new Setting();
+					new_setting.setId_profile_account(account.getId_account());
+					new_setting.setCorreo(false);
+					new_setting.setTelefono(false);
+					
+					if (hibernateTransations.registrarAjustes(new_setting)) {
+					
 						hibernateTransations.registrarProfile(account.getId_account());
 					
 					
@@ -157,6 +169,8 @@ public class DrizzleController {
 					Dts=null;
 					
 					return "Registrado";
+				}
+				
 				}else{
 					return "redirect:/index.html#contact";
 				}
@@ -422,6 +436,7 @@ public class DrizzleController {
 			object.addProperty("Descripcion", publication.getDescripcion());
 			object.addProperty("photo", Base64.encode(publication.getPhoto()));
 			int author = publication.getAuthor();
+			object.addProperty("authorperfil",author);
 			
 			
 			if(Usuario==author){
@@ -622,15 +637,250 @@ public class DrizzleController {
 			
 			return json;
 		}
+		
+public String crearJsonEstadisticas(List<Estadistica> listEstadisticas) {
+			
+			String jsonEstadisticas = "[{\"registro\":[";
+
+			if(!listEstadisticas.isEmpty()){
+				
+				jsonEstadisticas += "[";
+				
+				int comuna = listEstadisticas.get(0).getComuna();
+				
+				for(Estadistica estadistica : listEstadisticas){
+							
+					JsonObject estadisticaJson = new JsonObject();
+					
+					int[] clima = converClima(estadistica.getStorm(), estadistica.getSunny(), estadistica.getRain(), estadistica.getTempered());
+					
+					//estadisticaJson.addProperty("tipo",converTipo(estadistica.getTipo()));
+					estadisticaJson.addProperty("tipo",estadistica.getTipo());
+					estadisticaJson.addProperty("clima",clima[0]);
+					estadisticaJson.addProperty("valorClima",clima[1]);
+					estadisticaJson.addProperty("comuna",estadistica.getComuna());
+					
+					/*if(estadistica.getComuna()==comuna){
+						jsonEstadisticas += estadisticaJson.toString() + ",";
+					}else{
+						comuna = estadistica.getComuna();
+						jsonEstadisticas = jsonEstadisticas.substring(0,jsonEstadisticas.length()-1) + "],[" + estadisticaJson.toString() + "}";
+					}*/
+					if(estadistica.getComuna()==comuna){
+						jsonEstadisticas += estadisticaJson.toString() + ",";
+					}else{
+						comuna = estadistica.getComuna();
+						jsonEstadisticas = jsonEstadisticas.substring(0,jsonEstadisticas.length()-1) + "],[" + estadisticaJson.toString() + ",";
+					}
+					
+				}
+
+				jsonEstadisticas = jsonEstadisticas.substring(0, jsonEstadisticas.length()-1) + "]]}]";
+			
+			}else{
+				jsonEstadisticas += "]}]";
+			}
+			
+			return jsonEstadisticas;
+		}
+		
+		public int converTipo(String tipoString){
+			
+			int tipo = 0;
+			
+			if(tipoString.equals("madrugada")){
+				tipo = 10;
+			}else{
+				if(tipoString.equals("mañana")){
+					tipo = 15;
+				}else{
+					if(tipoString.equals("tarde")){
+						tipo = 20;
+					}else{
+						if(tipoString.equals("noche")){
+							tipo = 25;
+						}
+					}
+				}
+			}
+			
+			return tipo;
+		}
+		
+		
+		//mejorar
+		public int[] converClima(int storm, int sunny, int rain, int temp){
+			
+			int clima = 0;
+			int mayor[] = new int[2];
+			
+			if(rain > sunny && rain > storm && rain > temp){
+				clima = 10;
+				mayor[0] = clima;
+				mayor[1] = rain;
+			}else{
+				if(storm > sunny && storm > rain && storm > temp){
+					clima = 15;
+					mayor[0] = clima;
+					mayor[1] = storm;
+				}else{
+					if(sunny > storm && sunny > rain && sunny > temp){
+						clima = 20;
+						mayor[0] = clima;
+						mayor[1] = sunny;
+					}else{
+						if(temp > sunny && temp > rain && temp > storm){
+							clima = 25;
+							mayor[0] = clima;
+							mayor[1] = temp;
+						}else{
+							if(temp == sunny && sunny == rain && rain == storm){
+								clima = 25;
+								mayor[0] = clima;
+								mayor[1] = temp;	
+							}else{
+								if(temp > sunny && sunny == rain && temp == storm){
+									clima = 25;
+									mayor[0] = clima;
+									mayor[1] = temp;	
+								}else{
+									if(temp > rain && rain == storm && temp == sunny){
+										clima = 25;
+										mayor[0] = clima;
+										mayor[1] = temp;
+								}else{
+									if(temp > storm && storm == sunny && temp == rain){
+										clima = 25;
+										mayor[0] = clima;
+										mayor[1] = temp;
+									}else{
+										if(temp > storm && temp == rain && temp == sunny){
+											clima = 25;
+											mayor[0] = clima;
+											mayor[1] = temp;
+										}else{
+											if(temp > rain && temp == storm && temp == sunny){
+												clima = 25;
+												mayor[0] = clima;
+												mayor[1] = temp;
+											}else{
+												if(temp > sunny && temp == storm && temp == rain){
+													clima = 25;
+													mayor[0] = clima;
+													mayor[1] = temp;
+												}
+											}
+										}
+											
+									}
+											
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		
+			return mayor;
+	}
+		
 	
-	@RequestMapping(value = "/constaGrafica", method = { RequestMethod.GET, RequestMethod.POST })
-	public @ResponseBody String constaGrafica(HttpServletRequest request) {
+		@RequestMapping(value = "/constaGrafica", method = { RequestMethod.GET, RequestMethod.POST })
+		public @ResponseBody String constaGrafica(HttpServletRequest request) {
+			
+			int comuna = Integer.parseInt(request.getParameter("comuna"));
+			
+			System.out.println("comuna a Consultar " + comuna);
+			
+			String jsonCompleto = crearJsonEstadisticas(mongoTransations.consultarEstadisticas(comuna));
+			
+			System.out.println("Estadisticas " + jsonCompleto);
+			
+			return jsonCompleto;
+		}
+		
+	
+	@RequestMapping(value = "/consultarDatosPerfilAuthor", method = { RequestMethod.GET, RequestMethod.POST })
+	public @ResponseBody String consultarDatosPerfilAuthor(HttpServletRequest request) {
+		
+		int author = Integer.parseInt(request.getParameter("id_author"));
+		
+		System.out.println("perfil a consultar " + author);
+		
+		String jsonCompleto = hibernateTransations.consultarDatosProfile(author);
+		
+		System.out.println("Datos Profile " + jsonCompleto);
+		
+		return jsonCompleto;
+	}
+	
+
+	@RequestMapping(value = "/obtenerAjustes", method = { RequestMethod.GET, RequestMethod.POST })
+	public @ResponseBody String obtenerAjustes(HttpServletRequest request) {
+		
+		HttpSession sesion = request.getSession();
+
+		
+		
+		try {
+			String nombre = "";
+			String apellido = ""; 
+			String contrasena = "";
+			int telefono = 0;
+			boolean checkCorreo = false;
+			boolean checkTelefono = false;
+			
+			int Usuario=Integer.parseInt(sesion.getAttribute("usuario").toString());
+			FileItemFactory Interfaz = new DiskFileItemFactory();
+			ServletFileUpload servlet_up = new ServletFileUpload(Interfaz);
+			List objetos = servlet_up.parseRequest(request);
+			
+			for (int i = 0; i < objetos.size(); i++) {
+				FileItem item = (FileItem) objetos.get(i);
+				//System.out.println("objet: "+objetos.get(i).toString() + ", item.getFieldName: " + item.getFieldName() + ", item.getString: " + item.getString());
+				
+				if (item.getFieldName().equals("nombreModificar")) {
+					nombre = item.getString();
+					//pub.setDescripcion(Descripcion.getString());
+				}
+				if (item.getFieldName().equals("apellidoModificar")) {
+					apellido=item.getString();
+				}
+				if (item.getFieldName().equals("contrasenaModificar")) {
+					contrasena=item.getString();
+				}
+				if (item.getFieldName().equals("telefonoModificar")) {
+					telefono=Integer.parseInt(item.getString());
+				}
+				if (item.getFieldName().equals("checkTelefono")) {
+					checkTelefono=true;
+				}
+				if (item.getFieldName().equals("checkCorreo")) {
+					checkCorreo=true;
+				}
+				
+			}
+			
+			hibernateTransations.actualizarAjustes(Usuario, checkCorreo, checkTelefono, nombre, apellido, contrasena, telefono);
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 		
 		return "";
 	}
 	
-
-
+	@RequestMapping(value = "/showSettings", method = { RequestMethod.GET, RequestMethod.POST })
+	public @ResponseBody String ShowSettings(HttpServletRequest request) {
+		HttpSession sesion = request.getSession();
+		int id = Integer.parseInt(sesion.getAttribute("usuario").toString());
+			String json=hibernateTransations.consultarSettings(id);
+			System.out.println(json);
+			return json;
+				
+	}
+	
 
 
 }
