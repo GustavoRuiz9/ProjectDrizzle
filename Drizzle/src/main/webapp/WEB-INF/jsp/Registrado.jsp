@@ -74,9 +74,13 @@
 	<script  src="././resources/dist12/sweetalert-dev.js"></script>
     <link rel="stylesheet" href="././resources/dist12/sweetalert.css" /> 
     
-    <script src="././resources/sources/jscharts.js"></script> 
+    <script src="././resources/sources/jscharts.js"></script>  
     
     <script src="././resources/js/estadisticas.js"></script> 
+    
+     <!-- Jquery-confirm ventana notificacion eliminar// -->
+    <link rel="stylesheet" type="text/css" href="././resources/css/jquery-confirm.css"/>
+    <script type="text/javascript" src="././resources/js/jquery-confirm.js"></script>
   
   
   <![endif]-->
@@ -130,7 +134,6 @@
 					        <input id="sunny" type="radio" name="weather"value="sunny" />
 					        <label class="drinkcard-cc sunny" for="sunny"></label>
 					    </div>
-					    
 					    
 						<BR><BR>
 						
@@ -251,8 +254,6 @@
 									<option value="20">COMUNA 20</option>
 									<option value="21">COMUNA 21</option>
 									<option value="22">COMUNA 22</option>
-									<option value="23">COMUNA 23</option>
-									<option value="24">COMUNA 24</option>
 									
 									
 								</select>
@@ -806,7 +807,7 @@
                     if (Integer.parseInt(session.getAttribute("usuario").toString())==(lista.get(i).getAuthor())){
                     %>
                      <div class="attachment">
-	                    <button id="<%out.print(lista.get(i).getId_publication());%>" class="btn btn-default confirmation-callback" onclick="AlertDrop(this.id)" >
+	                    <button id="<%out.print(lista.get(i).getId_publication());%>" class="btn btn-default" onclick="AlertDrop(this.id)" >
 							 <span class="glyphicon glyphicon-trash"></span>
 						</button>
 						

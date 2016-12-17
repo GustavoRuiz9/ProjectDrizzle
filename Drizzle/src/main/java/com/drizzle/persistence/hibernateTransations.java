@@ -340,7 +340,7 @@ public class hibernateTransations {
 
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		Object [] datos;
-		String sentenciaSQL = "Select a.name,a.last_name,a.email,a.birth_date,a.number_phone,p.reputation,p.photo FROM Account a,Profile p Where p.profile_account = a.id_account and a.id_account = ?";
+		String sentenciaSQL = "Select a.name,a.last_name,a.email,a.birth_date,a.number_phone,p.reputation,p.photo,s.correo,s.telefono FROM Account a,Profile p, Setting s Where p.profile_account = a.id_account and p.profile_account = s.id_account_profile and a.id_account = ?";
 		
 		try{
 		
@@ -354,13 +354,13 @@ public class hibernateTransations {
 			//if(results.isEmpty())
 			String datosProfile = "[{\"nombre_author\":\""+ datos[0] + " " + datos[1] + "\", \"email\":\"" + datos[2] + "\", \"birth_date\":\"" + datos[3]    
 					+ "\",\"number_phone\":\"" + datos[4] + "\",\"reputation\":" + datos[5] + ",\"profile\":\"" + Base64.encode((byte[])datos[6]) + 
-					"\",\"id_author\":\"" +IdAccount +"\"}]";
+					"\",\"id_author\":\"" +IdAccount + "\",\"correo\":"+datos[7]+",\"telefono\":"+datos[8]+"}]";
 			
 			return datosProfile;
 			
 			
 		}catch (Exception e) {
-			System.out.println("Error en el metodo consultarProfile - " + e.getMessage());
+			System.out.println("Error en el metodo consultarDatosProfile - " + e.getMessage());
 			return null;
 		}finally {
 			session.disconnect();

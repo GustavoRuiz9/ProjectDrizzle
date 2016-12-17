@@ -7,11 +7,10 @@ function Geolocation(){
 	navigator.geolocation.getCurrentPosition(showPosition);
 	function showPosition(position){
 		var geocoder = new google.maps.Geocoder();
-		lat=position.coords.latitude;
-		lon=position.coords.longitude;
-		//lat = 3.46797234440776;
-		//lon = -76.50285601615906 Sena Comuan5
-		
+		//lat=position.coords.latitude;
+		//lon=position.coords.longitude;
+		lat = 3.4686148955336327;
+		lon = -76.50039911270142;
 		latlonmarker= new google.maps.LatLng(lat, lon);
 		geocoder.geocode({ 'latLng': latlonmarker },geocoderact);
 		
@@ -187,7 +186,7 @@ function ShowPublication(data) {
 		 	var Btn="";
 		 	if(dato[cont].author=="true"){
 		 		Btn='<div class="attachment">'+
-		 		'<button id="'+dato[cont].id_publication+'" class="btn btn-default confirmation-callback" onclick="AlertDrop(this.id)">'+
+		 		'<button id="'+dato[cont].id_publication+'" class="btn btn-default" onclick="AlertDrop(this.id)">'+
 				'<span class="glyphicon glyphicon-trash"></span>'+
 				'</button>'+
 		 		'<button id="'+dato[cont].id_publication+'" class="btn btn-default" data-toggle="modal" onclick="DisplayComments(this.id)">'+
@@ -327,35 +326,86 @@ function AlertDrop(clicked_id) {
     // Cantidad de div
     var divs = parent.querySelectorAll('div');
     firtsdiv=(divs[0].id).split('v');
+    alert("div a eliminar: "+div);
+    
+    $('#'+clicked_id).on('click', function () {
+        var jc= $.confirm({
+             title: 'Deseas Eliminar?',
+             autoClose: 'cancelAction|10000',
+             escapeKey: 'cancelAction',
+             buttons: {
+                 confirm: {
+                     btnClass: 'btn-danger',
+                     text: 'Eliminar',
+                     action: function () {
+                        
+                         $.ajax({
+         		            url: "DeletePublicacion.html",
+         		            type: "GET",
+         		            dataType: "html",
+         		            data:"id_Pbl="+clicked_id+"&UltDiv="+firtsdiv[1],
+         		            cache: false,
+         		            contentType: false,
+         		            processData: false,
+         		    			success : function(response) {
+         		    				console.log("SUCCESS: ", response);
+         		    				document.getElementById(div).remove();
+         		    				BarraSnPb(response);
+         		    				$.alert('Has eliminado la Publicacion!');
+         		    				ConsultaEstadiscticas(document.getElementById("comuna").value);
+         		    			},
+         		    			error : function(e) {
+         		    				console.log("ERROR: ", e);
+         		    				display(e);
+         		    			},
+         		    			done : function(e) {
+         		    				console.log("DONE");
+         		    			}
+         		    		});
+                     }
+                 },
+                 cancelAction: {
+                     text: 'Cancelar',
+                     action: function () {
+                     }
+                 }
+             }
+         });
+        jc.close();
+        	
+     });
+     
 	
-	$('.confirmation-callback').confirmation({
+	/*$('.confirmation-callback').confirmation({
 		onConfirm: function() { 
-			$.ajax({
-	            url: "DeletePublicacion.html",
-	            type: "GET",
-	            dataType: "html",
-	            data:"id_Pbl="+clicked_id+"&UltDiv="+firtsdiv[1],
-	            cache: false,
-	            contentType: false,
-	            processData: false,
-	    			success : function(response) {
-	    				console.log("SUCCESS: ", response);
-	    				document.getElementById(div).remove();
-	    				BarraSnPb(response);
-	    				ConsultaEstadiscticas(document.getElementById("comuna").value);
-	    			},
-	    			error : function(e) {
-	    				console.log("ERROR: ", e);
-	    				display(e);
-	    			},
-	    			done : function(e) {
-	    				console.log("DONE");
-	    			}
-	    		});
+				$.ajax({
+		            url: "DeletePublicacion.html",
+		            type: "GET",
+		            dataType: "html",
+		            data:"id_Pbl="+clicked_id+"&UltDiv="+firtsdiv[1],
+		            cache: false,
+		            contentType: false,
+		            processData: false,
+		    			success : function(response) {
+		    				console.log("SUCCESS: ", response);
+		    				document.getElementById(div).remove();
+		    				BarraSnPb(response);
+		    				ConsultaEstadiscticas(document.getElementById("comuna").value);
+		    			},
+		    			error : function(e) {
+		    				console.log("ERROR: ", e);
+		    				display(e);
+		    			},
+		    			done : function(e) {
+		    				console.log("DONE");
+		    			}
+		    		});
+				
 			
 		},
 		onCancel: function() { }
-	});
+	});*/
+  	
 }
 
 
@@ -399,7 +449,7 @@ function BarraSnPb(response){
 
 	console.log('datos.legt: '+dato.length+'divs.legt: '+divs.length);
 	//si el json esta vacio y en chat-box no hay ningun div pongalo
-	if(dato.length==0 && divs.length==0 ){
+	if(dato.length==0 && divs.length==0){
 		var newTextBoxDiv = $(document.createElement('div'))
 	    .attr("id", 'TextBoxDiv-1').attr("class", 'alert alert-info alert-dismissible fade in').attr("role", 'alert');
 		newTextBoxDiv.before().html('<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true"></span></button> <i class="fa fa-files-o"></i> <strong>Aun no hay publicaciones por aqui..</strong>');
@@ -408,6 +458,7 @@ function BarraSnPb(response){
 			ShowPublication(response);
 		}
 }
+
 function  AlertLike(varLk ,idPl){
 	if(varLk=="false"){
 		sweetAlert('Oops...', 'Publicacion Fue Eliminada!', 'error');
@@ -454,7 +505,23 @@ function Filtro(Vr){
 			success : function(response) {
 				console.log("SUCCESS: ", response);
 				$("div").remove(".item");
-				ShowPublication(response);
+				//control de error para remover barraAzul!
+				try {
+					//obtener div
+			         var parent = document.querySelector('#chat-box');
+			         // Cantidad de div
+				     var divs = parent.querySelectorAll('div');
+				     firtsdiv=(divs[0].id).split('v');
+				     if(firtsdiv[1]=="-1"){
+				    	 
+				    	 document.getElementById(divs[0].id).remove();
+				     }
+				}
+				catch(err) {
+					console.log(err.message);
+				
+				}
+				BarraSnPb(response);
 				ConsultaEstadiscticas(Vr);
 			},
 			error : function(e) {
@@ -511,6 +578,54 @@ function DisplayComments(id_publication) {
 	    			}
 	    		});
 	
+}
+
+//cambios3
+function getPublicationRecent(){
+	
+	$.ajax({
+        url: "getPublicationsRecent.html",
+        type: "GET",
+        dataType: "html",
+        cache: false,
+        contentType: false,
+        processData: false,
+			success : function(response) {
+				console.log("SUCCESS: ", response);				
+				changeImg(response);
+			},
+			error : function(e) {
+				console.log("ERROR: ", e);
+				display(e);
+			},
+			done : function(e) {
+				console.log("DONE");
+			}
+		});
+}
+
+//cambios3
+function changeImg(response) {
+	
+		dato=JSON.parse(response);
+		
+		for (var cont = 0; cont < dato.length; cont++) {
+
+			document.getElementById("imagenIndex"+cont).src='data:image/png;base64,'+ dato[cont].photo;
+			
+			var parent = document.querySelector('#modalIndexImagen'+cont);
+			parent.querySelector('img').src='data:image/png;base64,'+ dato[cont].photo;
+			parent.querySelector('h2').innerHTML = 'Publicacion de ' +  
+			dato[cont].barrio + ' - ' + dato[cont].pto_cardinal + '(Comuna ' + dato[cont].comuna +')';
+		    
+			parent.querySelector('p').innerHTML=dato[cont].Descripcion;
+			parent.querySelectorAll('li')[0].innerHTML=dato[cont].nombre_author;
+			parent.querySelectorAll('li')[1].innerHTML=dato[cont].weather;
+			parent.querySelectorAll('li')[2].innerHTML=dato[cont].date;
+		}
+		
+		
+	 
 }
 
 

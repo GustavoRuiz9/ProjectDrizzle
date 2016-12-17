@@ -36,11 +36,11 @@
     <![endif]-->
     
    
-   
+   <script src="././resources/js/publicacion.js"></script> 
    
 </head>
 
-<body id="page-top" class="index">
+<body id="page-top" class="index" onload="getPublicationRecent()">
 
 
 
@@ -113,7 +113,7 @@
                                 <i class="fa fa-search-plus fa-3x"></i>
                             </div>
                         </div>
-                        <img src="././resources/img/portfolio/cabin.png" class="img-responsive" alt="">
+                        <img id="imagenIndex0" src="././resources/img/portfolio/cabin.png" class="img-responsive" alt="">
                     </a>
                 </div>
                 <div class="col-sm-4 portfolio-item">
@@ -123,7 +123,7 @@
                                 <i class="fa fa-search-plus fa-3x"></i>
                             </div>
                         </div>
-                        <img src="././resources/img/portfolio/mono.png" class="img-responsive" alt="">
+                        <img id="imagenIndex1" src="././resources/img/portfolio/cabin.png" class="img-responsive" alt="">
                     </a>
                 </div>
                 <div class="col-sm-4 portfolio-item">
@@ -133,7 +133,7 @@
                                 <i class="fa fa-search-plus fa-3x"></i>
                             </div>
                         </div>
-                        <img src="././resources/img/portfolio/circus.png" class="img-responsive" alt="">
+                        <img id="imagenIndex2" src="././resources/img/portfolio/circus.png" class="img-responsive" alt="">
                     </a>
                 </div>
                 <div class="col-sm-4 portfolio-item">
@@ -143,7 +143,7 @@
                                 <i class="fa fa-search-plus fa-3x"></i>
                             </div>
                         </div>
-                        <img src="././resources/img/portfolio/game.png" class="img-responsive" alt="">
+                        <img id="imagenIndex3" src="././resources/img/portfolio/game.png" class="img-responsive" alt="">
                     </a>
                 </div>
                 <div class="col-sm-4 portfolio-item">
@@ -153,7 +153,7 @@
                                 <i class="fa fa-search-plus fa-3x"></i>
                             </div>
                         </div>
-                        <img src="././resources/img/portfolio/safe.png" class="img-responsive" alt="">
+                        <img id="imagenIndex4" src="././resources/img/portfolio/game.png" class="img-responsive" alt="">
                     </a>
                 </div>
                 <div class="col-sm-4 portfolio-item">
@@ -163,7 +163,7 @@
                                 <i class="fa fa-search-plus fa-3x"></i>
                             </div>
                         </div>
-                        <img src="././resources/img/portfolio/submarine.png" class="img-responsive" alt="">
+                        <img id="imagenIndex5" src="././resources/img/portfolio/submarine.png" class="img-responsive" alt="">
                     </a>
                 </div>
             </div>
@@ -367,24 +367,28 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8 col-lg-offset-2">
-                        <div class="modal-body">
-                            <h2>Project Title</h2>
+                        <div id = "modalIndexImagen0" class="modal-body">
+                            <h2></h2>
                             <hr class="star-primary">
                             <img src="././resources/img/portfolio/cabin.png" class="img-responsive img-centered" alt="">
-                            <p>Use this area of the page to describe your project. The icon above is part of a free icon set by <a href="https://sellfy.com/p/8Q9P/jV3VZ/">Flat Icons</a>. On their website, you can download their free set with 16 icons, or you can purchase the entire set with 146 icons for only $12!</p>
+                            <p></p>
                             <ul class="list-inline item-details">
-                                <li>Client:
-                                    <strong><a href="http://startbootstrap.com">Start Bootstrap</a>
-                                    </strong>
+                            
+                            	<strong>Autor:</strong>
+                            	<li>
+                            	
                                 </li>
-                                <li>Date:
-                                    <strong><a href="http://startbootstrap.com">April 2014</a>
-                                    </strong>
+                                
+                                <strong>Clima:</strong>
+                                <li>
+                                
+                                 </li>
+                                 
+                                <strong>Fecha:</strong>
+                                <li>
+                                
                                 </li>
-                                <li>Service:
-                                    <strong><a href="http://startbootstrap.com">Web Development</a>
-                                    </strong>
-                                </li>
+                                
                             </ul>
                             <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
                         </div>
@@ -394,33 +398,35 @@
         </div>
     </div>
     <div class="portfolio-modal modal fade" id="portfolioModal2" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-content">
+        <div  class="modal-content">
             <div class="close-modal" data-dismiss="modal">
                 <div class="lr">
                     <div class="rl">
                     </div>
                 </div>
             </div>
-            <div class="container">
+            <div  class="container">
                 <div class="row">
                     <div class="col-lg-8 col-lg-offset-2">
-                        <div class="modal-body">
+                        <div id = "modalIndexImagen1" class="modal-body">
                             <h2>Project Title</h2>
                             <hr class="star-primary">
-                            <img src="././resources/img/portfolio/mono.png" class="img-responsive img-centered" alt="">
-                            <p>Use this area of the page to describe your project. The icon above is part of a free icon set by <a href="https://sellfy.com/p/8Q9P/jV3VZ/">Flat Icons</a>. On their website, you can download their free set with 16 icons, or you can purchase the entire set with 146 icons for only $12!</p>
+                            <img src="././resources/img/portfolio/cabin.png" class="img-responsive img-centered" alt="">
+                            <p>Useddd this area of the page to describe your project. The icon above is part of a free icon set by <a href="https://sellfy.com/p/8Q9P/jV3VZ/">Flat Icons</a>. On their website, you can download their free set with 16 icons, or you can purchase the entire set with 146 icons for only $12!</p>
                             <ul class="list-inline item-details">
-                                <li>Client:
-                                    <strong><a href="http://startbootstrap.com">Start Bootstrap</a>
-                                    </strong>
+                                <strong>Autor:</strong>
+                            	<li>
+                            	
                                 </li>
-                                <li>Date:
-                                    <strong><a href="http://startbootstrap.com">April 2014</a>
-                                    </strong>
-                                </li>
-                                <li>Service:
-                                    <strong><a href="http://startbootstrap.com">Web Development</a>
-                                    </strong>
+                                
+                                <strong>Clima:</strong>
+                                <li>
+                                
+                                 </li>
+                                 
+                                <strong>Fecha:</strong>
+                                <li>
+                                
                                 </li>
                             </ul>
                             <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
@@ -441,23 +447,25 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8 col-lg-offset-2">
-                        <div class="modal-body">
+                        <div id = "modalIndexImagen2" class="modal-body">
                             <h2>Project Title</h2>
                             <hr class="star-primary">
                             <img src="././resources/img/portfolio/circus.png" class="img-responsive img-centered" alt="">
                             <p>Use this area of the page to describe your project. The icon above is part of a free icon set by <a href="https://sellfy.com/p/8Q9P/jV3VZ/">Flat Icons</a>. On their website, you can download their free set with 16 icons, or you can purchase the entire set with 146 icons for only $12!</p>
                             <ul class="list-inline item-details">
-                                <li>Client:
-                                    <strong><a href="http://startbootstrap.com">Start Bootstrap</a>
-                                    </strong>
+                                <strong>Autor:</strong>
+                            	<li>
+                            	
                                 </li>
-                                <li>Date:
-                                    <strong><a href="http://startbootstrap.com">April 2014</a>
-                                    </strong>
-                                </li>
-                                <li>Service:
-                                    <strong><a href="http://startbootstrap.com">Web Development</a>
-                                    </strong>
+                                
+                                <strong>Clima:</strong>
+                                <li>
+                                
+                                 </li>
+                                 
+                                <strong>Fecha:</strong>
+                                <li>
+                                
                                 </li>
                             </ul>
                             <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
@@ -478,23 +486,25 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8 col-lg-offset-2">
-                        <div class="modal-body">
+                        <div id = "modalIndexImagen3" class="modal-body">
                             <h2>Project Title</h2>
                             <hr class="star-primary">
                             <img src="././resources/img/portfolio/game.png" class="img-responsive img-centered" alt="">
                             <p>Use this area of the page to describe your project. The icon above is part of a free icon set by <a href="https://sellfy.com/p/8Q9P/jV3VZ/">Flat Icons</a>. On their website, you can download their free set with 16 icons, or you can purchase the entire set with 146 icons for only $12!</p>
                             <ul class="list-inline item-details">
-                                <li>Client:
-                                    <strong><a href="http://startbootstrap.com">Start Bootstrap</a>
-                                    </strong>
+                                <strong>Autor:</strong>
+                            	<li>
+                            	
                                 </li>
-                                <li>Date:
-                                    <strong><a href="http://startbootstrap.com">April 2014</a>
-                                    </strong>
-                                </li>
-                                <li>Service:
-                                    <strong><a href="http://startbootstrap.com">Web Development</a>
-                                    </strong>
+                                
+                                <strong>Clima:</strong>
+                                <li>
+                                
+                                 </li>
+                                 
+                                <strong>Fecha:</strong>
+                                <li>
+                                
                                 </li>
                             </ul>
                             <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
@@ -515,23 +525,25 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8 col-lg-offset-2">
-                        <div class="modal-body">
+                        <div id = "modalIndexImagen4" class="modal-body">
                             <h2>Project Title</h2>
                             <hr class="star-primary">
-                            <img src="././resources/img/portfolio/safe.png" class="img-responsive img-centered" alt="">
+                            <img src="././resources/img/portfolio/cabin.png" class="img-responsive img-centered" alt="">
                             <p>Use this area of the page to describe your project. The icon above is part of a free icon set by <a href="https://sellfy.com/p/8Q9P/jV3VZ/">Flat Icons</a>. On their website, you can download their free set with 16 icons, or you can purchase the entire set with 146 icons for only $12!</p>
                             <ul class="list-inline item-details">
-                                <li>Client:
-                                    <strong><a href="http://startbootstrap.com">Start Bootstrap</a>
-                                    </strong>
+                                <strong>Autor:</strong>
+                            	<li>
+                            	
                                 </li>
-                                <li>Date:
-                                    <strong><a href="http://startbootstrap.com">April 2014</a>
-                                    </strong>
-                                </li>
-                                <li>Service:
-                                    <strong><a href="http://startbootstrap.com">Web Development</a>
-                                    </strong>
+                                
+                                <strong>Clima:</strong>
+                                <li>
+                                
+                                 </li>
+                                 
+                                <strong>Fecha:</strong>
+                                <li>
+                                
                                 </li>
                             </ul>
                             <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
@@ -551,24 +563,26 @@
             </div>
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-8 col-lg-offset-2">
+                    <div id = "modalIndexImagen5" class="col-lg-8 col-lg-offset-2">
                         <div class="modal-body">
                             <h2>Project Title</h2>
                             <hr class="star-primary">
                             <img src="././resources/img/portfolio/submarine.png" class="img-responsive img-centered" alt="">
                             <p>Use this area of the page to describe your project. The icon above is part of a free icon set by <a href="https://sellfy.com/p/8Q9P/jV3VZ/">Flat Icons</a>. On their website, you can download their free set with 16 icons, or you can purchase the entire set with 146 icons for only $12!</p>
                             <ul class="list-inline item-details">
-                                <li>Client:
-                                    <strong><a href="http://startbootstrap.com">Start Bootstrap</a>
-                                    </strong>
+                                <strong>Autor:</strong>
+                            	<li>
+                            	
                                 </li>
-                                <li>Date:
-                                    <strong><a href="http://startbootstrap.com">April 2014</a>
-                                    </strong>
-                                </li>
-                                <li>Service:
-                                    <strong><a href="http://startbootstrap.com">Web Development</a>
-                                    </strong>
+                                
+                                <strong>Clima:</strong>
+                                <li>
+                                
+                                 </li>
+                                 
+                                <strong>Fecha:</strong>
+                                <li>
+                                
                                 </li>
                             </ul>
                             <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
@@ -578,7 +592,7 @@
             </div>
         </div>
     </div>
-
+    
     <!-- jQuery -->
     <script src="././resources/jquery/jquery.min.js"></script>
 

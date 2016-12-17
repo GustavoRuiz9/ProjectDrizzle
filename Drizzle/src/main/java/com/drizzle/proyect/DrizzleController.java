@@ -105,6 +105,7 @@ public class DrizzleController {
 						int Id_Usu= Integer.parseInt(sesion.getAttribute("usuario").toString());
 						if (hibernateTransations.actualizarProfile(b,Id_Usu)) {
 							BtnPerfil = true;
+							sesion.setAttribute("photo",Base64.encode(b));
 							System.out.println("Actualizo la Foto de perfil ");
 							
 						}
@@ -572,11 +573,12 @@ public class DrizzleController {
 		String id_Pbl = request.getParameter("id_Pbl");
 		String UltDiv = request.getParameter("UltDiv");
 		
-		System.out.println("id_publicacion: "+id_Pbl);
+		System.out.println("elminar id_publicacion: "+id_Pbl);
 		Publication Pb = new Publication();
 		Pb.setId_publication(Integer.parseInt(id_Pbl));
-		
+		id_Pbl="";
 		mongoTransations.borrarPublication(Pb);
+		
 		 return UpdateDiv(Usuario,UltDiv);
 	}
 	
@@ -880,6 +882,35 @@ public String crearJsonEstadisticas(List<Estadistica> listEstadisticas) {
 			return json;
 				
 	}
+	
+	//cambios3
+	
+		@RequestMapping(value = "/getPublicationsRecent", method = { RequestMethod.GET, RequestMethod.POST })
+		public @ResponseBody String getPublicationsRecent(HttpServletRequest request) {
+			HttpSession sesion = request.getSession();
+			String json = "[";
+			List<Publication> listPublicaciones = mongoTransations.consultarPublicationesRecientes();
+			
+			
+			for(Publication publicacion : listPublicaciones){
+						
+				JsonObject object = new JsonObject();
+				
+				object.addProperty("id_publication",publicacion.getId_publication());
+				object.addProperty("photo", Base64.encode(publicacion.getPhoto()));
+				object.addProperty("weather", publicacion.getWeather());
+				object.addProperty("date", publicacion.getDate().toString());
+				object.addProperty("Descripcion", publicacion.getDescripcion());
+				String ubicacion = mongoTransations.consultarUbication(Integer.parseInt(publicacion.getId_Barrio()));
+				String datosAuthor = hibernateTransations.consultarAuthor(publicacion.getAuthor());
+				
+				
+				json += object.toString().substring(0, object.toString().length()-1)+ubicacion+datosAuthor+","; 
+			}
+			
+			return json.substring(0, json.length()-1)+"]";
+					
+		}
 	
 
 

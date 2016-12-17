@@ -119,6 +119,24 @@ public class mongoTransations {
 		System.out.println(q1s.size());
 		return q1s;
 	}
+	
+
+		public static List<Publication> consultarPublicationesRecientes() {
+
+			List<Publication> q1s = null;
+			
+					
+					/*q1s = operation.find(new Query(
+							Criteria.where("date").gte(fecha).where("photo").exists(true)).limit(4),Publication.class);*/
+					
+					q1s = operation.find(new Query(
+									Criteria.where("photo").exists(true)
+							).limit(6).with(new Sort(Sort.Direction.DESC, "date")),Publication.class);
+			
+			System.out.println(q1s.size());
+			return q1s;
+		}
+	
 	public static List ActualizarPublic(int Id) {
 		List<Publication> list;
 		Date fecha = new Date();
@@ -291,11 +309,12 @@ public class mongoTransations {
 		Etd.setTipo(Tiempo(Hora));
 		Etd.setComuna(Comuna);
 		int vlrEstado=hibernateTransations.ObtVlEdt(author);
+		System.out.println("Valor de estado es: "+vlrEstado);
 		if(ConsultarEstadistica(Etd).isEmpty()){
-			if(weather.equals("rain"))Etd.setRain(1);
-			if(weather.equals("storm"))Etd.setStorm(1);
-			if(weather.equals("tempered"))Etd.setTempered(1);
-			if(weather.equals("sunny"))Etd.setSunny(1);
+			if(weather.equals("rain"))Etd.setRain(vlrEstado);
+			if(weather.equals("storm"))Etd.setStorm(vlrEstado);
+			if(weather.equals("tempered"))Etd.setTempered(vlrEstado);
+			if(weather.equals("sunny"))Etd.setSunny(vlrEstado);
 			registrarEtd(Etd);
 			System.out.println("Entro en la lista es empty");
 		}else{
