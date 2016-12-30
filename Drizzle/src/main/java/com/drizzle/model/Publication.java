@@ -17,7 +17,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.mysql.jdbc.Blob;
-
+//pulido
 @Entity
 @Document (collection="publication")
 public class Publication {
@@ -26,15 +26,17 @@ public class Publication {
 		 this.id_publication = new ObjectId()._time();
 	}
 	
-	public Publication(int id_publication, Date date, int author, String weather, String descripcion,String id_barrio, byte[] photo) {
-		super();
+
+	public Publication(int id_publication, Date date, int author, String weather, String descripcion, String id_Barrio,
+			byte[] photo, int ptos_publicacion) {
 		this.id_publication = id_publication;
 		this.date = date;
 		this.author = author;
 		this.weather = weather;
 		Descripcion = descripcion;
-		this.Id_Barrio=id_barrio;
+		Id_Barrio = id_Barrio;
 		this.photo = photo;
+		this.ptos_publicacion = ptos_publicacion;
 	}
 
 
@@ -48,7 +50,7 @@ public class Publication {
 	String Descripcion;
 	String Id_Barrio;
 	byte[] photo;
-	
+	int ptos_publicacion;
 	
 
 	public String getDescripcion() {
@@ -112,12 +114,24 @@ public class Publication {
 	public void setId_Barrio(String id_Barrio) {
 		Id_Barrio = id_Barrio;
 	}
+	
+	
+
+	public int getPtos_publicacion() {
+		return ptos_publicacion;
+	}
+
+	@Required
+	public void setPtos_publicacion(int ptos_publicacion) {
+		this.ptos_publicacion = ptos_publicacion;
+	}
+
 
 	@Override
 	public String toString() {
 		return "Publication [id_publication=" + id_publication + ", date=" + date + ", author=" + author + ", weather="
 				+ weather + ", Descripcion=" + Descripcion + ", Id_Barrio=" + Id_Barrio + ", photo="
-				+ Arrays.toString(photo) + "]";
+				+ Arrays.toString(photo) + ", ptos_publicacion=" + ptos_publicacion + "]";
 	}
 
 	

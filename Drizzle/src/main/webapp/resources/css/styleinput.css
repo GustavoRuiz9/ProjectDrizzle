@@ -46,3 +46,12 @@ float:left;
   border-color: transparent;
 }
 
+.modalconfirm {
+  A:link, A:visited { text-decoration: none }
+  A:hover { text-decoration: underline }
+}
+.selectolv {
+  hover { text-decoration: underline }
+}
+
+

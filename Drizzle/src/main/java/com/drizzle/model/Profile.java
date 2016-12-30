@@ -9,10 +9,10 @@ import org.springframework.beans.factory.annotation.Required;
 @Table
 public class Profile {
 
-	public Profile(int profile_account, byte[] photo, boolean auto_ubication, boolean estatus, int reputation) {
+	public Profile(int profile_account, byte[] photo, String verification, boolean estatus, int reputation) {
 		this.profile_account = profile_account;
 		this.photo = photo;
-		this.auto_ubication = auto_ubication;
+		this.verification = verification;
 		this.estatus = estatus;
 		this.reputation = reputation;
 	}
@@ -28,7 +28,7 @@ public class Profile {
 	
 	//private String ubication;                      //CAMPO PENDIENTE CUANDO SE CREE ESTABA CLASE!!!
 	
-	private boolean auto_ubication;
+	private String verification;
 	
 	private boolean estatus;
 	
@@ -54,20 +54,19 @@ public class Profile {
 		this.photo = photo;
 	}
 
-	public boolean isAuto_ubication() {
-		return auto_ubication;
-	}
-	@Required
-	public void setAuto_ubication(boolean auto_ubication) {
-		this.auto_ubication = auto_ubication;
-	}
-
 	public boolean isEstatus() {
 		return estatus;
 	}
 	@Required
 	public void setEstatus(boolean estatus) {
 		this.estatus = estatus;
+	}
+	
+	public String getVerification() {
+		return verification;
+	}
+	public void setVerification(String verification) {
+		this.verification = verification;
 	}
 	public int getReputation() {
 		return reputation;
@@ -79,7 +78,7 @@ public class Profile {
 
 	@Override
 	public String toString() {
-		return "Profile [profile_account=" + profile_account + ", photo=" + photo + ", auto_ubication=" + auto_ubication
+		return "Profile [profile_account=" + profile_account + ", photo=" + photo + ", verification=" + verification
 				+ ", estatus=" + estatus + ", reputation=" + reputation + "]";
 	}
 			

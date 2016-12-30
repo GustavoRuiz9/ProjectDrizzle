@@ -46,11 +46,12 @@ public class hibernateTransations {
 	
 	
 	@SuppressWarnings("finally")
-	public static List consultarAccount(String emailAccount) {
+	public static Object[] consultarAccount(String emailAccount) {
 
 		Session session = HibernateUtil.getSessionFactory().openSession();
-		List<Account> results;
-		String sentenciaSQL = "Select a FROM Account as a Where a.email = ?";
+		List<Object[]> results;
+		Object[] resul= new Object[0];
+		String sentenciaSQL = "Select a.email, a.password, p.estatus FROM Account a, Profile p Where a.email = ? and a.id_account = p.profile_account";
 		
 		try{
 		
@@ -58,10 +59,16 @@ public class hibernateTransations {
 			Query query = session.createQuery(sentenciaSQL);			
 			query.setParameter(0,emailAccount);
 			results = query.getResultList();
+			if(results.isEmpty()){
+			}else{
+				resul=results.get(0);	
+			}
+			
 			//System.out.println(query.getResultList()+"");
 			System.out.println("Select Successful");
 			//if(results.isEmpty())
-				return results;
+			System.out.println("consulta Account " + query.toString());
+				return resul;
 			
 			
 			
@@ -99,13 +106,13 @@ public class hibernateTransations {
 	}
 	
 	
-	public static boolean registrarProfile(int idAccount) {
+	public static boolean registrarProfile(int idAccount,String verification) {
 
 		Profile new_profile = new Profile();
 		new_profile.setProfile_account(idAccount);
 		new_profile.setReputation(0);
-		new_profile.setAuto_ubication(false);
-		new_profile.setEstatus(true);
+		new_profile.setVerification(verification);
+		new_profile.setEstatus(false);
 		
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		
@@ -186,7 +193,7 @@ public class hibernateTransations {
 	public static Object [] consultarDatosSesion(String emailAccount) {
 		Session session = HibernateUtil.getSessionFactory().openSession();		
 		Object [] datos;
-		String sentenciaSQL = "Select a.id_account,a.name,a.last_name,p.photo FROM Account a,Profile p Where p.profile_account = a.id_account and a.email = ?";
+		String sentenciaSQL = "Select a.id_account,a.name,a.last_name,p.photo,a.password FROM Account a,Profile p Where p.profile_account = a.id_account and a.email = ?";
 		
 		try{
 			//HttpSession sesion = request.getSession();
@@ -211,6 +218,39 @@ public class hibernateTransations {
 		}
 
 	}
+	
+	
+	public static Object [] validarUsuario(String email,String verification) {
+		Session session = HibernateUtil.getSessionFactory().openSession();		
+		Object [] datos;
+		String sentenciaSQL = "Select a.name,a.last_name,a.id_account FROM Account a,Profile p Where p.profile_account = a.id_account and p.estatus = 0 and  a.email = ? and p.verification = ?";
+		
+		try{
+			//HttpSession sesion = request.getSession();
+			
+			session.beginTransaction();
+			Query query = session.createQuery(sentenciaSQL);
+			//System.out.println("entro hay");
+			query.setParameter(0,email);
+			query.setParameter(1,verification);
+			//results = query.getResultList();
+			List<Object[]> listDatos = query.getResultList();
+			// for (Object[] datos : listDatos) {
+			datos = listDatos.get(0);  
+			System.out.println(datos[0] + "--" + datos[1]+"--"+datos[2] );
+			return datos;
+			
+
+		}catch (Exception e) {
+			System.out.println("Error en el metodo validarUsuario - " + e.getMessage());
+			return null;
+		}finally {
+			session.disconnect();
+		}
+
+	}
+	
+	
 	
 	@SuppressWarnings("finally")
 	public static Object [] consultarDatos(int id_Author) {
@@ -295,6 +335,32 @@ public class hibernateTransations {
 		}
 		
 	}
+	
+	public static boolean habilitarUsuario(int id_account) {
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		
+		//String sentenciaSQL = "Update a.reputation FROM Profile p Where p.profile_account = a.id_account and a.id_account = " + IdAccount;
+		
+		//Profile profile = (Profile)session.get(Profile.class, IdAccount);
+		
+			try{
+				session.beginTransaction();
+				
+				String sentenciaSQL=("UPDATE profile SET profile.estatus = "+true+" where profile.profile_account = "+id_account);
+				session.createSQLQuery(sentenciaSQL).executeUpdate();
+				session.getTransaction().commit();
+				return true;
+		
+			
+		}catch (Exception e) {
+			System.out.println("Error en el metodo HablitarUsuario - " + e.getMessage());
+			return false;
+		}finally {
+			session.disconnect();
+		}
+		
+	}
+	
 	public static int ObtVlEdt(int Usuario) {
 		System.out.println("EL usurio es :"+Usuario);
 		Session session = HibernateUtil.getSessionFactory().openSession();

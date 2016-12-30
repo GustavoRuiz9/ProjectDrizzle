@@ -74,93 +74,120 @@ function display(data) {
 	$('#Barrio').html(datos[0]);
 }
 
-
+//pulido
 function ValPublication() {
         
         var formData = new FormData(document.getElementById("formPublication"));
+        if(formData.get('weather')){
+	         //obtener div
+	         var parent = document.querySelector('#chat-box');
+	         // Cantidad de div
+		     var divs = parent.querySelectorAll('div');
+		     firtsdiv=(divs[0].id).split('v');
+		     if(firtsdiv[1]=="-1"){
+		    	 
+		    	 document.getElementById(divs[0].id).remove();
+		     }
+		     formData.append("Id_Pb",firtsdiv[1]);
+		     $.ajax({
+	            url: "registrarPublicacion.html",
+	            type: "POST",
+	            dataType: "html",
+	            data:formData,
+	            cache: false,
+	            contentType: false,
+	            processData: false,
+	    			success : function(response) {
+	    				console.log("SUCCESS: ", response);
+	    				ShowPublication(response);
+	    				ConsultaEstadiscticas(document.getElementById("comuna").value);
+	    				$('#myModal').modal('hide');
+	    				//llamar el ShowPublication
+	    			},
+	    			error : function(e) {
+	    				console.log("ERROR: ", e);
+	    				display(e);
+	    			},
+	    			done : function(e) {
+	    				console.log("DONE");
+	    			}
+	    		});
+	     
+        }else{
+        	/*$(function() {
+        	    $.bootstrapGrowl("This is a test.");
+        	});*/
+        	
+        	setTimeout(function() {
+                $.bootstrapGrowl("Seleccione un tipo de Clima!", {
+                    type: 'danger',
+                    align: 'center',
+                    stackup_spacing: 30
+                });
+            }, 10);
         
-         //obtener div
-         var parent = document.querySelector('#chat-box');
-         // Cantidad de div
-	     var divs = parent.querySelectorAll('div');
-	     firtsdiv=(divs[0].id).split('v');
-	     if(firtsdiv[1]=="-1"){
-	    	 
-	    	 document.getElementById(divs[0].id).remove();
-	     }
-	     formData.append("Id_Pb",firtsdiv[1]);
-	     $.ajax({
-            url: "registrarPublicacion.html",
-            type: "POST",
-            dataType: "html",
-            data:formData,
-            cache: false,
-            contentType: false,
-            processData: false,
-    			success : function(response) {
-    				console.log("SUCCESS: ", response);
-    				ShowPublication(response);
-    				ConsultaEstadiscticas(document.getElementById("comuna").value);
-    				//llamar el ShowPublication
-    			},
-    			error : function(e) {
-    				console.log("ERROR: ", e);
-    				display(e);
-    			},
-    			done : function(e) {
-    				console.log("DONE");
-    			}
-    		});
+
+        }
     
     }
 
-//cambios
+//pulido
 function regComment() {
     
 	var formData = new FormData();
     var descriptionComentary = document.getElementById("textarearDescription").value;
     
-     //obtener div
-     var parent = document.querySelector('#myModalLabelPublication');
-     // Cantidad de div
-     var divs = parent.querySelectorAll('div');
-     firtsdiv=(divs[0].id).split('v');
-     
-     //obtener div
-     var parent2 = document.querySelector('#myModalLabelComments');
-     // Cantidad de div
-     var divs2 = parent2.querySelectorAll('div');
-     firtsdiv2=(divs2[0].id).split('v');
-     if(firtsdiv2[1]=="-1"){
-    	 document.getElementById(divs2[0].id).remove();
-     }
-     
-     formData.append("descriptionComentary",descriptionComentary);
-     formData.append("id_publication",firtsdiv[1]);
-     formData.append("UltDivCommentary",firtsdiv2[1]);
-     
-     $.ajax({
-        url: "registrarCommentary.html",
-        type: "POST",
-        dataType: "html",
-        data:formData,
-        cache: false,
-        contentType: false,
-        processData: false,
-			success : function(response) {
-				console.log("SUCCESS: ", response);
-				paintComments(JSON.parse(response));
-				//ShowPublication(response); dividir esto en 2 metodos uno para comentarios y otro para publi q llame a ....
-				//llamar el ShowPublication
-			},
-			error : function(e) {
-				console.log("ERROR: ", e);
-				display(e);
-			},
-			done : function(e) {
-				console.log("DONE");
-			}
-		});
+    if(descriptionComentary.trim() != ""){
+	     //obtener div
+	     var parent = document.querySelector('#myModalLabelPublication');
+	     // Cantidad de div
+	     var divs = parent.querySelectorAll('div');
+	     firtsdiv=(divs[0].id).split('v');
+	     
+	     //obtener div
+	     var parent2 = document.querySelector('#myModalLabelComments');
+	     // Cantidad de div
+	     var divs2 = parent2.querySelectorAll('div');
+	     firtsdiv2=(divs2[0].id).split('v');
+	     if(firtsdiv2[1]=="-1"){
+	    	 document.getElementById(divs2[0].id).remove();
+	     }
+	     
+	     formData.append("descriptionComentary",descriptionComentary);
+	     formData.append("id_publication",firtsdiv[1]);
+	     formData.append("UltDivCommentary",firtsdiv2[1]);
+	     
+	     $.ajax({
+	        url: "registrarCommentary.html",
+	        type: "POST",
+	        dataType: "html",
+	        data:formData,
+	        cache: false,
+	        contentType: false,
+	        processData: false,
+				success : function(response) {
+					console.log("SUCCESS: ", response);
+					paintComments(JSON.parse(response));
+					//ShowPublication(response); dividir esto en 2 metodos uno para comentarios y otro para publi q llame a ....
+					//llamar el ShowPublication
+				},
+				error : function(e) {
+					console.log("ERROR: ", e);
+					display(e);
+				},
+				done : function(e) {
+					console.log("DONE");
+				}
+			});
+    }else{
+    	setTimeout(function() {
+            $.bootstrapGrowl("Comenta con algo!", {
+                type: 'info',
+                align: 'center',
+                stackup_spacing: 30
+            });
+        }, 10);
+    }
 
 }
 
@@ -192,8 +219,9 @@ function ShowPublication(data) {
 		 		'<button id="'+dato[cont].id_publication+'" class="btn btn-default" data-toggle="modal" onclick="DisplayComments(this.id)">'+
 				'<span class="glyphicon glyphicon-pencil"></span>'+
 				'</button>'+
+				'<small> <b> <i>'+dato[cont].barrio+' (comuna '+ dato[cont].comuna+ ')'+'</i></b></small>'+
 				'</div>';
-		 		//cambios
+		 		//pulido
 		 	}else{
 		 		if(dato[cont].author=="false"){
 		 			Btn='<div class="attachment">'+
@@ -203,8 +231,9 @@ function ShowPublication(data) {
 			 		'<button id="'+dato[cont].id_publication+'" class="btn btn-default" data-toggle="modal" onclick="DisplayComments(this.id)">'+
 					'<span class="glyphicon glyphicon-pencil"></span>'+
 					'</button>'+
+					'<small> <b> <i>'+dato[cont].barrio+' (comuna '+ dato[cont].comuna+ ')'+'</i></b></small>'+
 					'</div>';	
-		 			//cambios
+		 			//pulido
 		 		}else{
 		 			Btn='<div class="attachment">'+
 		        	'<button id="'+dato[cont].id_publication+'" class="btn btn-default" onclick="Like(this.id)" >'+
@@ -213,8 +242,9 @@ function ShowPublication(data) {
 			 		'<button id="'+dato[cont].id_publication+'" class="btn btn-default" data-toggle="modal" onclick="DisplayComments(this.id)">'+
 					'<span class="glyphicon glyphicon-pencil"></span>'+
 					'</button>'+
+					'<small> <b> <i>'+dato[cont].barrio+' (comuna '+ dato[cont].comuna+ ')'+'</i></b></small>'+
 					'</div>';
-		 			//cambios
+		 			//pulido
 
 		 			
 		 		}
@@ -222,18 +252,29 @@ function ShowPublication(data) {
 		 		
 		 	}
 		 	
+		 	//pulido
+		 	var imagen = "";
+		 	if(dato[cont].photo){
+		 		imagen ='</p> <div class="attachment">'+ 
+		 			'<img src="data:image/png;base64,'+dato[cont].photo+'" class="img-responsive">'+
+		 			'</div>';
+		 	}
+		 	var descripcion = "";
+		 	if(dato[cont].Descripcion){
+		 		descripcion = dato[cont].Descripcion; 
+		 	}
+		 	
 		  onclick="consultaPerfil(this.name,this.id)"
 		   newTextBoxDiv.before().html('<img src="data:image/png;base64,'+ dato[cont].profile + '"  alt="user image" class="online" style="cursor: pointer" id="popoveUser'+dato[cont].id_publication+'" name="'+ dato[cont].authorperfil + '" onclick="consultaPerfil(this.name,this.id)" >'+
 				    '<p class="message">'+
 					'<a href="#" class="name">'+
-					'<small class="text-muted pull-right"><i class="fa fa-clock-o"></i>'+dato[cont].date.substring(13, 17)+'</small>'+ dato[cont].nombre_author +
-					'</a>'+
-					dato[cont].weather+
-					'<br>'+
-					dato[cont].Descripcion+
-					'</p> <div class="attachment">'+
-					'<img src="data:image/png;base64,'+dato[cont].photo+'" class="img-responsive">'+
-					'</div>'+Btn);
+					'<small class="text-muted pull-right"><i class="fa fa-clock-o"></i>'+dato[cont].date.split(' ')[3]+'</small>'+ dato[cont].nombre_author +
+					'</a>'+ 
+					'<img src="././resources/img/perfil/'+ dato[cont].weather+ '-weather.png" class="img-responsive"/>'+
+		 			//Pulido
+					descripcion
+					+imagen
+					+Btn);
 
 		   $("#chat-box").prepend(newTextBoxDiv);
 		   cont = cont + 1;
@@ -255,18 +296,22 @@ function ShowComments(data,id_publicacion) {
 		document.querySelector('#myModalLabelTitle').querySelectorAll('h3')[0].innerHTML = 'Publicacion de ' +  
 			dato[0].barrio + ' - ' + dato[0].pto_cardinal + '(Comuna ' + dato[0].comuna +')';
 		
+		var descripcion="";
+		if(dato[0].Descripcion){
+			descripcion = dato[0].Descripcion;
+		}
 		
 		var divPublicacion = $(document.createElement('div')).attr("id", "PubBoxDiv"+dato[0].id_publication).attr("class", 'box-body chat');
-		
+	 	//pulido
 		divPublicacion.before().html('<div class="item"> <img src="data:image/png;base64,'+ dato[0].profile + '" alt="user image" class="online">'+
 				    '<p class="message">'+
 					'<a href="#" class="name">'+
-					'<small class="text-muted pull-right"><i class="fa fa-clock-o"></i>'+dato[0].date.substring(13, 17)+'</small>'+ dato[0].nombre_author +
+					'<small class="text-muted pull-right"><i class="fa fa-clock-o"></i>'+dato[0].date.split(' ')[3]+'</small>'+ dato[0].nombre_author +
 					'</a>'+
-					dato[0].weather+
-					'<br>'+
-					dato[0].Descripcion + "</div>");
-		 
+					'<img src="././resources/img/perfil/'+ dato[0].weather+ '-weather.png" class="img-responsive"/>'+
+		 			//Pulido
+					descripcion + "</div>");
+
 	
 		$("#myModalLabelPublication").empty();
 		$("#myModalLabelComments").empty();
@@ -294,6 +339,7 @@ function ShowComments(data,id_publicacion) {
 	}
 }
 
+
 //cambios
 function paintComments(dato) {
 	alert("pinte comentarios");
@@ -305,11 +351,11 @@ function paintComments(dato) {
 	}else{
 		while (cont <= (dato[0].comments.length-1)){
 			divComment = $(document.createElement('div')).attr("id", "CommBoxDiv"+dato[0].comments[cont].id_commentary).attr("class", 'box-body chat');
-			
+		 	//pulido
 			divComment.before().html('<div class="item"> <img src="data:image/png;base64,'+ dato[0].comments[cont].profile + '" alt="user image" class="online">'+
 				    '<p class="message">'+
 					'<a href="#" class="name">'+
-					'<small class="text-muted pull-right"><i class="fa fa-clock-o"></i>'+dato[0].comments[cont].date + 	'</small>'+ dato[0].comments[cont].nombre_author +
+					'<small class="text-muted pull-right"><i class="fa fa-clock-o"></i>'+dato[0].comments[cont].date.split(' ')[3] + 	'</small>'+ dato[0].comments[cont].nombre_author +
 					'</a>'+
 					dato[0].comments[cont].description + 
 					"</div>");
@@ -318,6 +364,7 @@ function paintComments(dato) {
 		}
 	}
 }
+
 
 function AlertDrop(clicked_id) {
 	div="TextBoxDiv"+clicked_id;
@@ -607,26 +654,407 @@ function getPublicationRecent(){
 //cambios3
 function changeImg(response) {
 	
-		dato=JSON.parse(response);
-		
-		for (var cont = 0; cont < dato.length; cont++) {
+	dato=JSON.parse(response);
+	
+	for (var cont = 0; cont < dato.length; cont++) {
 
-			document.getElementById("imagenIndex"+cont).src='data:image/png;base64,'+ dato[cont].photo;
-			
-			var parent = document.querySelector('#modalIndexImagen'+cont);
-			parent.querySelector('img').src='data:image/png;base64,'+ dato[cont].photo;
-			parent.querySelector('h2').innerHTML = 'Publicacion de ' +  
-			dato[cont].barrio + ' - ' + dato[cont].pto_cardinal + '(Comuna ' + dato[cont].comuna +')';
-		    
-			parent.querySelector('p').innerHTML=dato[cont].Descripcion;
-			parent.querySelectorAll('li')[0].innerHTML=dato[cont].nombre_author;
-			parent.querySelectorAll('li')[1].innerHTML=dato[cont].weather;
-			parent.querySelectorAll('li')[2].innerHTML=dato[cont].date;
-		}
+		document.getElementById("imagenIndex"+cont).src='data:image/png;base64,'+ dato[cont].photo;
 		
+		var parent = document.querySelector('#modalIndexImagen'+cont);
+		parent.querySelectorAll('img')[0].src='data:image/png;base64,'+ dato[cont].photo;
+		parent.querySelector('h2').innerHTML = 'Publicacion de ' +  
+		dato[cont].barrio + ' - ' + dato[cont].pto_cardinal + '(Comuna ' + dato[cont].comuna +')';
+	    
+		parent.querySelector('p').innerHTML=dato[cont].Descripcion;
+		//pulido
+		parent.querySelectorAll('img')[1].src= '././resources/img/perfil/'+ dato[cont].weather+ '-weather2.png';
+		parent.querySelectorAll('li')[0].innerHTML=dato[cont].nombre_author;
+		fechaModal = dato[cont].date.split(' ');
+		parent.querySelectorAll('li')[1].innerHTML=fechaModal[2]+'/'+fechaModal[1]+'/'+fechaModal[5]+' - '+fechaModal[3];
 		
-	 
+	}
+	
+	
+ 
 }
+
+function registroUsuario() {
+	
+	$('#formularioReg').bootstrapValidator({
+		 
+		 message: 'Este valor no es valido',
+
+		 feedbackIcons: {
+
+			 valid: 'glyphicon glyphicon-ok',
+
+			 invalid: 'glyphicon glyphicon-remove',
+
+			 validating: 'glyphicon glyphicon-refresh'
+
+		 },
+
+		 fields: {
+
+			 name: {
+
+				 validators: {
+
+					 notEmpty: {
+
+						 message: 'El nombre es requerido'
+
+					 }
+
+				 }
+
+			 },
+
+			 lastname: {
+
+				 validators: {
+
+					 notEmpty: {
+
+						 message: 'el apellido es requerido'
+
+					 }
+
+				 }
+
+			 },
+			 
+			  email: {
+
+				 validators: {
+
+					 notEmpty: {
+
+						 message: 'el email es requerido'
+
+					 },
+					 
+					 emailAddress: {
+						 
+						 message: 'El correo electronico no es valido'
+	 
+					 }
+			 
+			 		
+
+				 }
+
+			 },
+			 
+			 birth: {
+
+				 validators: {
+
+					 notEmpty: {
+
+						 message: 'la fecha es requerida'
+
+					 }
+			 
+			 		
+
+				 }
+
+			 },
+			 
+			 phone: {
+
+				 validators: {
+
+					 notEmpty: {
+
+						 message: 'el telefono es requerido'
+
+					 },
+					 regexp: {
+						 
+						 regexp: /^(?=[0-9]*$)(?:.{7}|.{10})$/, 
+	 
+						 message: 'El teléfono solo puede contener numeros'
+	 
+					 }
+			 
+			 		
+
+				 }
+
+			 },
+			 
+			 password: {
+
+				 validators: {
+
+					 notEmpty: {
+
+						 message: 'el password es requerido'
+
+					 },
+					 
+					 stringLength: {
+						 
+						 min: 8,
+						 
+						 max: 12,
+	 
+						 message: 'El password debe contener al menos 8 caracteres'
+	 
+					 }
+			 
+			 		
+
+				 }
+
+			 },
+			 
+			 password2: {
+
+				 validators: {
+
+					 notEmpty: {
+
+						 message: 'el password es requerido'
+
+					 },
+					 identical: {
+		                    field: 'password',
+		                    message: 'los dos campos deben de ser iguales'
+		             }
+
+				 }
+
+			 },
+			 
+			 
+			 
+			 
+
+		 }
+		 
+	});
+	$('#formularioReg').bootstrapValidator().on('submit', function (e) {
+		  if (e.isDefaultPrevented()) {
+		    // handle the invalid form...
+			  console.log('hay problema');
+			  return true;
+		  } else {
+		    // everything looks good!
+			  
+			  console.log('todo melo');
+			  var formData = new FormData(document.getElementById("formularioReg"));
+			  swal({
+				  title: "Verificar Cuenta",
+				  text: "Te enviaremos un enlace a tu cuenta de correo",
+				  type: "info",
+				  closeOnConfirm: false,
+				  showLoaderOnConfirm: true
+				}, function () {
+				  setTimeout(function () {
+					  $.ajax({
+					        url: "registrar.html",
+					        type: "POST",
+					        dataType: "html",
+					        data:formData,
+					        cache: false,
+					        contentType: false,
+					        processData: false,
+								success : function(response) {
+									console.log("SUCCESS: ", response);
+									
+									if(response=="success"){
+										setTimeout(function() {
+									        swal({
+									            title: "Correcto!",
+									            text: "Enlace Enviado!",
+									            type: "success"
+									        }, function() {
+									        	window.location.replace("http://localhost:8080/proyect/"); 
+									        });
+									    }, 1000);	
+									}else{
+										setTimeout(function() {
+									        swal({
+									            title: "Invalido!",
+									            text: "Correo ya registrado!",
+									            type: "error"
+									        });
+									    }, 1000);	
+									}
+									 
+								},
+								error : function(e) {
+									console.log("ERROR: ", e);
+								},
+								done : function(e) {
+									console.log("DONE");
+								}
+							});
+					  
+				  }, 1000);
+				});
+			  return false;
+			  
+		  }
+		});
+		
+}
+
+function Login() {
+	
+	var formData = new FormData(document.getElementById("logger"));
+	$.ajax({
+        url: "login.html",
+        type: "POST",
+        dataType: "html",
+        data:formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+			success : function(response) {
+				console.log("SUCCESS: ", response);
+				
+				if(response=="success"){
+					window.location.replace("http://localhost:8080/proyect/Registrado.html");
+				}else{
+					if(response=="warning"){
+						swal("Datos invalidos!");
+					}else{
+						if(response=="invalidate"){
+							swal("Usuario no verificado!");
+
+						}else{
+							if(response=="error"){
+								swal("Usuario no encontrado!");
+							}
+							
+						}
+						
+					}
+					
+				}
+				 
+			},
+			error : function(e) {
+				console.log("ERROR: ", e);
+			},
+			done : function(e) {
+				console.log("DONE");
+			}
+		});
+	
+	
+	
+ 
+}
+
+function olvCont() {
+	
+	$('#modal1').modal('hide');
+	
+	swal({
+		  title: "Recuperar Password!",
+		  text: "Te enviaremos el password a tu cuenta de correo",
+		  type: "input",
+		  showCancelButton: true,
+		  closeOnConfirm: false,
+		  showLoaderOnConfirm: true,
+		  inputPlaceholder: "Cuenta de correo"
+		}, function (inputValue) {
+		  if (inputValue === false) return false;
+		  
+		  if (inputValue === "") {
+			  
+		    swal.showInputError("Digita por favor el correo!");
+		    return false
+		  }
+		  $.ajax({
+		        url: "olvCont.html",
+		        type: "GET",
+		        dataType: "html",
+		        data:"correo="+inputValue,
+		        cache: false,
+		        contentType: false,
+		        processData: false,
+					success : function(response) {
+						console.log("SUCCESS: ", response);
+						
+						if(response=="success"){
+							 swal("Nice!", "Password enviado!", "success");
+						}else{
+							swal.showInputError("Cuenta de Correo Erronea!");
+						}
+						 
+					},
+					error : function(e) {
+						console.log("ERROR: ", e);
+					},
+					done : function(e) {
+						console.log("DONE");
+					}
+				});
+		 
+		});
+	
+	/*	$.confirm({
+        title: 'Recuperar Password',
+        content:'url:form.html',
+        buttons: {
+            sayMyName: {
+                text: 'Say my name',
+                btnClass: 'btn-warning',
+                action: function () {
+                    var input = this.$content.find('input#Cc');
+                    var errorText = this.$content.find('.text-danger');
+                    if (input.val() == '') {
+                        errorText.html('Por favor digita el correo electronico!').slideDown(200);
+                        return false;
+                    } else {
+                        $.alert('Hello ' + input.val() + ', i hope you have a great day!');
+                    }
+                }
+            },
+            later: function () {
+                // do nothing.
+            }
+        }
+    });
+	
+	
+	$.ajax({
+        url: "olvCont.html",
+        type: "POST",
+        dataType: "html",
+        data:data,
+        cache: false,
+        contentType: false,
+        processData: false,
+			success : function(response) {
+				console.log("SUCCESS: ", response);
+				
+				if(response=="success"){
+					window.location.replace("http://localhost:8080/proyect/Registrado.html");
+				}else{
+					
+				}
+				 
+			},
+			error : function(e) {
+				console.log("ERROR: ", e);
+			},
+			done : function(e) {
+				console.log("DONE");
+			}
+		});*/
+	
+	
+	
+ 
+}
+
 
 
 	

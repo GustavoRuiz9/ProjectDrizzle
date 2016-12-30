@@ -23,6 +23,7 @@
      <mapping class="com.drizzle.model.Account"/>
      <mapping class="com.drizzle.model.Profile"/>
      <mapping class="com.drizzle.model.Setting"/>
+     <mapping class="com.drizzle.model.Correo"/>
      
       
 </session-factory>

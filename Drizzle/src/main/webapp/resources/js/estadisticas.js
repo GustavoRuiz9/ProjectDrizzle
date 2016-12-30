@@ -45,8 +45,9 @@ function cargarmap(Data){
 								matriz[int]=new Array();
 								
 								
+								//pulido
 								for (var int2 = 0; int2 < dato[0].registro[int].length; int2++) {
-	
+									//condicionar con dato[0].registro[int][int2].clima > 0 para q pinte
 									console.log("matriz["+int+"]" + "["+int2+"] = "+ dato[0].registro[int][int2].tipo +","+dato[0].registro[int][int2].clima);
 									matriz[int][int2] = [dato[0].registro[int][int2].tipo,dato[0].registro[int][int2].clima];
 									

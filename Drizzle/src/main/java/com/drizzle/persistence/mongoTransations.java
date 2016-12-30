@@ -155,15 +155,17 @@ public class mongoTransations {
 		Date fecha = new Date();
 
 		if(comuna != 0){
-			//cambio2
+			//pulido
 			list = operation.find(new Query(
-				Criteria.where("fecha").is(trim(fecha)).andOperator(Criteria.where("comuna").is(comuna)		
-				)).with(new Sort(Sort.Direction.ASC, "comuna")).with(new Sort(Sort.Direction.ASC,"tipo")),Estadistica.class);
+					Criteria.where("fecha").is(trim(fecha)).andOperator(Criteria.where("comuna").is(comuna).
+							orOperator(Criteria.where("storm").gt(0),Criteria.where("sunny").gt(0),Criteria.where("rain").gt(0),Criteria.where("tempered").gt(0))
+			)).with(new Sort(Sort.Direction.ASC, "comuna")).with(new Sort(Sort.Direction.ASC,"tipo")),Estadistica.class);
 		}else{
-			//cambio2
+			//pulido
 			list = operation.find(new Query(
-					//modificar tipo en la BD por numeros y hacer al sort otro sort por tipo
-					Criteria.where("fecha").is(trim(fecha))).with(new Sort(Sort.Direction.ASC, "comuna","tipo")),Estadistica.class);
+					Criteria.where("fecha").is(trim(fecha)).
+							orOperator(Criteria.where("storm").gt(0),Criteria.where("sunny").gt(0),Criteria.where("rain").gt(0),Criteria.where("tempered").gt(0))
+							).with(new Sort(Sort.Direction.ASC, "comuna","tipo")),Estadistica.class);
 					//Criteria.where("fecha").is(trim(fecha))),Estadistica.class); //prueba 
 		}
 		
@@ -174,6 +176,11 @@ public class mongoTransations {
 
 	public static void borrarPublication(Publication publication) {
 		operation.remove(new Query(Criteria.where("id_publication").is(publication.getId_publication())), Publication.class);
+	}
+	
+	//pulido
+	public static void borrarComentarios(Publication publication) {
+		operation.remove(new Query(Criteria.where("publication").is(publication.getId_publication())), Comment.class);
 	}
 	
 	public static List ConsultarPosition(String Barrio1, String Barrio2) {
@@ -299,7 +306,7 @@ public class mongoTransations {
 
 		
 	
-	public static boolean UpdateEstadistica(int Comuna,int author,String weather) {
+	public static boolean UpdateEstadistica(int Comuna,int author,String weather,int suma) {
 		
 		Estadistica Etd=new Estadistica();
 		Date fecha = new Date();
@@ -308,7 +315,15 @@ public class mongoTransations {
 		Etd.setFecha(trim(fecha));
 		Etd.setTipo(Tiempo(Hora));
 		Etd.setComuna(Comuna);
-		int vlrEstado=hibernateTransations.ObtVlEdt(author);
+		
+		int vlrEstado=0;
+		
+		if(suma==-1){
+			vlrEstado = hibernateTransations.ObtVlEdt(author);
+		}else{
+			vlrEstado = suma;
+		}
+		
 		System.out.println("Valor de estado es: "+vlrEstado);
 		if(ConsultarEstadistica(Etd).isEmpty()){
 			if(weather.equals("rain"))Etd.setRain(vlrEstado);
@@ -329,10 +344,17 @@ public class mongoTransations {
 			System.out.println("Etd1 - " +Etd2 );
 			Update update=new Update();
 			
-			if(weather.equals("rain"))update.set("rain",Etd2.getRain()+vlrEstado);
-			if(weather.equals("storm"))update.set("storm",Etd2.getStorm()+vlrEstado);
-			if(weather.equals("tempered"))update.set("tempered",Etd2.getTempered()+vlrEstado);
-			if(weather.equals("sunny"))update.set("sunny",Etd2.getSunny()+vlrEstado);
+			if(suma==-1){
+				if(weather.equals("rain"))update.set("rain",Etd2.getRain()+vlrEstado);
+				if(weather.equals("storm"))update.set("storm",Etd2.getStorm()+vlrEstado);
+				if(weather.equals("tempered"))update.set("tempered",Etd2.getTempered()+vlrEstado);
+				if(weather.equals("sunny"))update.set("sunny",Etd2.getSunny()+vlrEstado);
+			}else{
+				if(weather.equals("rain"))update.set("rain",Etd2.getRain()-vlrEstado);
+				if(weather.equals("storm"))update.set("storm",Etd2.getStorm()-vlrEstado);
+				if(weather.equals("tempered"))update.set("tempered",Etd2.getTempered()-vlrEstado);
+				if(weather.equals("sunny"))update.set("sunny",Etd2.getSunny()-vlrEstado);
+			}
 			
 			operation.updateFirst(query, update, Estadistica.class);
 			

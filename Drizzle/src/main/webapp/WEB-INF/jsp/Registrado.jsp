@@ -157,7 +157,7 @@
 				
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-					<button id="BtnPub" name="BtnPub" type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+					<button id="BtnPub" name="BtnPub" type="button" class="btn btn-primary">Save</button>
 					
 				</div>
 
@@ -795,14 +795,22 @@
     					 <img src="data:image/jpg;base64,<%out.print(Base64.encode((byte[])Datos[2]));%>"  alt="user image" class="online" style="cursor: pointer" id="popoveUser<%out.print(lista.get(i).getId_publication());%>" name="<%out.print(lista.get(i).getAuthor());%>" onclick="consultaPerfil(this.name,this.id)">
                       	<p class="message">
                       	<a class="name">
-                        <small class="text-muted pull-right"><i class="fa fa-clock-o"></i><% out.print(date.getHours()+":"+date.getMinutes());%></small>
+                        <!-- pulido -->
+                        <small class="text-muted pull-right"><i class="fa fa-clock-o"></i><% out.print(((date.getHours()<10)?"0"+date.getHours():date.getHours()) +":"+ ((date.getMinutes()<10)?"0"+date.getMinutes():date.getMinutes()) +":"+((date.getSeconds()<10)?"0"+date.getSeconds():date.getSeconds()));%></small>
                         <%out.print(Datos[0]+" "+Datos[1]);%>
                       </a>
-    					<% out.print(lista.get(i).getWeather());%><br><% out.print(lista.get(i).getDescripcion()+"");%>
+    					<img src="././resources/img/perfil/
+						<%out.print(lista.get(i).getWeather());%>-weather.png" class="img-responsive"/>
+						<!-- pulido -->
+						<%if(lista.get(i).getDescripcion()!=null){ out.print(lista.get(i).getDescripcion()+"");}%>
                     	</p>
-                    <div class="attachment">
-                      <img src="data:image/png;base64,<%out.print(Base64.encode((byte[])lista.get(i).getPhoto()));%>" class="img-responsive">
-                    </div>
+                    
+                    <!-- pulido -->
+                    	<% if(lista.get(i).getPhoto()!=null){ %>
+                    		<div class="attachment">
+                      		<img src="data:image/png;base64,<%out.print(Base64.encode((byte[])lista.get(i).getPhoto()));%>" class="img-responsive">
+                      		</div>
+                      	<% } %>
                     <% 
                     if (Integer.parseInt(session.getAttribute("usuario").toString())==(lista.get(i).getAuthor())){
                     %>
@@ -811,10 +819,12 @@
 							 <span class="glyphicon glyphicon-trash"></span>
 						</button>
 						
-						<!-- cambios -->
+												<!-- pulido -->
 						<button id="<%out.print(lista.get(i).getId_publication());%>" class="btn btn-default"  data-toggle="modal" onclick="DisplayComments(this.id)">
 							 <span class="glyphicon glyphicon-pencil"></span>
 						</button>
+						
+						<small> <b> <i> <%out.print(mongoTransations.consultarUbication(Integer.parseInt(lista.get(i).getId_Barrio())).replace("\"","").replaceAll("(,barrio|,pto_cardinal|Oriente|Occidente|Nororiente|Centro|Suroriente|Norte|Centro Nororiente|Suroccidente|Sur)(\\W|$)", "").replace(","," (").replace(":", " ")+")");%> </i> </b></small>
 						
                     </div>
                     <%}else{
@@ -834,6 +844,8 @@
 								 <span class="glyphicon glyphicon-pencil"></span>
 								</button>
 								
+								<small> <b> <i> <%out.print(mongoTransations.consultarUbication(Integer.parseInt(lista.get(i).getId_Barrio())).replace("\"","").replaceAll("(,barrio|,pto_cardinal|Oriente|Occidente|Nororiente|Centro|Suroriente|Norte|Centro Nororiente|Suroccidente|Sur)(\\W|$)", "").replace(","," (").replace(":", " ")+")");%> </i> </b> </small>
+								
 								</div>
                     			</div>
                     			
@@ -852,6 +864,9 @@
 							<button id="<%out.print(lista.get(i).getId_publication());%>" class="btn btn-default"  data-toggle="modal" onclick="DisplayComments(this.id)">
 								 <span class="glyphicon glyphicon-pencil"></span>
 							</button>
+							
+							<!-- pulido -->
+							<small> <b> <i> <%out.print(mongoTransations.consultarUbication(Integer.parseInt(lista.get(i).getId_Barrio())).replace("\"","").replaceAll("(,barrio|,pto_cardinal|Oriente|Occidente|Nororiente|Centro|Suroriente|Norte|Centro Nororiente|Suroccidente|Sur)(\\W|$)", "").replace(","," (").replace(":", " ")+")");%> </i> </b> </small>
 							
 	                    </div>
                     <%}
@@ -1265,6 +1280,8 @@
 </script>
 <!-- Bootstrap 3.3.6 -->
 <script src="././resources/js/bootstrap.min.js"></script>
+<!-- notification pulido -->
+<script src="././resources/js/jquery.bootstrap-growl.js"></script>
 <!-- Morris.js charts -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
 <script src="././resources/js/morris.min.js"></script>

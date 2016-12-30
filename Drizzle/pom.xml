@@ -48,8 +48,12 @@
 		    <version>1.1.1</version>
 		</dependency>
 
-
-		
+<!-- https://mvnrepository.com/artifact/org.imgscalr/imgscalr-lib pulido-->
+		<dependency>
+		    <groupId>org.imgscalr</groupId>
+		    <artifactId>imgscalr-lib</artifactId>
+		    <version>4.2</version>
+		</dependency>
 	    
 
 		<!-- Mysql Hibernate -->
@@ -78,7 +82,19 @@
 			<version>1.2.0.RELEASE</version>
 		</dependency>
 		
-
+		<!-- https://mvnrepository.com/artifact/javax.mail/javax.mail-api -->
+		<dependency>
+    		<groupId>javax.mail</groupId>
+    		<artifactId>javax.mail-api</artifactId>
+    		<version>1.5.5</version>
+		</dependency>
+		
+		<dependency>
+    		<groupId>com.sun.mail</groupId>
+    		<artifactId>javax.mail</artifactId>
+    		<version>1.5.2</version>
+		</dependency>
+		
 		<dependency>
 			<groupId>cglib</groupId>
 			<artifactId>cglib</artifactId>

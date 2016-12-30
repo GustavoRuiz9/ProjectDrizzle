@@ -11,8 +11,21 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Objects;
+import java.util.Properties;
+import java.util.Random;
 import java.util.SimpleTimeZone;
 
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
+import javax.mail.BodyPart;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -22,6 +35,7 @@ import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.jasper.tagplugins.jstl.core.ForEach;
+import org.apache.jasper.tagplugins.jstl.core.Out;
 import org.apache.log4j.helpers.ISO8601DateFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -33,6 +47,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.drizzle.model.Account;
 import com.drizzle.model.Comment;
+import com.drizzle.model.Correo;
 import com.drizzle.model.Estadistica;
 import com.drizzle.model.Like;
 import com.drizzle.model.Profile;
@@ -64,20 +79,124 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import javax.imageio.ImageIO;
+import org.imgscalr.Scalr;
+
 @MultipartConfig
 @Controller
 public class DrizzleController {
 	
 	byte[] b;
 	boolean BtnPerfil;
+	
 	@RequestMapping(value = "/index", method = { RequestMethod.GET, RequestMethod.POST })
 	public ModelAndView redireccionPrincipal(HttpServletRequest request) {
 		HttpSession sesion = request.getSession();
+		boolean pull=false;
+		Object[] Dts;
+		
 		if(request.getParameter("Sign_out")!=null){
 			sesion.invalidate();
 		}
+		try {
+			String usu=request.getParameter("usuario");
+			String ale=request.getParameter("aleatorio");
+			if(!usu.equals("") && !ale.equals("")){
+				Object[] usuario=hibernateTransations.validarUsuario(usu,ale);
+				if(usuario!=null){
+					boolean habi=hibernateTransations.habilitarUsuario(Integer.parseInt(usuario[2].toString()));
+					if(habi){
+						pull=true;
+						System.out.println("Tu Cuenta ha sido Verificada "+usuario[0]);
+						Dts=hibernateTransations.consultarDatosSesion(usu);
+						byte[] photo = (byte[])Dts[3];			
+						String photoBase64 = Base64.encode(photo);
+						sesion.setAttribute("usuario", Dts[0]);
+						sesion.setAttribute("nombres", Dts[1]+" "+Dts[2]);
+						sesion.setAttribute("photo",photoBase64);
+						//Limpiar el Objeto!
+						Dts=null;
+						
+					}
+					
+				}
+				
+					
+			}
+			
+			if(pull==true){
+				pull=false;
+				return new ModelAndView("Registrado");
+			}else{
+				return new ModelAndView("Index");
+			}
+			
+			
+		} catch (Exception e) {
+			System.out.println("no hay valores de verificacion index.html");
+			// TODO: handle exception
+			return new ModelAndView("Index");
+		}
 		
-		return new ModelAndView("Index", "command", new Account());
+		
+		
+		
+	}
+	
+	@RequestMapping(value = "/Registrado", method = { RequestMethod.GET, RequestMethod.POST })
+	public ModelAndView Registrado(HttpServletRequest request) {
+		
+		return new ModelAndView("Registrado");
+	}
+	@RequestMapping(value = "/form", method = { RequestMethod.GET, RequestMethod.POST })
+	public ModelAndView formOlviCont(HttpServletRequest request) {
+		
+		return new ModelAndView("form");
+	}
+	
+	
+	@RequestMapping(value = "/olvCont", method = { RequestMethod.GET, RequestMethod.POST })
+	public @ResponseBody String RContrasena(HttpServletRequest request) {
+		//MODIFICAR PARA QUE ACTUALICE EL DIV DE LAS PUBLICACIONES Y NO TODO REGISTRADO.jsp
+		Object[] Dts;
+		String correo = request.getParameter("correo");
+		//String ingreso = request.getParameter("botoningreso");
+		Correo c= new Correo();
+		
+		
+		try {
+			
+					Dts=hibernateTransations.consultarDatosSesion(correo);
+					if(Dts!=null){
+						c.setContrasenia("smcovdpwpmuvijzq");
+						c.setUsuarioCorreo("drizzleweb@hotmail.com");
+						c.setAsunto("Solicitu Recuperacion de contraseña drizzleWeb");
+						c.setMensaje("<h2>solicitud de Recuperacion de contraseña</h2> <br> "
+								+ "<h4>"+Dts[1]+"Tu password Es:"+Dts[4]+"</h4> <br>"
+								+ "<a href='http://localhost:8080/proyect/'>Drizzleweb</a> <br>"
+								+ "<h4>DrizzleWeb.com</h4>");
+						c.setDestino(correo);
+						if(enviarCorreo(c)){
+							System.out.println("Mensaje Enviado");
+						}else{
+							System.out.println("Mensaje no enviado");
+							}
+						return "success";
+					}else{
+						return "error";
+					}
+			
+		} catch (Exception e) {
+			System.out.println("error: "+e.getMessage());
+			//return "error";
+			return "fatal";
+		}
+		//return aleatorio;
+	
+		
 	}
 	
 	
@@ -98,10 +217,11 @@ public class DrizzleController {
 					if (!item.isFormField()) {
 						File archivo = new File(ruta + item.getName());
 						item.write(archivo);
-						b = new byte[(int) archivo.length()];
-						FileInputStream fs = new FileInputStream(archivo);
-						fs.read(b);
-						fs.close();
+						b = resize(archivo, true);
+						//b = new byte[(int) archivo.length()];
+						//FileInputStream fs = new FileInputStream(archivo);
+						//fs.read(b);
+						//fs.close();
 						int Id_Usu= Integer.parseInt(sesion.getAttribute("usuario").toString());
 						if (hibernateTransations.actualizarProfile(b,Id_Usu)) {
 							BtnPerfil = true;
@@ -124,27 +244,52 @@ public class DrizzleController {
 		}
 	
 
-	@RequestMapping(value = "/volveregistrar", method = { RequestMethod.GET, RequestMethod.POST })
-	public ModelAndView volverRegistrar(@ModelAttribute Account account,HttpServletRequest request) {
-		//MODIFICAR PARA QUE ACTUALICE EL DIV DE LAS PUBLICACIONES Y NO TODO REGISTRADO.jsp
-		return new ModelAndView("Registrado", "valorCombobox",request.getParameter("comuna"));
-	}
-	
-	
-	
 	@RequestMapping(value = "/registrar", method = { RequestMethod.GET, RequestMethod.POST })
-	public String redireccionregistro(@ModelAttribute Account account, HttpServletRequest request) {
-		HttpSession sesion = request.getSession();
+	public @ResponseBody String redireccionregistro(HttpServletRequest request) {
+		//MODIFICAR PARA QUE ACTUALICE EL DIV DE LAS PUBLICACIONES Y NO TODO REGISTRADO.jsp
 		
-		Object[] Dts;
-		String login = request.getParameter("botonLogin");
-		String ingreso = request.getParameter("botoningreso");
-		//String Cmbfoto = request.getParameter("botonperfil");
-		System.out.println("Login: "+login+" ingreso: "+ingreso+" cambioFoto: "+BtnPerfil);
-
-		if (ingreso!=null) {
+		Account account = new Account();
+		//Object[] Dts;
+		//String login = request.getParameter("botonLogin");
+		//String ingreso = request.getParameter("botoningreso");
+		String aleatorio=CadenaAlfanumAleatoria(8); 
+		Correo c= new Correo();
+		
+		
+		
+	
+	try {
 			
-			if ((hibernateTransations.consultarAccount(account.getEmail())).isEmpty()) {
+			FileItemFactory Interfaz = new DiskFileItemFactory();
+			ServletFileUpload servlet_up = new ServletFileUpload(Interfaz);
+			List objetos = servlet_up.parseRequest(request);
+			for (int i = 0; i < objetos.size(); i++) {
+				FileItem item = (FileItem) objetos.get(i);
+				//System.out.println("objet: "+objetos.get(i).toString() + ", item.getFieldName: " + item.getFieldName() + ", item.getString: " + item.getString());
+				
+				if (item.getFieldName().equals("name")) {
+					account.setName(item.getString());
+				}
+				if (item.getFieldName().equals("lastname")) {
+					account.setLast_name(item.getString());
+				}
+				if (item.getFieldName().equals("email")) {
+					account.setEmail(item.getString());
+				}
+				if (item.getFieldName().equals("birth")) {
+					account.setBirth_date(item.getString());
+				}
+				if (item.getFieldName().equals("phone")) {
+					account.setNumber_phone(item.getString());
+				}
+				if (item.getFieldName().equals("password")) {
+					account.setPassword(item.getString());
+				}
+				
+			}
+			System.out.println(account.getName()+"--"+account.getLast_name()+"--"+account.getNumber_phone()+"--"+account.getEmail()+"--"+account.getBirth_date()+"--"+account.getPassword()+"--"+account.getId_account());
+			
+			if ((hibernateTransations.consultarAccount(account.getEmail())).length==0) {
 				
 				if (hibernateTransations.registrarAccount(account)) {
 					
@@ -152,35 +297,155 @@ public class DrizzleController {
 					new_setting.setId_profile_account(account.getId_account());
 					new_setting.setCorreo(false);
 					new_setting.setTelefono(false);
+					System.out.println(new_setting.getId_profile_account()+"--"+new_setting.isCorreo()+"--"+new_setting.isTelefono());
 					
 					if (hibernateTransations.registrarAjustes(new_setting)) {
 					
-						hibernateTransations.registrarProfile(account.getId_account());
+						hibernateTransations.registrarProfile(account.getId_account(),aleatorio);
 					
+					c.setContrasenia("smcovdpwpmuvijzq");
+					c.setUsuarioCorreo("drizzleweb@hotmail.com");
+					c.setAsunto("Bienvenido a drizzleWeb");
+					c.setMensaje("<h2>Bievenido ahora puedes compartir El estado del Clima</h2> <br> "
+							+ "<h3>Recuerda solo en la ciudad de cali!</h3> <br> "
+							+ "<h4>Este es un correo de verificacion Por favor pulsa en el enlace: </h4> <br>"
+							+ "<a href='http://localhost:8080/proyect/index.html?usuario="+account.getEmail()+"&aleatorio="+aleatorio+"'>Enlace</a> <br>"
+							+ "<h4>DrizzleWeb.com</h4>");
+					c.setDestino(account.getEmail());
 					
-					Dts=hibernateTransations.consultarDatosSesion(account.getEmail());
-					byte[] photo = (byte[])Dts[3];			
-					
-					String photoBase64 = Base64.encode(photo);
-					
-					sesion.setAttribute("usuario", Dts[0]);
-					sesion.setAttribute("nombres", Dts[1]+" "+Dts[2]);
-					sesion.setAttribute("photo",photoBase64);
-					//Limpiar el Objeto!
-					Dts=null;
-					
-					return "Registrado";
 				}
 				
-				}else{
-					return "redirect:/index.html#contact";
 				}
+				System.out.println("entro!");
+				
+				if(enviarCorreo(c)){
+					System.out.println("Mensaje Enviado");
+				}else{
+					System.out.println("Mensaje no enviado");
+					}
+				return "success";
 			}else{
-				return "redirect:/index.html#contact";
-				 }
+				return "error";
+			}
+			
+				
+			
+		} catch (Exception e) {
+			System.out.println("error: "+e.getMessage());
+			//return "error";
+			return "fatal";
+		}
+		//return aleatorio;
+	
+		
+		
+		
+	}
+	
+	//pulido
+		public static byte[] resize(File icon, boolean perfil) {
+	        try {
+	        	
+	        	int ancho = 900;
+	        	int alto = 650;
+	        	
+	        	if(perfil){
+	        		ancho = 215;
+	        		alto = 215;
+	        	}
+	        	
+	        	System.out.println("pongalos en acho:"+ancho + " alto:"+alto);
+	        	
+	           BufferedImage originalImage = ImageIO.read(icon);
 
-		}else 
-			if(login!=null){
+	           	originalImage = Scalr.resize(originalImage, Scalr.Method.QUALITY, Scalr.Mode.FIT_EXACT, ancho, alto);
+	            //To save with original ratio uncomment next line and comment the above.
+	            //originalImage= Scalr.resize(originalImage, 153, 128);
+	            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	            ImageIO.write(originalImage, "png", baos);
+	            baos.flush();
+	            byte[] imageInByte = baos.toByteArray();
+	            baos.close();
+	            return imageInByte;
+	        } catch (Exception e) {
+	        	System.out.println("error en el metodo resize");
+	            return null;
+	        }
+		}
+
+	
+	
+	@RequestMapping(value = "/login", method = { RequestMethod.GET, RequestMethod.POST })
+	public @ResponseBody String Logger(HttpServletRequest request) {
+		HttpSession sesion = request.getSession();
+		Account account = new Account();
+		Object[] Dts;
+		
+		try {
+					String usu="";
+					String pass="";
+					FileItemFactory Interfaz = new DiskFileItemFactory();
+					ServletFileUpload servlet_up = new ServletFileUpload(Interfaz);
+					List objetos = servlet_up.parseRequest(request);
+					for (int i = 0; i < objetos.size(); i++) {
+						FileItem item = (FileItem) objetos.get(i);
+						//System.out.println("objet: "+objetos.get(i).toString() + ", item.getFieldName: " + item.getFieldName() + ", item.getString: " + item.getString());
+						
+						if (item.getFieldName().equals("user_name")) {
+							usu=item.getString();
+						}
+						if (item.getFieldName().equals("pass")) {
+							pass=item.getString();
+						}
+						
+					}
+					
+					Object[] results;  
+					Date fecha = new Date();
+					Calendar cal = Calendar.getInstance();
+					Date date = new Date(fecha.getTime()-18000000);
+					
+						System.out.println("Esta fecha menos 5 Horas: "+date );
+						results=(hibernateTransations.consultarAccount(usu));
+						if(!(results.length==0)){
+							System.out.println("estatus es: "+results[2]);
+							if(results[2].toString().equals("true")){
+								if(usu.equals(results[0]) && pass.equals(results[1])){
+									
+									Dts=hibernateTransations.consultarDatosSesion(results[0].toString());
+									byte[] photo = (byte[])Dts[3];			
+									String photoBase64 = Base64.encode(photo);
+									sesion.setAttribute("usuario", Dts[0]);
+									sesion.setAttribute("nombres", Dts[1]+" "+Dts[2]);
+									sesion.setAttribute("photo",photoBase64);
+									//Limpiar el Objeto!
+									Dts=null;
+									return "success";
+									}else{
+									System.out.println("Datos incorrectos");
+									return "warning";
+									}
+							}else{
+								return "invalidate";
+							}
+							
+						}else{
+							return "error";
+						}
+					
+					
+					
+				} catch (Exception e) {
+					System.out.println("error: "+e.getMessage());
+					//return "error";
+					return "fatal";
+				}
+		
+		
+		
+		/*
+	
+			
 			System.out.println("entro al BtnLogin");
 			String usu = request.getParameter("user_name");
 			String pass = request.getParameter("pass");
@@ -195,7 +460,7 @@ public class DrizzleController {
 				System.out.println("Entro el consul tenia algo!");
 				results=(hibernateTransations.consultarAccount(usu));
 				
-				
+					
 					if(usu.equals(results.get(0).getEmail()) && pass.equals(results.get(0).getPassword())){
 					
 					Dts=hibernateTransations.consultarDatosSesion(results.get(0).getEmail());
@@ -208,10 +473,8 @@ public class DrizzleController {
 					sesion.setAttribute("photo",photoBase64);
 					//Limpiar el Objeto!
 					Dts=null;
-					login=null;
 					return "Registrado";
 					}else{
-					//alert
 					System.out.println("Usuario o Password incorrectos");
 					return "redirect:/index.html#";
 					
@@ -219,95 +482,93 @@ public class DrizzleController {
 				
 				}else{
 					return "redirect:/index.html#contact";
-				}
-			}
-		System.out.println("retorno null");
-		return null;
-
+				}*/
 	}
 	
-	@RequestMapping(value = "/registrarPublicacion", method = { RequestMethod.GET, RequestMethod.POST })
-	public @ResponseBody String registrarPub(HttpServletRequest request) {
-		HttpSession sesion = request.getSession();
-		Publication pub = new Publication();
-		String UltDiv="";
-		
-		
-		
-			try {
-					
-					FileItemFactory Interfaz = new DiskFileItemFactory();
-					ServletFileUpload servlet_up = new ServletFileUpload(Interfaz);
-					List objetos = servlet_up.parseRequest(request);
-					//String ruta = "/opt/tomcat/webapps/drizzleweb/resources/img/perfil/";
-					String ruta = "C://Users//RICARDO OSPINA//WorkspaceSpring//ProjectDrizzle//IMG//";
-					int Comuna=0;
-					int id = Integer.parseInt(sesion.getAttribute("usuario").toString());
-					pub.setAuthor(id);
-					pub.setDate(new Date());
-					for (int i = 0; i < objetos.size(); i++) {
-						FileItem item = (FileItem) objetos.get(i);
-						try{
-						if (item.getFieldName().equals("files")) {
-							if (!item.isFormField()) {
-								File archivo = new File(ruta + item.getName());
-								item.write(archivo);
-								byte[] b = new byte[(int) archivo.length()];
-								FileInputStream fs = new FileInputStream(archivo);
-								fs.read(b);
-								fs.close();
-								pub.setPhoto(b);
+	
+	//pulido
+		@RequestMapping(value = "/registrarPublicacion", method = { RequestMethod.GET, RequestMethod.POST })
+		public @ResponseBody String registrarPub(HttpServletRequest request) {
+			HttpSession sesion = request.getSession();
+			Publication pub = new Publication();
+			String UltDiv="";
+			
+				try {
+						
+						FileItemFactory Interfaz = new DiskFileItemFactory();
+						ServletFileUpload servlet_up = new ServletFileUpload(Interfaz);
+						List objetos = servlet_up.parseRequest(request);
+						String ruta = "C://Users//RICARDO OSPINA//WorkspaceSpring//ProjectDrizzle//IMG//";
+						//String ruta = "/opt/tomcat/webapps/drizzleweb/resources/img/";
+						int Comuna=0;
+						int id = Integer.parseInt(sesion.getAttribute("usuario").toString());
+						pub.setAuthor(id);
+						pub.setDate(new Date());
+						for (int i = 0; i < objetos.size(); i++) {
+							FileItem item = (FileItem) objetos.get(i);
+							try{
+							if (item.getFieldName().equals("files")) {
+								if (!item.isFormField()) {
+									File archivo = new File(ruta + item.getName());
+									item.write(archivo);
+									//byte[] b = new byte[(int) archivo.length()];
+									byte[] b = resize(archivo,false);
+									//FileInputStream fs = new FileInputStream(archivo);
+									//fs.read(b);
+									//fs.close();
+									pub.setPhoto(b);
+								}
+							}}catch (Exception e) {
+								System.out.println("no hay foto!");
 							}
-						}}catch (Exception e) {
-							System.out.println("no hay foto!");
-						}
-						if (item.getFieldName().equals("textareaPublicacion")) {
-							FileItem Descripcion = (FileItem) objetos.get(i);
-							pub.setDescripcion(Descripcion.getString());
+							if (item.getFieldName().equals("textareaPublicacion")) {
+								FileItem Descripcion = (FileItem) objetos.get(i);
+								//pulido
+								if(!Descripcion.getString().trim().isEmpty()){
+									pub.setDescripcion(Descripcion.getString());
+								}
+							}
+							
+							if (item.getFieldName().equals("weather")) {
+								FileItem weather = (FileItem) objetos.get(i);
+								pub.setWeather(weather.getString());
+							}
+							if (item.getFieldName().equals("Id_")) {
+								FileItem Id_Barrio = (FileItem) objetos.get(i);
+								pub.setId_Barrio(Id_Barrio.getString());
+							}
+							if (item.getFieldName().equals("Id_Pb")) {
+								FileItem Id_Pb = (FileItem) objetos.get(i);
+								UltDiv=Id_Pb.getString();
+							}
+							
 						}
 						
-						if (item.getFieldName().equals("weather")) {
-							FileItem weather = (FileItem) objetos.get(i);
-							pub.setWeather(weather.getString());
-						}
-						if (item.getFieldName().equals("Id_")) {
-							FileItem Id_Barrio = (FileItem) objetos.get(i);
-							pub.setId_Barrio(Id_Barrio.getString());
-						}
-						if (item.getFieldName().equals("Id_Pb")) {
-							FileItem Id_Pb = (FileItem) objetos.get(i);
-							UltDiv=Id_Pb.getString();
-						}
-						
+						//Actudalizar estadisticas-->
+						if(pub.getId_Barrio().length()==3){
+							 Comuna= Integer.parseInt(pub.getId_Barrio().substring(0, 1));
+						 }else{
+							 Comuna= Integer.parseInt(pub.getId_Barrio().substring(0, 2));
+						 }
+						 
+						 mongoTransations.UpdateEstadistica(Comuna,id,pub.getWeather(),-1);
+						 pub.setPtos_publicacion(hibernateTransations.ObtVlEdt(id));
+						 
+					} catch (Exception e) {
+						System.out.print("<p>" + e.getMessage() + "</p>");
 					}
+				
+				
+					mongoTransations.registrarPublication(pub);
 					
-					//Actudalizar estadisticas-->
-					if(pub.getId_Barrio().length()==3){
-						 Comuna= Integer.parseInt(pub.getId_Barrio().substring(0, 1));
-					 }else{
-						 Comuna= Integer.parseInt(pub.getId_Barrio().substring(0, 2));
-					 }
-					 
-					 mongoTransations.UpdateEstadistica(Comuna,id,pub.getWeather());
 					
-				} catch (Exception e) {
-					System.out.print("<p>" + e.getMessage() + "</p>");
-				}
+					System.out.println("Dta: "+UltDiv);
+		
+					
+				return UpdateDiv(Integer.parseInt(sesion.getAttribute("usuario").toString()),UltDiv);
+					
+		}
 			
-				
-			
-				mongoTransations.registrarPublication(pub);
-				
-				
-				System.out.println("Dta: "+UltDiv);
-
-				
-				
-				
-			return UpdateDiv(Integer.parseInt(sesion.getAttribute("usuario").toString()),UltDiv);
-				
-	}
-	
 	//cambios
 		@RequestMapping(value = "/registrarCommentary", method = { RequestMethod.GET, RequestMethod.POST })
 		public @ResponseBody String registrarComment(HttpServletRequest request) {
@@ -434,8 +695,15 @@ public class DrizzleController {
 			object.addProperty("id_publication",publication.getId_publication());
 			object.addProperty("weather", publication.getWeather());
 			object.addProperty("date", publication.getDate().toString());
-			object.addProperty("Descripcion", publication.getDescripcion());
-			object.addProperty("photo", Base64.encode(publication.getPhoto()));
+			//pulido
+			if(publication.getDescripcion()!=null){
+				object.addProperty("Descripcion", publication.getDescripcion());
+			}
+			//pulido
+			if(publication.getPhoto()!=null){
+				object.addProperty("photo", Base64.encode(publication.getPhoto()));
+			}
+			
 			int author = publication.getAuthor();
 			object.addProperty("authorperfil",author);
 			
@@ -457,13 +725,16 @@ public class DrizzleController {
 			}
 			//consulta en mysql
 			String datosAuthor = hibernateTransations.consultarAuthor(author);
+			//pulido
+			String datosUbication = mongoTransations.consultarUbication(Integer.parseInt(publication.getId_Barrio()));
 			
-			
+			//pulido
 			if(ListPub.get(ListPub.size()-1).getId_publication() == publication.getId_publication()){
-				jsonCompleto += object.toString().substring(0,object.toString().length()-1) + datosAuthor;
+				jsonCompleto += object.toString().substring(0,object.toString().length()-1) +datosUbication+ datosAuthor;
 			}else{
-				jsonCompleto += object.toString().substring(0,object.toString().length()-1) + datosAuthor+",";
+				jsonCompleto += object.toString().substring(0,object.toString().length()-1) +datosUbication+ datosAuthor+",";
 			}
+
 			
 			object = null;
 			
@@ -565,22 +836,39 @@ public class DrizzleController {
 		return dato;
 	}
 	
-	@RequestMapping(value = "/DeletePublicacion", method = { RequestMethod.GET, RequestMethod.POST })
-	public @ResponseBody String DeletePublicacion(HttpServletRequest request) {
-		HttpSession sesion = request.getSession();
-		int Usuario=Integer.parseInt(sesion.getAttribute("usuario").toString());
-		
-		String id_Pbl = request.getParameter("id_Pbl");
-		String UltDiv = request.getParameter("UltDiv");
-		
-		System.out.println("elminar id_publicacion: "+id_Pbl);
-		Publication Pb = new Publication();
-		Pb.setId_publication(Integer.parseInt(id_Pbl));
-		id_Pbl="";
-		mongoTransations.borrarPublication(Pb);
-		
-		 return UpdateDiv(Usuario,UltDiv);
-	}
+	//pulido
+		@RequestMapping(value = "/DeletePublicacion", method = { RequestMethod.GET, RequestMethod.POST })
+		public @ResponseBody String DeletePublicacion(HttpServletRequest request) {
+			HttpSession sesion = request.getSession();
+			int Usuario=Integer.parseInt(sesion.getAttribute("usuario").toString());
+			int Comuna = 0;
+			String id_Pbl = request.getParameter("id_Pbl");
+			String UltDiv = request.getParameter("UltDiv");
+			
+			System.out.println("elminar id_publicacion y comments: "+id_Pbl);
+			Publication Pb = new Publication();
+			Pb = mongoTransations.consultarPublication(Integer.parseInt(id_Pbl));
+			System.out.println("id_publicacion "+Pb.getId_publication());
+			//consultar Publicacion por id_Pbl
+			//Pb.setId_publication(Integer.parseInt(id_Pbl));
+			id_Pbl="";
+			
+			//Actudalizar estadisticas-->
+			if(Pb.getId_Barrio().length()==3){
+				 Comuna= Integer.parseInt(Pb.getId_Barrio().substring(0, 1));
+			 }else{
+				 Comuna= Integer.parseInt(Pb.getId_Barrio().substring(0, 2));
+			 }
+			
+			mongoTransations.UpdateEstadistica(Comuna,Usuario,Pb.getWeather(),Pb.getPtos_publicacion());
+			
+			mongoTransations.borrarPublication(Pb);
+			//pulido
+			mongoTransations.borrarComentarios(Pb);
+			
+			
+			 return UpdateDiv(Usuario,UltDiv);
+		}
 	
 	
 	
@@ -911,6 +1199,84 @@ public String crearJsonEstadisticas(List<Estadistica> listEstadisticas) {
 			return json.substring(0, json.length()-1)+"]";
 					
 		}
+		
+	public boolean enviarCorreo(Correo correo){
+			
+		
+		//correo.setNombreArchivo("profile.png");
+		//correo.setRutaArchivo("C:/Users/RICARDO OSPINA/WorkspaceSpring/ProjectDrizzle/IMG/profile.png");
+		
+		
+		try {
+			Properties p = new Properties();
+			p.put("mail.smtp.host","smtp.live.com");
+			p.setProperty("mail.smtp.starttls.enable", "true");
+			p.setProperty("mail.smtp.port", "587");
+			p.setProperty("mail.smtp.user", correo.getUsuarioCorreo());
+			p.setProperty("mail.smtp.auth", "true");
+			
+			Session s=Session.getDefaultInstance(p,null);
+			BodyPart texto=new MimeBodyPart();
+			//texto.setText(correo.getMensaje());
+			texto.setContent(correo.getMensaje(), "text/html; charset=utf-8");
+			BodyPart adjunto= new MimeBodyPart();
+			
+			/*if(!correo.getRutaArchivo().equals("")){
+				adjunto.setDataHandler(new DataHandler(new FileDataSource(correo.getRutaArchivo())));
+				adjunto.setFileName(correo.getNombreArchivo());
+			}*/
+			MimeMultipart m=new MimeMultipart();
+			m.addBodyPart(texto);
+			
+			/*if(!correo.getRutaArchivo().equals("")){
+				m.addBodyPart(adjunto);
+				
+			}*/
+			MimeMessage mensaje=new MimeMessage(s);
+			mensaje.setFrom(new  InternetAddress(correo.getUsuarioCorreo()));
+			System.out.println("correo: "+correo.getDestino());
+			mensaje.addRecipient(Message.RecipientType.TO, new InternetAddress(correo.getDestino()));
+			mensaje.setSubject(correo.getAsunto());
+			mensaje.setContent(m);
+			
+			Transport t =s.getTransport("smtp");
+			t.connect(correo.getUsuarioCorreo(),correo.getContrasenia());
+			t.sendMessage(mensaje, mensaje.getAllRecipients());
+			return true;
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println("error en Enviarcorreo "+e.getMessage());
+			return false;
+		}
+			
+			
+					
+	}
+	
+	
+	 public  String CadenaAlfanumAleatoria (int longitud){
+		  String cadenaAleatoria="";
+		  long milis = new java.util.GregorianCalendar().getTimeInMillis();
+		  Random r = new Random(milis);
+		  int i = 0;
+		  while ( i < longitud){
+		  char c = (char)r.nextInt(255);
+		  //System.out.println("char:"+c);
+		  if ( (c >= '0' && c <=9) || (c >='A' && c <='Z') ){
+		  cadenaAleatoria += c;
+		  i ++;
+		  }
+		  }
+		  
+		  return cadenaAleatoria;
+	 }
+	 
+	 
+	 
+	 
+	
+		
+		
 	
 
 

@@ -22,12 +22,15 @@
 
     <!-- Theme CSS Login -->
     <link rel="stylesheet" type="text/css" href="././resources/css/Login.css">
+    <link href="././resources/css/styleinput.css" rel="stylesheet">
 
     <!-- Custom Fonts -->
     <link href="././resources/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
 
+
+	<link href="//oss.maxcdn.com/jquery.bootstrapvalidator/0.5.2/css/bootstrapValidator.min.css" rel="stylesheet"></link
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -35,8 +38,21 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
     
+    <!-- SweetAlert Alertas -->
+	<script  src="././resources/dist12/sweetalert-dev.js"></script>
+    <link rel="stylesheet" href="././resources/dist12/sweetalert.css" /> 
    
    <script src="././resources/js/publicacion.js"></script> 
+   <script src="//oss.maxcdn.com/jquery/1.11.1/jquery.min.js"></script>
+  	<script src="././resources/js/validator.js"></script>
+ 	<!-- jQuery -->
+    <script src="././resources/jquery/jquery.min.js"></script>
+    
+    
+	<!-- Jquery-confirm ventana para recuparar password// -->
+    <link rel="stylesheet" type="text/css" href="././resources/css/jquery-confirm.css"/>
+    <script type="text/javascript" src="././resources/js/jquery-confirm.js"></script>
+
    
 </head>
 
@@ -113,7 +129,8 @@
                                 <i class="fa fa-search-plus fa-3x"></i>
                             </div>
                         </div>
-                        <img id="imagenIndex0" src="././resources/img/portfolio/cabin.png" class="img-responsive" alt="">
+                        <!-- pulido -->
+                        <img id="imagenIndex0" src="././resources/img/portfolio/umbrella.png" class="img-responsive" alt="">
                     </a>
                 </div>
                 <div class="col-sm-4 portfolio-item">
@@ -123,7 +140,8 @@
                                 <i class="fa fa-search-plus fa-3x"></i>
                             </div>
                         </div>
-                        <img id="imagenIndex1" src="././resources/img/portfolio/cabin.png" class="img-responsive" alt="">
+                        <!-- pulido -->
+                        <img id="imagenIndex1" src="././resources/img/portfolio/umbrella.png" class="img-responsive" alt="">
                     </a>
                 </div>
                 <div class="col-sm-4 portfolio-item">
@@ -133,7 +151,8 @@
                                 <i class="fa fa-search-plus fa-3x"></i>
                             </div>
                         </div>
-                        <img id="imagenIndex2" src="././resources/img/portfolio/circus.png" class="img-responsive" alt="">
+                        <!-- pulido -->
+                        <img id="imagenIndex2" src="././resources/img/portfolio/umbrella.png" class="img-responsive" alt="">
                     </a>
                 </div>
                 <div class="col-sm-4 portfolio-item">
@@ -143,7 +162,8 @@
                                 <i class="fa fa-search-plus fa-3x"></i>
                             </div>
                         </div>
-                        <img id="imagenIndex3" src="././resources/img/portfolio/game.png" class="img-responsive" alt="">
+                        <!-- pulido -->
+                        <img id="imagenIndex3" src="././resources/img/portfolio/umbrella.png" class="img-responsive" alt="">
                     </a>
                 </div>
                 <div class="col-sm-4 portfolio-item">
@@ -153,7 +173,8 @@
                                 <i class="fa fa-search-plus fa-3x"></i>
                             </div>
                         </div>
-                        <img id="imagenIndex4" src="././resources/img/portfolio/game.png" class="img-responsive" alt="">
+                        <!-- pulido -->
+                        <img id="imagenIndex4" src="././resources/img/portfolio/umbrella.png" class="img-responsive" alt="">
                     </a>
                 </div>
                 <div class="col-sm-4 portfolio-item">
@@ -163,13 +184,14 @@
                                 <i class="fa fa-search-plus fa-3x"></i>
                             </div>
                         </div>
-                        <img id="imagenIndex5" src="././resources/img/portfolio/submarine.png" class="img-responsive" alt="">
+                        <!-- pulido -->
+                        <img id="imagenIndex5" src="././resources/img/portfolio/umbrella.png" class="img-responsive" alt="">
                     </a>
                 </div>
             </div>
         </div>
     </section>
-
+    
     <!-- About Section -->
     <section class="success" id="about">
         <div class="container">
@@ -208,17 +230,17 @@
                 <div class="col-lg-8 col-lg-offset-2">
                     <!-- To configure the contact form email address, go to mail/contact_me.php and update the email address in the PHP file on line 19. -->
                     <!-- The form should work on most web servers, but if the form is not working you may need to configure your web server differently. -->
-                    <form:form action="registrar.html" id="formularioReg" onsubmit="return myFunction()" data-toggle="validator">
+                  <form method="POST" id="formularioReg" name="formularioReg" enctype="multipart/form-data" onsubmit="return registroUsuario();">
                         <div class="row control-group">
                             <div class="form-group col-xs-12 floating-label-form-group controls">
                                 <div class="col-xs-6">
-                               		<form:label path="name">Name</form:label>
-                          			<form:input type="text" path="name" class="form-control" placeholder="Name" id="name" required="required"/>
+                               		<label  path="name">Name</label>
+                          			<input type="text"  class="form-control" path="name" placeholder="Name" id="name" name="name" required="required"/>
                                 	<p class="help-block text-danger"></p>
                                 </div>
                                 <div class="col-xs-6">
-                                	<form:label path="last_name">Last Name</form:label>
-                                	<form:input type="text" path="last_name" class="form-control" placeholder="Last Name" id="lastname" required="required"/>
+                                	<label path="Last Name">Last Name</label>
+                                	<input type="text" class="form-control" path="Last Name" placeholder="Last Name" id="lastname" name="lastname" required="required"/>
                                 	<p class="help-block text-danger"></p>
                                 </div>
                             </div>
@@ -226,13 +248,13 @@
                          <div class="row control-group">
                             <div class="form-group col-xs-12 floating-label-form-group controls">
                             	<div class="col-xs-6">
-                                	<form:label path="email">Email Address</form:label>
-                                	<form:input type="email" path="email" class="form-control" placeholder="Email Address" id="email" required="required"/>
+                                	<label>Email Address</label>
+                                	<input type="email" class="form-control" placeholder="Email Address" id="email" name="email" required="required"/>
                                 	<p class="help-block text-danger"></p>
                             	</div>
                             	<div class="col-xs-6">
-                                	<form:label path="birth_date">Birth Date</form:label>
-                                	<form:input type="date" path="birth_date" class="form-control" placeholder="Birth Date" id="birth" required="required"/>
+                                	<label>Birth Date</label>
+                                	<input type="date" class="form-control" placeholder="Birth Date" id="birth" name="birth" required="required"/>
                                 	<p class="help-block text-danger"></p>
                             	</div>
                             </div>
@@ -240,8 +262,8 @@
                         <div class="row control-group">
                             <div class="form-group col-xs-12 floating-label-form-group controls">
                                 <div class="col-xs-11">
-                                	<form:label path="number_phone">Phone Number</form:label>
-                                	<form:input type="number" path="number_phone" class="form-control" placeholder="Phone Number" id="phone" required="required"/>
+                                	<label>Phone Number</label>
+                                	<input type="number" class="form-control" placeholder="Phone Number" maxlength="10" id="phone" name="phone" required="required"/>
                                 	<p class="help-block text-danger"></p>
                                 </div>
                             </div>
@@ -250,9 +272,10 @@
                         <div class="row control-group">
                             <div class="form-group col-xs-12 floating-label-form-group controls">
                             	<div class="col-xs-11">
-                                	<form:label path="password">Password</form:label>
-                                	<form:input type="password" path="password" class="form-control" placeholder="Password" id="password" required="required"/>
+                                	<label >Password</label>
+                                	<input type="password" class="form-control" placeholder="Password" id="password" name="password" required="required"/>
                                 	<p class="help-block text-danger"></p>
+                                	
                               	</div>
                             </div>
                         </div>
@@ -260,7 +283,7 @@
                             <div class="form-group col-xs-12 floating-label-form-group controls">
                             	<div class="col-xs-11">
                                 	<label>Confirm Password</label>
-                                	<input type="password" class="form-control" placeholder="Confirmar password" id="password2" required="required"/>
+                                	<input type="password" class="form-control" placeholder="Confirmar password" id="password2" name="password2" required="required"/>
                                 	<p class="help-block text-danger"></p>
                             	</div>
                             </div>
@@ -270,12 +293,11 @@
                         <div class="row">
                             <div class="form-group col-xs-12">
                             	<div class="col-xs-11">
-                                <button type="submit" class="btn btn-success btn-lg" name="botoningreso" value="Btningreso">Registrarme</button>
-                               
+                                <button type="submit" class="btn btn-success btn-lg" name="botonregistro" id="botonregistro" onclick="registroUsuario()">Registrarme</button>
                                 </div>
                             </div>
                         </div>
-                    </form:form>
+                    </form>
                 </div>
             </div>
         </div>
@@ -285,16 +307,15 @@
   			<div class="modal-content modal-popup">
   				<a href="#" class="close-link"><i class="icon_close_alt2"></i></a>
   				<h3 class="white">Login</h3>
-  				<form action="registrar.html" class="popup-form" method="post">
-  					<input type="text" id="user_name" name="user_name" class="form-control form-white" placeholder="Full Name">
-  					<input type="text" id="pass" name="pass" class="form-control form-white" placeholder="Email Address">
+  				<form class="popup-form" method="post" enctype="multipart/form-data" id="logger" name="logger" >
+  					<input type="email" id="user_name" name="user_name" class="form-control form-white" placeholder="Full Name" required="required">
+  					<input type="password" id="pass" name="pass" class="form-control form-white" placeholder="Email Address" required="required">
   					<div class="checkbox-holder text-left">
-  						<div class="checkbox">
-  							<input type="checkbox" value="None" id="squaredOne" name="check" />
-  							<label for="squaredOne"><span>I Agree to the <strong>Terms &amp; Conditions</strong></span></label>
+  						<div>
+  							<label id="demo" class="modalconfirm" style="cursor: pointer" onclick="olvCont()"><span>¿Olvidaste Tu Contraseña?</span></label>
   						</div>
   					</div>
-  					<button type="submit" name="botonLogin" value="Btnlogin" class="btn btn-submit">Submit</button>
+  					<input type="button" name="botonLogin" value="Iniciar Sesion" class="btn btn-submit" onclick="Login()"></input>
   				</form>
   			</div>
   		</div>
@@ -368,25 +389,22 @@
                 <div class="row">
                     <div class="col-lg-8 col-lg-offset-2">
                         <div id = "modalIndexImagen0" class="modal-body">
-                            <h2></h2>
+                            <h2>Comparte el estado del clima de Cali!</h2>
                             <hr class="star-primary">
-                            <img src="././resources/img/portfolio/cabin.png" class="img-responsive img-centered" alt="">
-                            <p></p>
+                            <!-- pulido -->
+                            <img src="././resources/img/portfolio/umbrella.png" class="img-responsive img-centered" alt="">
+                            <p>¿Cómo se encuentra el estado climatico de tu ubicación?</p>
+                            <img id = "imagenClima0" class="img-responsive img-centered" src="././resources/img/perfil/no-weather.png" alt="clima">
                             <ul class="list-inline item-details">
                             
                             	<strong>Autor:</strong>
-                            	<li>
-                            	
+                            	<li>                            	
+                                 tú (regístrate)
                                 </li>
-                                
-                                <strong>Clima:</strong>
-                                <li>
-                                
-                                 </li>
                                  
                                 <strong>Fecha:</strong>
                                 <li>
-                                
+                                hoy 
                                 </li>
                                 
                             </ul>
@@ -409,24 +427,21 @@
                 <div class="row">
                     <div class="col-lg-8 col-lg-offset-2">
                         <div id = "modalIndexImagen1" class="modal-body">
-                            <h2>Project Title</h2>
+                            <h2>Comparte el estado del clima de Cali!</h2>
                             <hr class="star-primary">
-                            <img src="././resources/img/portfolio/cabin.png" class="img-responsive img-centered" alt="">
-                            <p>Useddd this area of the page to describe your project. The icon above is part of a free icon set by <a href="https://sellfy.com/p/8Q9P/jV3VZ/">Flat Icons</a>. On their website, you can download their free set with 16 icons, or you can purchase the entire set with 146 icons for only $12!</p>
+                            <!-- pulido -->
+                            <img src="././resources/img/portfolio/umbrella.png" class="img-responsive img-centered" alt="">
+                            <p>¿Cómo se encuentra el estado climatico de tu ubicación?</p>
+                            <img id = "imagenClima1" class="img-responsive img-centered" src="././resources/img/perfil/no-weather.png" alt="clima">
                             <ul class="list-inline item-details">
                                 <strong>Autor:</strong>
                             	<li>
-                            	
+                            	tú (regístrate)
                                 </li>
                                 
-                                <strong>Clima:</strong>
-                                <li>
-                                
-                                 </li>
-                                 
                                 <strong>Fecha:</strong>
                                 <li>
-                                
+                                hoy
                                 </li>
                             </ul>
                             <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
@@ -448,24 +463,22 @@
                 <div class="row">
                     <div class="col-lg-8 col-lg-offset-2">
                         <div id = "modalIndexImagen2" class="modal-body">
-                            <h2>Project Title</h2>
+                            <h2>Comparte el estado del clima de Cali!</h2>
                             <hr class="star-primary">
-                            <img src="././resources/img/portfolio/circus.png" class="img-responsive img-centered" alt="">
-                            <p>Use this area of the page to describe your project. The icon above is part of a free icon set by <a href="https://sellfy.com/p/8Q9P/jV3VZ/">Flat Icons</a>. On their website, you can download their free set with 16 icons, or you can purchase the entire set with 146 icons for only $12!</p>
+                            <!-- pulido -->
+                            <img src="././resources/img/portfolio/umbrella.png" class="img-responsive img-centered" alt="">
+                            <p>¿Cómo se encuentra el estado climatico de tu ubicación?</p>
+                            <img id = "imagenClima2" class="img-responsive img-centered" src="././resources/img/perfil/no-weather.png" alt="clima">
                             <ul class="list-inline item-details">
                                 <strong>Autor:</strong>
                             	<li>
-                            	
+                            	tú (regístrate)
                                 </li>
                                 
-                                <strong>Clima:</strong>
-                                <li>
-                                
-                                 </li>
                                  
                                 <strong>Fecha:</strong>
                                 <li>
-                                
+                                hoy
                                 </li>
                             </ul>
                             <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
@@ -487,24 +500,22 @@
                 <div class="row">
                     <div class="col-lg-8 col-lg-offset-2">
                         <div id = "modalIndexImagen3" class="modal-body">
-                            <h2>Project Title</h2>
+                            <h2>Comparte el estado del clima de Cali!</h2>
                             <hr class="star-primary">
-                            <img src="././resources/img/portfolio/game.png" class="img-responsive img-centered" alt="">
-                            <p>Use this area of the page to describe your project. The icon above is part of a free icon set by <a href="https://sellfy.com/p/8Q9P/jV3VZ/">Flat Icons</a>. On their website, you can download their free set with 16 icons, or you can purchase the entire set with 146 icons for only $12!</p>
+                            <!-- pulido -->
+                            <img src="././resources/img/portfolio/umbrella.png" class="img-responsive img-centered" alt="">
+                            <p>¿Cómo se encuentra el estado climatico de tu ubicación?</p>
+                            <img id = "imagenClima3" class="img-responsive img-centered" src="././resources/img/perfil/no-weather.png" alt="clima">
                             <ul class="list-inline item-details">
                                 <strong>Autor:</strong>
                             	<li>
-                            	
+                            	tú (regístrate)
                                 </li>
                                 
-                                <strong>Clima:</strong>
-                                <li>
-                                
-                                 </li>
                                  
                                 <strong>Fecha:</strong>
                                 <li>
-                                
+                                hoy
                                 </li>
                             </ul>
                             <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
@@ -526,24 +537,22 @@
                 <div class="row">
                     <div class="col-lg-8 col-lg-offset-2">
                         <div id = "modalIndexImagen4" class="modal-body">
-                            <h2>Project Title</h2>
+                            <h2>Comparte el estado del clima de Cali!</h2>
                             <hr class="star-primary">
-                            <img src="././resources/img/portfolio/cabin.png" class="img-responsive img-centered" alt="">
-                            <p>Use this area of the page to describe your project. The icon above is part of a free icon set by <a href="https://sellfy.com/p/8Q9P/jV3VZ/">Flat Icons</a>. On their website, you can download their free set with 16 icons, or you can purchase the entire set with 146 icons for only $12!</p>
+                            <!-- pulido -->
+                            <img src="././resources/img/portfolio/umbrella.png" class="img-responsive img-centered" alt="">
+                            <p>¿Cómo se encuentra el estado climatico de tu ubicación?</p>
+                            <img id = "imagenClima4" class="img-responsive img-centered" src="././resources/img/perfil/no-weather.png" alt="clima">
                             <ul class="list-inline item-details">
                                 <strong>Autor:</strong>
                             	<li>
-                            	
+                            	tú (regístrate)
                                 </li>
                                 
-                                <strong>Clima:</strong>
-                                <li>
-                                
-                                 </li>
                                  
                                 <strong>Fecha:</strong>
                                 <li>
-                                
+                                hoy
                                 </li>
                             </ul>
                             <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
@@ -565,24 +574,22 @@
                 <div class="row">
                     <div id = "modalIndexImagen5" class="col-lg-8 col-lg-offset-2">
                         <div class="modal-body">
-                            <h2>Project Title</h2>
+                            <h2>Comparte el estado del clima de Cali!</h2>
                             <hr class="star-primary">
-                            <img src="././resources/img/portfolio/submarine.png" class="img-responsive img-centered" alt="">
-                            <p>Use this area of the page to describe your project. The icon above is part of a free icon set by <a href="https://sellfy.com/p/8Q9P/jV3VZ/">Flat Icons</a>. On their website, you can download their free set with 16 icons, or you can purchase the entire set with 146 icons for only $12!</p>
+                            <!-- pulido -->
+                            <img src="././resources/img/portfolio/umbrella.png" class="img-responsive img-centered" alt="">
+                            <p>¿Cómo se encuentra el estado climatico de tu ubicación?</p>
+                            <img id = "imagenClima5" class="img-responsive img-centered" src="././resources/img/perfil/no-weather.png" alt="clima">
                             <ul class="list-inline item-details">
                                 <strong>Autor:</strong>
                             	<li>
-                            	
+                            	tú (regístrate)
                                 </li>
                                 
-                                <strong>Clima:</strong>
-                                <li>
-                                
-                                 </li>
                                  
                                 <strong>Fecha:</strong>
                                 <li>
-                                
+                                hoy
                                 </li>
                             </ul>
                             <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
@@ -594,22 +601,31 @@
     </div>
     
     <!-- jQuery -->
-    <script src="././resources/jquery/jquery.min.js"></script>
+    <script src="././resources/jquery/jquery.min.js"></script>    
+    
 
     <!-- Bootstrap Core JavaScript -->
     <script src="././resources/js/bootstrap.min.js"></script>
+   <!-- <script src="././resources/js/validator.js"></script> -->
+   
+   
+    <!--bootstrapValidator validador campos! // -->
+	   <script src="//oss.maxcdn.com/jquery.bootstrapvalidator/0.5.3/js/bootstrapValidator.min.js"></script>
+       <script src="././resources/js/jqBootstrapValidation.js"></script>
+   
+   
 
     <!-- Plugin JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
 
     <!-- Contact Form JavaScript -->
-    <script src="././resources/js/jqBootstrapValidation.js"></script>
+    
     <script src="././resources/js/contact_me.js"></script>
 
     <!-- Theme JavaScript -->
     <script src="././resources/js/freelancer.min.js"></script>
     
-    <script src="././resources/js/validaciones.js"></script>
+    <!-- <script src="././resources/js/validaciones.js"></script>-->
 
 </body>
 </html>
