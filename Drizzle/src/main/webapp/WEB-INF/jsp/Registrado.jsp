@@ -28,6 +28,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Bienvenido</title>
+  <!-- Icono de Pestaña -->
+  <link rel="shortcut icon" type="image/png" href="././resources/img/perfil/weather-9.png"/>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <!-- Bootstrap 3.3.6 -->
@@ -57,7 +59,7 @@
   <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'>
   <link href="././resources/css/style.css" rel="stylesheet">
    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
-   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCPYXQMu5fcr5_SiKfxyjO7auJdUl4lOTM &callback=initMap"></script>
+   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCPYXQMu5fcr5_SiKfxyjO7auJdUl4lOTM"></script>
    <script src="././resources/js/validaciones.js"></script>
    
   <!-- Stylo del alert Eliminar// -->
@@ -88,8 +90,6 @@
 <body class="hold-transition skin-blue sidebar-mini" onload="ConsultaEstadiscticas('0')">
 
 <!-- Trigger the modal with a button -->
-	<button id="BtnModal" type="button" class="btn btn-info btn-lg" data-toggle="modal"
-		data-target="#myModal">Publicar</button>
 		
 	<!-- Modal -->
 	<div id="myModal" name="myModal" class="modal fade" role="dialog">
@@ -139,7 +139,7 @@
 						
 							  <div class="form-group">
 						      	<!-- <input type="file" id="files" name="files" /> -->
-								<input id="files" accept="image/*" name="files" capture="" type="file">
+								<input id="files" accept="image/*" name="files" capture="" type="file" onchange="checkExt(this)">
 						      </div>
 						     <i class="fa fa-location-arrow"   aria-hidden="true" ></i>
 						      <h5 align="left" id="Barrio"> </h5>
@@ -156,8 +156,8 @@
 				</div>
 				
 				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-					<button id="BtnPub" name="BtnPub" type="button" class="btn btn-primary">Save</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+					<button id="BtnPub" name="BtnPub" type="button" class="btn btn-primary" onclick="ValPublication()">Publicar</button>
 					
 				</div>
 
@@ -199,8 +199,8 @@
                     
                     
                     <div class="modal-footer">
-	                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-	                    <button id="BtnComment" name="BtnComment" type="button" class="btn btn-danger">Save</button>
+	                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+	                    <button id="BtnComment" name="BtnComment" type="button" class="btn btn-danger" onclick="regComment()">Comentar</button>
                 	</div>
             </div>
         </div>
@@ -212,7 +212,7 @@
 
   <header class="main-header">
     <!-- Logo -->
-    <a href="index2.html" class="logo">
+    <a href="Registrado.html" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
       <span class="logo-mini"><b>D</b>Web</span>
       <!-- logo for regular state and mobile devices -->
@@ -228,44 +228,11 @@
       <div class="navbar-custom-menu">
         <ul class="nav navbar-nav">
         
-        		        <li >
-							<form id="formComuna" name="formComuna">
-								<select id="comuna" name="comuna" class="form-control" onchange="Filtro(this.value)">
-									<option value="0">TODAS</option>
-									<option value="1">COMUNA 1</option>
-									<option value="2">COMUNA 2</option>
-									<option value="3">COMUNA 3</option>
-									<option value="4">COMUNA 4</option>
-									<option value="5">COMUNA 5</option>
-									<option value="6">COMUNA 6</option>
-									<option value="7">COMUNA 7</option>
-									<option value="8">COMUNA 8</option>
-									<option value="9">COMUNA 9</option>
-									<option value="10">COMUNA 10</option>
-									<option value="11">COMUNA 11</option>
-									<option value="12">COMUNA 12</option>
-									<option value="13">COMUNA 13</option>
-									<option value="14">COMUNA 14</option>
-									<option value="15">COMUNA 15</option>
-									<option value="16">COMUNA 16</option>
-									<option value="17">COMUNA 17</option>
-									<option value="18">COMUNA 18</option>
-									<option value="19">COMUNA 19</option>
-									<option value="20">COMUNA 20</option>
-									<option value="21">COMUNA 21</option>
-									<option value="22">COMUNA 22</option>
-									
-									
-								</select>
-							</form>
-						</li>
-        
-        
           <!-- Messages: style can be found in dropdown.less-->
           <li class="dropdown messages-menu">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="">
               <i class="fa fa-envelope-o"></i>
-              <span class="label label-success">4</span>
+              <span class="label label-success"></span>
             </a>
             <ul class="dropdown-menu">
               <li class="header">You have 4 messages</li>
@@ -340,9 +307,9 @@
           </li>
           <!-- Notifications: style can be found in dropdown.less -->
           <li class="dropdown notifications-menu">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="">
               <i class="fa fa-bell-o"></i>
-              <span class="label label-warning">10</span>
+              <span class="label label-warning"></span>
             </a>
             <ul class="dropdown-menu">
               <li class="header">You have 10 notifications</li>
@@ -382,9 +349,9 @@
           </li>
           <!-- Tasks: style can be found in dropdown.less -->
           <li class="dropdown tasks-menu">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="">
               <i class="fa fa-flag-o"></i>
-              <span class="label label-danger">9</span>
+              <span class="label label-danger"></span>
             </a>
             <ul class="dropdown-menu">
               <li class="header">You have 9 tasks</li>
@@ -458,9 +425,9 @@
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <img src="data:image/jpg;base64,<% out.print(session.getAttribute("photo")); %>" class="user-image" alt="User Image" id="image0">
-              <span class="hidden-xs">
+              <span id="span0" class="hidden-xs">
 				<% out.println(session.getAttribute("nombres")); %>
-			</span>
+				</span>
             </a>
             <ul class="dropdown-menu">
               <!-- User image -->
@@ -468,21 +435,23 @@
                 <img src="data:image/jpg;base64,<% out.print(session.getAttribute("photo")); %>" class="img-circle" alt="User Image" id="image1">
 
                 <p>
+                <span id="span1">
                   <% out.println(session.getAttribute("nombres")); %>
-                  <small>Member since Nov. 2012</small>
+                </span>
+                  <small><% out.println(session.getAttribute("email"));%></small>
                 </p>
               </li>
               <!-- Menu Body -->
               <li class="user-body">
                 <div class="row">
                   <div class="col-xs-4 text-center">
-                    <a href="#">Followers</a>
+                    <a href="#"></a>
                   </div>
                   <div class="col-xs-4 text-center">
-                    <a href="#">Sales</a>
+                    <a href="#"></a>
                   </div>
                   <div class="col-xs-4 text-center">
-                    <a href="#">Friends</a>
+                    <a href="#"></a>
                   </div>
                 </div>
                 <!-- /.row -->
@@ -490,10 +459,10 @@
               <!-- Menu Footer-->
               <li class="user-footer">
                 <div class="pull-left"id="leftbar">
-                    <button id="myBtn" class="btn btn-default btn-flat" ><i class="fa fa-picture-o"></i> Subir foto</button>
+                    <button id="<% out.print(session.getAttribute("usuario")); %>" onclick="displayfile(this.id)" class="btn btn-default btn-flat" ><i class="fa fa-picture-o"></i> Subir foto</button>
                     <div class="hideform" >
                     <form enctype="multipart/form-data" id="formuploadajax" method="post">
-                    <input id="changeprofile1" type="file" name="imageprofile" >
+                    <input id="changeprofile1" type="file" name="imageprofile" onchange="checkExt(this)">
                     <input type="button" id="Btn" name="botonperfil" value="Btnperfil"/>
                     </form>
                     </div> 
@@ -533,7 +502,9 @@
         </div>
         <div class="pull-left info">
           <p>
+          <span id="span2">
 			<% out.println(session.getAttribute("nombres")); %>
+		  </span>
 		  </p>
           <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
         </div>
@@ -553,19 +524,19 @@
       <ul class="sidebar-menu">
         <li class="header">MAIN NAVIGATION</li>
         <li class="active treeview">
-          <a href="#">
+          <a>
             <i class="fa fa-dashboard"></i> <span>Dashboard</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
           </a>
           <ul class="treeview-menu">
-            <li class="active"><a href="index.html"><i class="fa fa-circle-o"></i> Dashboard v1</a></li>
-            <li><a href="index2.html"><i class="fa fa-circle-o"></i> Dashboard v2</a></li>
+            <li class="active"><a><i class="fa fa-circle-o"></i> Dashboard v1</a></li>
+            <li><a><i class="fa fa-circle-o"></i> Dashboard v2</a></li>
           </ul>
         </li>
         <li class="treeview">
-          <a href="#">
+          <a>
             <i class="fa fa-files-o"></i>
             <span>Layout Options</span>
             <span class="pull-right-container">
@@ -573,14 +544,14 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="././resources/pages/layout/top-nav.html"><i class="fa fa-circle-o"></i> Top Navigation</a></li>
-            <li><a href="././resources/pages/layout/boxed.html"><i class="fa fa-circle-o"></i> Boxed</a></li>
-            <li><a href="././resources/pages/layout/fixed.html"><i class="fa fa-circle-o"></i> Fixed</a></li>
-            <li><a href="././resources/pages/layout/collapsed-sidebar.html"><i class="fa fa-circle-o"></i> Collapsed Sidebar</a></li>
+            <li><a><i class="fa fa-circle-o"></i> Top Navigation</a></li>
+            <li><a><i class="fa fa-circle-o"></i> Boxed</a></li>
+            <li><a><i class="fa fa-circle-o"></i> Fixed</a></li>
+            <li><a><i class="fa fa-circle-o"></i> Collapsed Sidebar</a></li>
           </ul>
         </li>
         <li>
-          <a href="././resources/pages/widgets.html">
+          <a >
             <i class="fa fa-th"></i> <span>Widgets</span>
             <span class="pull-right-container">
               <small class="label pull-right bg-green">new</small>
@@ -596,10 +567,10 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="././resources/pages/charts/chartjs.html"><i class="fa fa-circle-o"></i> ChartJS</a></li>
-            <li><a href="././resources/pages/charts/morris.html"><i class="fa fa-circle-o"></i> Morris</a></li>
-            <li><a href="././resources/pages/charts/flot.html"><i class="fa fa-circle-o"></i> Flot</a></li>
-            <li><a href="././resources/pages/charts/inline.html"><i class="fa fa-circle-o"></i> Inline charts</a></li>
+            <li><a ><i class="fa fa-circle-o"></i> ChartJS</a></li>
+            <li><a ><i class="fa fa-circle-o"></i> Morris</a></li>
+            <li><a ><i class="fa fa-circle-o"></i> Flot</a></li>
+            <li><a ><i class="fa fa-circle-o"></i> Inline charts</a></li>
           </ul>
         </li>
         <li class="treeview">
@@ -611,12 +582,12 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="././resources/pages/UI/general.html"><i class="fa fa-circle-o"></i> General</a></li>
-            <li><a href="././resources/pages/UI/icons.html"><i class="fa fa-circle-o"></i> Icons</a></li>
-            <li><a href="././resources/pages/UI/buttons.html"><i class="fa fa-circle-o"></i> Buttons</a></li>
-            <li><a href="././resources/pages/UI/sliders.html"><i class="fa fa-circle-o"></i> Sliders</a></li>
-            <li><a href="././resources/pages/UI/timeline.html"><i class="fa fa-circle-o"></i> Timeline</a></li>
-            <li><a href="././resources/pages/UI/modals.html"><i class="fa fa-circle-o"></i> Modals</a></li>
+            <li><a ><i class="fa fa-circle-o"></i> General</a></li>
+            <li><a ><i class="fa fa-circle-o"></i> Icons</a></li>
+            <li><a ><i class="fa fa-circle-o"></i> Buttons</a></li>
+            <li><a ><i class="fa fa-circle-o"></i> Sliders</a></li>
+            <li><a ><i class="fa fa-circle-o"></i> Timeline</a></li>
+            <li><a ><i class="fa fa-circle-o"></i> Modals</a></li>
           </ul>
         </li>
         <li class="treeview">
@@ -627,9 +598,9 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="././resources/pages/forms/general.html"><i class="fa fa-circle-o"></i> General Elements</a></li>
-            <li><a href="././resources/pages/forms/advanced.html"><i class="fa fa-circle-o"></i> Advanced Elements</a></li>
-            <li><a href="././resources/pages/forms/editors.html"><i class="fa fa-circle-o"></i> Editors</a></li>
+            <li><a><i class="fa fa-circle-o"></i> General Elements</a></li>
+            <li><a><i class="fa fa-circle-o"></i> Advanced Elements</a></li>
+            <li><a><i class="fa fa-circle-o"></i> Editors</a></li>
           </ul>
         </li>
         <li class="treeview">
@@ -640,12 +611,12 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="././resources/pages/tables/simple.html"><i class="fa fa-circle-o"></i> Simple tables</a></li>
-            <li><a href="././resources/pages/tables/data.html"><i class="fa fa-circle-o"></i> Data tables</a></li>
+            <li><a><i class="fa fa-circle-o"></i> Simple tables</a></li>
+            <li><a><i class="fa fa-circle-o"></i> Data tables</a></li>
           </ul>
         </li>
         <li>
-          <a href="././resources/pages/calendar.html">
+          <a >
             <i class="fa fa-calendar"></i> <span>Calendar</span>
             <span class="pull-right-container">
               <small class="label pull-right bg-red">3</small>
@@ -654,7 +625,7 @@
           </a>
         </li>
         <li>
-          <a href="././resources/pages/mailbox/mailbox.html">
+          <a>
             <i class="fa fa-envelope"></i> <span>Mailbox</span>
             <span class="pull-right-container">
               <small class="label pull-right bg-yellow">12</small>
@@ -671,15 +642,15 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="././resources/pages/examples/invoice.html"><i class="fa fa-circle-o"></i> Invoice</a></li>
-            <li><a href="././resources/pages/examples/profile.html"><i class="fa fa-circle-o"></i> Profile</a></li>
-            <li><a href="././resources/pages/examples/login.html"><i class="fa fa-circle-o"></i> Login</a></li>
-            <li><a href="././resources/pages/examples/register.html"><i class="fa fa-circle-o"></i> Register</a></li>
-            <li><a href="././resources/pages/examples/lockscreen.html"><i class="fa fa-circle-o"></i> Lockscreen</a></li>
-            <li><a href="././resources/pages/examples/404.html"><i class="fa fa-circle-o"></i> 404 Error</a></li>
-            <li><a href="././resources/pages/examples/500.html"><i class="fa fa-circle-o"></i> 500 Error</a></li>
-            <li><a href="././resources/pages/examples/blank.html"><i class="fa fa-circle-o"></i> Blank Page</a></li>
-            <li><a href="././resources/pages/examples/pace.html"><i class="fa fa-circle-o"></i> Pace Page</a></li>
+            <li><a><i class="fa fa-circle-o"></i> Invoice</a></li>
+            <li><a><i class="fa fa-circle-o"></i> Profile</a></li>
+            <li><a><i class="fa fa-circle-o"></i> Login</a></li>
+            <li><a><i class="fa fa-circle-o"></i> Register</a></li>
+            <li><a><i class="fa fa-circle-o"></i> Lockscreen</a></li>
+            <li><a><i class="fa fa-circle-o"></i> 404 Error</a></li>
+            <li><a><i class="fa fa-circle-o"></i> 500 Error</a></li>
+            <li><a><i class="fa fa-circle-o"></i> Blank Page</a></li>
+            <li><a><i class="fa fa-circle-o"></i> Pace Page</a></li>
           </ul>
         </li>
         <li class="treeview">
@@ -690,9 +661,9 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="#"><i class="fa fa-circle-o"></i> Level One</a></li>
+            <li><a><i class="fa fa-circle-o"></i> Level One</a></li>
             <li>
-              <a href="#"><i class="fa fa-circle-o"></i> Level One
+              <a><i class="fa fa-circle-o"></i> Level One
                 <span class="pull-right-container">
                   <i class="fa fa-angle-left pull-right"></i>
                 </span>
@@ -700,40 +671,41 @@
               <ul class="treeview-menu">
                 <li><a href="#"><i class="fa fa-circle-o"></i> Level Two</a></li>
                 <li>
-                  <a href="#"><i class="fa fa-circle-o"></i> Level Two
+                  <a ><i class="fa fa-circle-o"></i> Level Two
                     <span class="pull-right-container">
                       <i class="fa fa-angle-left pull-right"></i>
                     </span>
                   </a>
                   <ul class="treeview-menu">
-                    <li><a href="#"><i class="fa fa-circle-o"></i> Level Three</a></li>
-                    <li><a href="#"><i class="fa fa-circle-o"></i> Level Three</a></li>
+                    <li><a><i class="fa fa-circle-o"></i> Level Three</a></li>
+                    <li><a><i class="fa fa-circle-o"></i> Level Three</a></li>
                   </ul>
                 </li>
               </ul>
             </li>
-            <li><a href="#"><i class="fa fa-circle-o"></i> Level One</a></li>
+            <li><a><i class="fa fa-circle-o"></i> Level One</a></li>
           </ul>
         </li>
-        <li><a href="documentation/index.html"><i class="fa fa-book"></i> <span>Documentation</span></a></li>
+        <li><a><i class="fa fa-book"></i> <span>Documentation</span></a></li>
         <li class="header">LABELS</li>
-        <li><a href="#"><i class="fa fa-circle-o text-red"></i> <span>Important</span></a></li>
-        <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> <span>Warning</span></a></li>
-        <li><a href="#"><i class="fa fa-circle-o text-aqua"></i> <span>Information</span></a></li>
+        <li><a><i class="fa fa-circle-o text-red"></i> <span>Important</span></a></li>
+        <li><a><i class="fa fa-circle-o text-yellow"></i> <span>Warning</span></a></li>
+        <li><a><i class="fa fa-circle-o text-aqua"></i> <span>Information</span></a></li>
       </ul>
     </section>
     <!-- /.sidebar -->
   </aside>
   <!-- Content Wrapper. Contains page content -->
+  
+  
   <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        Dashboard
-        <small>Control panel</small>
+        Comparte!
+        <small>Tu Opinion es importante</small>
       </h1>
       <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a><i class="fa fa-dashboard"></i> Home</a></li>
         <li class="active">Dashboard</li>
       </ol>
     </section>
@@ -750,8 +722,34 @@
           <div class="nav-tabs-custom">
             <!-- Tabs within a box -->
             <ul class="nav nav-tabs pull-right">
-              <li class="active"><a href="#revenue-chart" data-toggle="tab">Area</a></li>
-              <li><a href="#sales-chart" data-toggle="tab">Donut</a></li>
+              <li><form id="formComuna" name="formComuna">
+					<select id="comuna" name="comuna" class="form-control" onchange="Filtro(this.value)">
+						<option value="0">TODAS</option>
+						<option value="1">COMUNA 1</option>
+						<option value="2">COMUNA 2</option>
+						<option value="3">COMUNA 3</option>
+						<option value="4">COMUNA 4</option>
+						<option value="5">COMUNA 5</option>
+						<option value="6">COMUNA 6</option>
+						<option value="7">COMUNA 7</option>
+						<option value="8">COMUNA 8</option>
+						<option value="9">COMUNA 9</option>
+						<option value="10">COMUNA 10</option>
+						<option value="11">COMUNA 11</option>
+						<option value="12">COMUNA 12</option>
+						<option value="13">COMUNA 13</option>
+						<option value="14">COMUNA 14</option>
+						<option value="15">COMUNA 15</option>
+						<option value="16">COMUNA 16</option>
+						<option value="17">COMUNA 17</option>
+						<option value="18">COMUNA 18</option>
+						<option value="19">COMUNA 19</option>
+						<option value="20">COMUNA 20</option>
+						<option value="21">COMUNA 21</option>
+						<option value="22">COMUNA 22</option>
+					</select>
+				</form></li>
+              <li><button id="BtnModal" type="button" class="btn btn-info" data-toggle="modal"data-target="#myModal" onclick="Geolocation()">Publicar</button></li>
               <li class="pull-left header"><i class="fa fa-inbox"></i> Estado del clima</li>
             </ul>
             <div class="tab-content no-padding">
@@ -797,7 +795,9 @@
                       	<a class="name">
                         <!-- pulido -->
                         <small class="text-muted pull-right"><i class="fa fa-clock-o"></i><% out.print(((date.getHours()<10)?"0"+date.getHours():date.getHours()) +":"+ ((date.getMinutes()<10)?"0"+date.getMinutes():date.getMinutes()) +":"+((date.getSeconds()<10)?"0"+date.getSeconds():date.getSeconds()));%></small>
+                        <span  id="<%out.print(lista.get(i).getAuthor());%>">
                         <%out.print(Datos[0]+" "+Datos[1]);%>
+						</span>                     
                       </a>
     					<img src="././resources/img/perfil/
 						<%out.print(lista.get(i).getWeather());%>-weather.png" class="img-responsive"/>
@@ -896,38 +896,6 @@
           </div>
           <!-- /.box -->
 
-          <!-- quick email widget -->
-          <div class="box box-info">
-            <div class="box-header">
-              <i class="fa fa-envelope"></i>
-
-              <h3 class="box-title">Quick Email</h3>
-              <!-- tools box -->
-              <div class="pull-right box-tools">
-                <button type="button" class="btn btn-info btn-sm" data-widget="remove" data-toggle="tooltip" title="Remove">
-                  <i class="fa fa-times"></i></button>
-              </div>
-              <!-- /. tools -->
-            </div>
-            <div class="box-body">
-              <form action="#" method="post">
-                <div class="form-group">
-                  <input type="email" class="form-control" name="emailto" placeholder="Email to:">
-                </div>
-                <div class="form-group">
-                  <input type="text" class="form-control" name="subject" placeholder="Subject">
-                </div>
-                <div>
-                  <textarea class="textarea" placeholder="Message" style="width: 100%; height: 125px; font-size: 14px; line-height: 18px; border: 1px solid #dddddd; padding: 10px;"></textarea>
-                </div>
-              </form>
-            </div>
-            <div class="box-footer clearfix">
-              <button type="button" class="pull-right btn btn-default" id="sendEmail">Send
-                <i class="fa fa-arrow-circle-right"></i></button>
-            </div>
-          </div>
-
         </section>
         <!-- /.Left col -->
         <!-- right col (We are only adding the ID to make the widgets sortable)-->
@@ -938,8 +906,6 @@
             <div class="box-header">
               <!-- tools box -->
               <div class="pull-right box-tools">
-                <button type="button" class="btn btn-primary btn-sm daterange pull-right" data-toggle="tooltip" title="Date range">
-                  <i class="fa fa-calendar"></i></button>
                 <button type="button" class="btn btn-primary btn-sm pull-right" data-widget="collapse" data-toggle="tooltip" title="Collapse" style="margin-right: 5px;">
                   <i class="fa fa-minus"></i></button>
               </div>
@@ -987,7 +953,7 @@
             <div class="box-header">
               <i class="fa fa-th"></i>
 
-              <h3 class="box-title">Sales Graph</h3>
+              <h3 class="box-title">Datos Calculados</h3>
 
               <div class="box-tools pull-right">
                 <button type="button" class="btn bg-teal btn-sm" data-widget="collapse"><i class="fa fa-minus"></i>
@@ -996,34 +962,13 @@
                 </button>
               </div>
             </div>
-            <div class="box-body border-radius-none">
-              <div class="chart" id="line-chart" style="height: 250px;"></div>
+            <div class="box-body border-radius-none" >
+              <div id="cont_4a0d8413e882c61c31c34ea525780b0a" >
+            	<script type="text/javascript" async src="https://www.tiempo.com/wid_loader/4a0d8413e882c61c31c34ea525780b0a">
+            	</script>
+            </div>
             </div>
            
-            <!-- /.box-body -->
-            <div class="box-footer no-border">
-              <div class="row">
-                <div class="col-xs-4 text-center" style="border-right: 1px solid #f4f4f4">
-                  <input type="text" class="knob" data-readonly="true" value="20" data-width="60" data-height="60" data-fgColor="#39CCCC">
-
-                  <div class="knob-label">Mail-Orders</div>
-                </div>
-                <!-- ./col -->
-                <div class="col-xs-4 text-center" style="border-right: 1px solid #f4f4f4">
-                  <input type="text" class="knob" data-readonly="true" value="50" data-width="60" data-height="60" data-fgColor="#39CCCC">
-
-                  <div class="knob-label">Online</div>
-                </div>
-                <!-- ./col -->
-                <div class="col-xs-4 text-center">
-                  <input type="text" class="knob" data-readonly="true" value="30" data-width="60" data-height="60" data-fgColor="#39CCCC">
-
-                  <div class="knob-label">In-Store</div>
-                </div>
-                <!-- ./col -->
-              </div>
-              <!-- /.row -->
-            </div>
             <!-- /.box-footer -->
           </div>
           <!-- /.box -->
@@ -1045,143 +990,41 @@
   <!-- /.content-wrapper -->
   <footer class="main-footer">
     <div class="pull-right hidden-xs">
-      <b>Version</b> 2.3.6
+      <b>Version</b> 1.0.0
     </div>
-    <strong>Copyright &copy; 2014-2016 <a href="http://Spring.com">Drizzle Web</a>.</strong> All rights
+    <strong>Copyright &copy; 2016-2017 <a >Drizzle Web</a>.</strong> All rights
     reserved.
   </footer>
 
   <!-- Control Sidebar -->
   <aside class="control-sidebar control-sidebar-dark">
+  
     <!-- Create the tabs -->
     <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
-      <li><a href="#control-sidebar-home-tab" data-toggle="tab"><i class="fa fa-home"></i></a></li>
+      
       <li><a href="#control-sidebar-settings-tab" data-toggle="tab"><i class="fa fa-gears"></i></a></li>
     </ul>
     <!-- Tab panes -->
     <div class="tab-content">
       <!-- Home tab content -->
-      <div class="tab-pane" id="control-sidebar-home-tab">
-        <h3 class="control-sidebar-heading">Recent Activity</h3>
-        <ul class="control-sidebar-menu">
-          <li>
-            <a href="javascript:void(0)">
-              <i class="menu-icon fa fa-birthday-cake bg-red"></i>
-
-              <div class="menu-info">
-                <h4 class="control-sidebar-subheading">Langdon's Birthday</h4>
-
-                <p>Will be 23 on April 24th</p>
-              </div>
-            </a>
-          </li>
-          <li>
-            <a href="javascript:void(0)">
-              <i class="menu-icon fa fa-user bg-yellow"></i>
-
-              <div class="menu-info">
-                <h4 class="control-sidebar-subheading">Frodo Updated His Profile</h4>
-
-                <p>New phone +1(800)555-1234</p>
-              </div>
-            </a>
-          </li>
-          <li>
-            <a href="javascript:void(0)">
-              <i class="menu-icon fa fa-envelope-o bg-light-blue"></i>
-
-              <div class="menu-info">
-                <h4 class="control-sidebar-subheading">Nora Joined Mailing List</h4>
-
-                <p>nora@example.com</p>
-              </div>
-            </a>
-          </li>
-          <li>
-            <a href="javascript:void(0)">
-              <i class="menu-icon fa fa-file-code-o bg-green"></i>
-
-              <div class="menu-info">
-                <h4 class="control-sidebar-subheading">Cron Job 254 Executed</h4>
-
-                <p>Execution time 5 seconds</p>
-              </div>
-            </a>
-          </li>
-        </ul>
-        <!-- /.control-sidebar-menu -->
-
-        <h3 class="control-sidebar-heading">Tasks Progress</h3>
-        <ul class="control-sidebar-menu">
-          <li>
-            <a href="javascript:void(0)">
-              <h4 class="control-sidebar-subheading">
-                Custom Template Design
-                <span class="label label-danger pull-right">70%</span>
-              </h4>
-
-              <div class="progress progress-xxs">
-                <div class="progress-bar progress-bar-danger" style="width: 70%"></div>
-              </div>
-            </a>
-          </li>
-          <li>
-            <a href="javascript:void(0)">
-              <h4 class="control-sidebar-subheading">
-                Update Resume
-                <span class="label label-success pull-right">95%</span>
-              </h4>
-
-              <div class="progress progress-xxs">
-                <div class="progress-bar progress-bar-success" style="width: 95%"></div>
-              </div>
-            </a>
-          </li>
-          <li>
-            <a href="javascript:void(0)">
-              <h4 class="control-sidebar-subheading">
-                Laravel Integration
-                <span class="label label-warning pull-right">50%</span>
-              </h4>
-
-              <div class="progress progress-xxs">
-                <div class="progress-bar progress-bar-warning" style="width: 50%"></div>
-              </div>
-            </a>
-          </li>
-          <li>
-            <a href="javascript:void(0)">
-              <h4 class="control-sidebar-subheading">
-                Back End Framework
-                <span class="label label-primary pull-right">68%</span>
-              </h4>
-
-              <div class="progress progress-xxs">
-                <div class="progress-bar progress-bar-primary" style="width: 68%"></div>
-              </div>
-            </a>
-          </li>
-        </ul>
-        <!-- /.control-sidebar-menu -->
-
-      </div>
-      <!-- /.tab-pane -->
+            <!-- /.tab-pane -->
       <!-- Stats tab content -->
       <div class="tab-pane" id="control-sidebar-stats-tab">Stats Tab Content</div>
       <!-- /.tab-pane -->
       <!-- Settings tab content -->
       <div class="tab-pane" id="control-sidebar-settings-tab">
-        <form id="formularioAjustes" name="formularioAjustes" method="post" enctype="multipart/form-data" >
+        <form id="formularioAjustes" name="formularioAjustes" method="post"  onsubmit="return establecerAjustes();" enctype="multipart/form-data" >
           <h3 class="control-sidebar-heading">Ajustes Generales</h3>
 
 
 		<div class="form-group">
             <label class="control-sidebar-subheading">
             <p>
-              Modificar Nombre:
+              Nombre:
             </p>
                <div class="input-group">
           			<input type="text" id="nombreModificar" name="nombreModificar" placeholder="Nombre..." style="color: #000000">
+          			<p class="help-block text-danger"></p>
         		</div>
               
             </label>
@@ -1191,10 +1034,11 @@
           <div class="form-group">
             <label class="control-sidebar-subheading">
             <p>
-              Modificar Apellido:
+              Apellido:
             </p>
                <div class="input-group">
           			<input type="text"  id="apellidoModificar"  name="apellidoModificar" placeholder="Apellido..." style="color: #000000">
+          			<p class="help-block text-danger"></p>
         		</div>
               
             </label>
@@ -1204,23 +1048,31 @@
           <div class="form-group">
             <label class="control-sidebar-subheading">
             <p>
-              Modificar Contraseña:
+              Contraseña:
             </p>
                <div class="input-group">
-          			<input type="password" id="contrasenaModificar" name="contrasenaModificar" style="color: #000000">
+          			<input type="password" id="contrasenaModificar" name="contrasenaModificar" style="color: #000000" readonly>
+          			<p class="help-block text-danger"></p>
+          			<span class="input-group-btn">
+                		<input name = "checkPass" id = "checkPass" type="checkbox" value="off" onchange="CambioType(this.checked)" class="pull-right">
+              		</span>
         		</div>
               
             </label>
+            <p align="right" style="font-size:11px;">
+              Mostrar contraseña
+            </p>
 
           </div>
 
           <div class="form-group">
             <label class="control-sidebar-subheading">
             <p>
-              Modificar telefono:
+              Telefono:
             </p>
                <div class="input-group">
           			<input type="number" id="telefonoModificar" name="telefonoModificar" placeholder="Telefono..." style="color: #000000">
+          			<p class="help-block text-danger"></p>
               		<span class="input-group-btn">
                 		<input name = "checkTelefono" id = "checkTelefono" type="checkbox" value="off" class="pull-right">
               		</span>
@@ -1255,7 +1107,8 @@
           <br/>
           <br/>
           <div>
-          <button id="BtnAjustes" name="BtnAjustes" type="button" onclick="establecerAjustes(this.form)" class="btn btn-info btn-lg">Guardar</button>
+          <button id="BtnAjustes" name="BtnAjustes" type="submit" onclick="establecerAjustes();" class="btn btn-info">Guardar</button>
+          <button id="BtnBaja" name="BtnBaja" type="button" onclick="darBaja()" class="btn btn-danger">Dar Baja</button>
           </div>
           <!-- /.form-group -->
 
@@ -1318,6 +1171,12 @@
 
 <script src="././resources/chartjs/Chart.min.js"></script>
 
+<!--bootstrapValidator validador campos! // -->
+	   <script src="//oss.maxcdn.com/jquery.bootstrapvalidator/0.5.3/js/bootstrapValidator.min.js"></script>
+       <script src="././resources/js/jqBootstrapValidation.js"></script>
+   
+   
+
 
 <!-- Api Google maps JavaScritp -->
  
@@ -1327,7 +1186,6 @@
 
 <%--hibernateTransations.registrar(new Account("fabian","ruiz","fabia.an@hotmail.com","dr1ssl3","05/02/1999",4458745));--%>
 
-Registro:${registro};
 	
 	
 </body>

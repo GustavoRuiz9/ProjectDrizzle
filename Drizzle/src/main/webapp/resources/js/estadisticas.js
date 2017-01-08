@@ -60,15 +60,17 @@ function cargarmap(Data){
 							
 							var myChart = new JSChart('graph', 'line');
 							
-							myChart.setSize(600, 400);
+							//pulido2
+							myChart.setSize(580, 400);
 							myChart.setAxisValuesNumberY(17);
 							myChart.setAxisValuesNumberX(17);
 							myChart.setIntervalStartX(8);
 							myChart.setIntervalStartY(8);
-							myChart.setLabelY([10, 'Rain']);
-							myChart.setLabelY([15, 'Storm']);
-							myChart.setLabelY([20, 'Sunny']);
-							myChart.setLabelY([25, 'Temper']);
+							//pulido2
+							myChart.setLabelY([10, 'Lluvia']);
+							myChart.setLabelY([15, 'Tormenta']);
+							myChart.setLabelY([20, 'Soleado']);
+							myChart.setLabelY([25, 'Templado']);
 							myChart.setGrid(false);
 							myChart.setTitle("Clima");
 
@@ -82,13 +84,20 @@ function cargarmap(Data){
 							myChart.setShowYValues(false);
 							myChart.setShowXValues(false);
 							
-							myChart.setTooltip([10,' ']);
-							myChart.setTooltip([15,' ']);
-							myChart.setTooltip([20,' ']);
-							myChart.setTooltip([25,' ']);
+							//pulido2
+							for (var int = 0; int < dato[0].registro.length; int++) {
+								
+								for (var int2 = 0; int2 < dato[0].registro[int].length; int2++) {
+									myChart.setTooltip([dato[0].registro[int][int2].tipo,dato[0].registro[int][int2].valorClima+' Ptos']);
+								}
+								
+							}
+
 							myChart.setFlagColor('#9D16FC');
 							myChart.setFlagRadius(4);
 							myChart.setAxisPaddingRight(100);
+							//pulido2
+							myChart.setAxisPaddingLeft(100);
 							myChart.setLegendShow(true);
 							myChart.setAxisNameX(' ');
 							myChart.setAxisNameY(' ');
@@ -155,6 +164,8 @@ function cargarmap(Data){
 								
 								myChart.draw();
 								
+								//pulido2 
+								//document.getElementById("JSChart_graph").style.margin = "auto";
 								
 							}
 	  
@@ -402,31 +413,227 @@ function consultaPerfil(id_author,id_Pb){
 
 
 
-function establecerAjustes(form){
-	var formData = new FormData(document.getElementById("formularioAjustes"));
+function establecerAjustes(){
+	
+	$('#formularioAjustes').bootstrapValidator({
+		 
+		 message: 'Este valor no es valido',
+
+		 feedbackIcons: {
+
+			 valid: 'glyphicon glyphicon-ok',
+
+			 invalid: 'glyphicon glyphicon-remove',
+
+			 validating: 'glyphicon glyphicon-refresh'
+
+		 },
+
+		 fields: {
+
+			 nombreModificar: {
+
+				 validators: {
+
+					 notEmpty: {
+
+						 message: 'El nombre es requerido'
+
+					 }
+
+				 }
+
+			 },
+
+			 apellidoModificar: {
+
+				 validators: {
+
+					 notEmpty: {
+
+						 message: 'el apellido es requerido'
+
+					 }
+
+				 }
+
+			 },
+			 
+			 telefonoModificar: {
+
+				 validators: {
+
+					 notEmpty: {
+
+						 message: 'el telefono es requerido'
+
+					 },
+					 regexp: {
+						 
+						 regexp: /^(?=[0-9]*$)(?:.{7}|.{10})$/, 
+	 
+						 message: 'El telefono solo puede contener numeros'
+	 
+					 }
+			 
+			 		
+
+				 }
+
+			 },
+			 
+			 contrasenaModificar: {
+
+				 validators: {
+
+					 notEmpty: {
+
+						 message: 'el password es requerido'
+
+					 },
+					 
+					 stringLength: {
+						 
+						 min: 8,
+						 
+						 max: 12,
+	 
+						 message: 'El password debe contener al menos 8 caracteres'
+	 
+					 }
+			 
+			 		
+
+				 }
+
+			 },
+			
+		 }
+		 
+	});
+	$('#formularioAjustes').bootstrapValidator().on('submit', function (e) {
+		  if (e.isDefaultPrevented()) {
+		    // handle the invalid form...
+			  console.log('hay problema en actulizar ajustes');
+			  return true;
+		  } else {
+		    // everything looks good!
+			  
+			  console.log('todo melo en actulizar ajustes');
+			  var formData = new FormData(document.getElementById("formularioAjustes"));
+				
+				swal({
+					  title: "Actualizar Ajustes",
+					  text: "Seguro Deseas Actuzalizar Tus Ajustes",
+					  type: "warning",
+					  showCancelButton: true,
+					  closeOnConfirm: false,
+					  showLoaderOnConfirm: true
+					}, function () {
+					  setTimeout(function () {
+						  
+						  $.ajax({
+						        url: "obtenerAjustes.html",
+						        type: "POST",
+						        dataType: "html",
+						        data:formData,
+						        cache: false,
+						        contentType: false,
+						        processData: false,
+									success : function(response) {
+										console.log("SUCCESS: ", response);
+										
+										//sweetAlert('Oops...', 'Publicacion Fue Eliminada!', 'error');
+										if(response!=""){
+											data=JSON.parse(response);
+											for (var int = 0; int < 3; int++) {
+												$("#span"+int).text(data[0].nombre+" "+data[0].apellido);	
+											}
+											//obtener div
+									        var parent = document.querySelector('#chat-box');
+									        // Cantidad de div
+										     var divs = parent.querySelectorAll('div');
+										     firtsdiv=(divs[0].id).split('v');
+										     if(firtsdiv[1]=="-1"){
+										    	 console.log("entro al if no habia nada!");
+										     }else{
+										    	 //cont=0;
+										    	 var span=parent.querySelectorAll('span');
+										    	 for (var int = 0; int < divs.length; int++) {
+													console.log("entro "+int);
+													if((int % 3)==0){
+														console.log("archivo: "+span[int]);
+														//console.log("usuario: "+image[int].id+" id_usuario: "+id_usuario);
+														if(span[int].id==data[0].codigo){
+															console.log("este es de el");
+															span[int].textContent=data[0].nombre+" "+data[0].apellido;
+														}
+														
+														//cont=cont+3;
+													}
+													
+												}
+										     }
+										}
+										
+										
+										swal("Ajustes Actualizados!");
+									   
+									},
+									error : function(e) {
+										console.log("ERROR: ", e);
+										display(e);
+									},
+									done : function(e) {
+										console.log("DONE");
+									}
+								});
+					    
+						  document.getElementById("ControlAjustes").click(); }, 1000);
+					});
+			  return false;
+			  
+		  }
+		});
+	
+}
+
+
+//pulido2
+function darBaja(){
 	
 	swal({
-		  title: "Actualizar Ajustes",
-		  text: "Seguro Deseas Actuzalizar Tus Ajustes",
+		  title: "Desactivar Cuenta",
+		  text: "¿Seguro Deseas dar de baja tu Cuenta?",
 		  type: "warning",
 		  showCancelButton: true,
 		  closeOnConfirm: false,
 		  showLoaderOnConfirm: true
 		}, function () {
 		  setTimeout(function () {
-			  document.getElementById("ControlAjustes").click();
 			  $.ajax({
-			        url: "obtenerAjustes.html",
+			        url: "setStatus.html",
 			        type: "POST",
 			        dataType: "html",
-			        data:formData,
+			        data: "",
 			        cache: false,
 			        contentType: false,
 			        processData: false,
 						success : function(response) {
-							console.log("SUCCESS: ", response);
+							console.log("SUCCESS true or false: ", response);
 							//sweetAlert('Oops...', 'Publicacion Fue Eliminada!', 'error');
-							swal("Ajustes Actualizados!");
+							//var url = window.location.origin+"/"+window.location.pathname.split('/')[1];
+							//window.location.replace(url);
+							setTimeout(function() {
+						        swal({
+						            title: "",
+						            text: "Ok, Tu cuenta ha sido Desactivada!",
+						            type: "success"
+						        }, function() {
+						        	var url = window.location.origin+"/"+window.location.pathname.split('/')[1];
+									window.location.replace(url);
+						        });
+						    }, 1000);
 						   
 						},
 						error : function(e) {
@@ -441,11 +648,11 @@ function establecerAjustes(form){
 		  }, 1000);
 		});
 	
-	
-	
 }
 
+
 function showSettings(){
+	
 	$.ajax({
         url: "showSettings.html",
         type: "POST",
@@ -468,6 +675,57 @@ function showSettings(){
 		});
 	
 
+}
+function CambioType(value){
+	var campo=document.getElementById('contrasenaModificar');
+	var checkbox=document.getElementById('checkPass');
+	if(value==true){
+		$.confirm({
+	        title: 'Cambiar Contraseña!',
+	        content:'<div>'+
+	            '<div class="form-group">'+
+	        '<label class="control-label">Digita tu contraseña</label>'+
+	        '<input autofocus type="password" id="Cc" placeholder="This field is validated"  class="form-control">'+
+	        '<p class="text-danger help-block" style="display:none; color:red"></p>'+
+	    '</div>'+
+	    '<p class="text">'+
+	        'Para realizar el cambio de contraseña debes digitar la actual.'+
+	    '</p>'+
+	    '</div>',
+	        buttons: {
+	            sayMyName: {
+	                text: 'validar',
+	                btnClass: 'btn-warning',
+	                action: function () {
+	                    var input = this.$content.find('input#Cc');
+	                    var Contra= campo.value;
+	                    var errorText = this.$content.find('.text-danger');
+	                    if (input.val() == '') {
+	                        errorText.html('Por favor digita la contraseña!').slideDown(200);
+	                        return false;
+	                    } else {
+	                    	if(input.val()==Contra){
+	                    		$.alert('Ahora puedes Modificar Tu contraseña');
+	                    		campo.type = 'text';
+	                    		campo.readOnly=false;
+	    	                    	
+	                    	}else{
+	                    		errorText.html('Contraseña invalida!').slideDown(200);
+	                    		return false;
+	                    	}
+	                    	
+	                    	}
+	                }
+	            },
+	            later: function () {
+	                // do nothing.
+	            	checkbox.checked=false;
+	            }
+	        }
+	    });
+	}else{
+		document.getElementById('contrasenaModificar').type = 'password';
+	}
 }
 
 function PrintSettings(data){

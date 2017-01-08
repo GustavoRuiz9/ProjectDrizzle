@@ -13,6 +13,11 @@
 		<servlet-name>spring</servlet-name>
 		<url-pattern>*.html</url-pattern>
 	</servlet-mapping>
+	<session-config>
+	<session-timeout>
+	5
+	</session-timeout>
+	</session-config>
 
 	<welcome-file-list>
 

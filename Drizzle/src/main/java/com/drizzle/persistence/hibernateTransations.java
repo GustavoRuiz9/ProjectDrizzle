@@ -17,6 +17,7 @@ import com.drizzle.model.Account;
 import com.drizzle.model.Like;
 import com.drizzle.model.Profile;
 import com.drizzle.model.Setting;
+import com.drizzle.model.cifrar_decifrar;
 
 import org.apache.soap.encoding.soapenc.Base64;
 import com.mysql.jdbc.Blob;
@@ -51,7 +52,8 @@ public class hibernateTransations {
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		List<Object[]> results;
 		Object[] resul= new Object[0];
-		String sentenciaSQL = "Select a.email, a.password, p.estatus FROM Account a, Profile p Where a.email = ? and a.id_account = p.profile_account";
+		
+		String sentenciaSQL = "Select a.email, a.password, p.estatus, p.verification, a.id_account FROM Account a, Profile p Where a.email = ? and a.id_account = p.profile_account";
 		
 		try{
 		
@@ -193,7 +195,7 @@ public class hibernateTransations {
 	public static Object [] consultarDatosSesion(String emailAccount) {
 		Session session = HibernateUtil.getSessionFactory().openSession();		
 		Object [] datos;
-		String sentenciaSQL = "Select a.id_account,a.name,a.last_name,p.photo,a.password FROM Account a,Profile p Where p.profile_account = a.id_account and a.email = ?";
+		String sentenciaSQL = "Select a.id_account,a.name,a.last_name,p.photo,a.password,a.email FROM Account a,Profile p Where p.profile_account = a.id_account and a.email = ?";
 		
 		try{
 			//HttpSession sesion = request.getSession();
@@ -303,7 +305,7 @@ public class hibernateTransations {
 			
 			
 		}catch (Exception e) {
-			System.out.println("Error en el metodo consultarAccount - " + e.getMessage());
+			System.out.println("Error en el metodo consultarAutor - " + e.getMessage());
 			return null;
 		}finally {
 			session.disconnect();
@@ -335,6 +337,29 @@ public class hibernateTransations {
 		}
 		
 	}
+	
+	//pulido2
+		public static boolean actualizarStatus(int author,String verification) {
+			Session session = HibernateUtil.getSessionFactory().openSession();
+			
+				try{
+					session.beginTransaction();
+					
+					String sentenciaSQL=("UPDATE Profile SET Profile.estatus = "+false+ ", Profile.verification = \""+verification+"\" where Profile.profile_account = "+author);
+					session.createSQLQuery(sentenciaSQL).executeUpdate();
+					session.getTransaction().commit();
+					return true;
+			
+				
+			}catch (Exception e) {
+				System.out.println("Error en el metodo actualizarStatus - " + e.getMessage());
+				return false;
+			}finally {
+				session.disconnect();
+			}
+			
+		}
+	
 	
 	public static boolean habilitarUsuario(int id_account) {
 		Session session = HibernateUtil.getSessionFactory().openSession();
@@ -455,14 +480,14 @@ public class hibernateTransations {
 
 	}
 	
-	public static boolean actualizarAjustes(int author, boolean checkcorreo , boolean checktelefono, String nombre, String apellido, String contrasena, int telefono ) {
+	public static boolean actualizarAjustes(int author, boolean checkcorreo , boolean checktelefono, String nombre, String apellido, byte[] contrasena, int telefono ) {
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		
 			try{
 				session.beginTransaction();
 				
 				String sentenciaSQL= ("UPDATE Account INNER JOIN Setting ON Account.id_account = Setting.id_account_profile SET  "+
-						 "Account.name = '" + nombre + "', Account.last_name = '" + apellido + "', Account.password = '" + contrasena + "', Account.number_phone = " + telefono 
+						 "Account.name = '" + nombre + "', Account.last_name = '" + apellido + "', Account.password = ?, Account.number_phone = " + telefono 
 						 + ", Setting.correo = "+checkcorreo + ", Setting.telefono = " + checktelefono + " where Account.id_account = "+author);
 				System.out.println(sentenciaSQL);
 				/*
@@ -475,8 +500,11 @@ public class hibernateTransations {
 				 * 
 				 * 
 				 */
-				
-				session.createSQLQuery(sentenciaSQL).executeUpdate();
+				//Query query = session.createQuery(sentenciaSQL);			
+				//query.setParameter(0,contrasena);
+				//query.executeUpdate();
+				session.createSQLQuery(sentenciaSQL).setParameter(0, contrasena).executeUpdate();
+				//session.createSQLQuery(sentenciaSQL).executeUpdate();
 				session.getTransaction().commit();
 				return true;
 		
@@ -503,11 +531,13 @@ public class hibernateTransations {
 			query.setParameter(0,IdAccount);
 			List<Object[]> results = query.getResultList();
 			datos=results.get(0);
+			cifrar_decifrar ciDe=new cifrar_decifrar();
+			String passBd=ciDe.descifra((byte[]) datos[6]);
 			//System.out.println(query.getResultList()+"");
 			System.out.println("Select Successful Settings");
 			//if(results.isEmpty())
 			String datosProfile = "[{\"nombre\":\""+ datos[0] + "\",\"apellido\": \"" + datos[1] + "\", \"email\":\"" + datos[2] + "\", \"number_phone\":" + datos[3]    
-					+ ",\"correo\":" + datos[4] + ",\"telefono\":" + datos[5] + ",\"contrasena\":\"" + datos[6]	+ "\"}]";
+					+ ",\"correo\":" + datos[4] + ",\"telefono\":" + datos[5] + ",\"contrasena\":\"" + passBd + "\"}]";
 			
 			return datosProfile;
 			

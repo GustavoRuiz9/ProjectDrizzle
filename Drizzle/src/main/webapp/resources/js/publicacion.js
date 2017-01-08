@@ -1,7 +1,7 @@
-document.getElementById("BtnPub").onclick = ValPublication;
-document.getElementById("BtnModal").onclick = Geolocation;
+//document.getElementById("BtnPub").onclick = ValPublication;
+//document.getElementById("BtnModal").onclick = Geolocation;
 //cambios
-document.getElementById("BtnComment").onclick = regComment;
+//document.getElementById("BtnComment").onclick = regComment;
 
 function Geolocation(){
 	navigator.geolocation.getCurrentPosition(showPosition);
@@ -775,7 +775,7 @@ function registroUsuario() {
 						 
 						 regexp: /^(?=[0-9]*$)(?:.{7}|.{10})$/, 
 	 
-						 message: 'El teléfono solo puede contener numeros'
+						 message: 'El telefono solo puede contener numeros'
 	 
 					 }
 			 
@@ -872,7 +872,9 @@ function registroUsuario() {
 									            text: "Enlace Enviado!",
 									            type: "success"
 									        }, function() {
-									        	window.location.replace("http://localhost:8080/proyect/"); 
+									        	//pulido2
+									        	var url = window.location.origin+"/"+window.location.pathname.split('/')[1];
+									        	window.location.replace(url); 
 									        });
 									    }, 1000);	
 									}else{
@@ -903,8 +905,10 @@ function registroUsuario() {
 		
 }
 
+//pulido2
 function Login() {
 	
+	//document.getElementById("span").text="hola mario";
 	var formData = new FormData(document.getElementById("logger"));
 	$.ajax({
         url: "login.html",
@@ -918,7 +922,9 @@ function Login() {
 				console.log("SUCCESS: ", response);
 				
 				if(response=="success"){
-					window.location.replace("http://localhost:8080/proyect/Registrado.html");
+					//pulido2
+					var url = window.location.origin+"/"+window.location.pathname.split('/')[1];
+					window.location.replace(url+"/Registrado.html");
 				}else{
 					if(response=="warning"){
 						swal("Datos invalidos!");
@@ -927,8 +933,56 @@ function Login() {
 							swal("Usuario no verificado!");
 
 						}else{
-							if(response=="error"){
-								swal("Usuario no encontrado!");
+								if(response=="error"){
+									swal("Usuario no encontrado!");
+								//pulido2
+								}else{
+										swal({
+											  title: "Cuenta Desactivada!",
+											  text: "Deseas reactivar tu Cuenta?",
+											  type: "info",
+											  showCancelButton: true,
+											  closeOnConfirm: false,
+											  showLoaderOnConfirm: true
+											}, function () {
+											  setTimeout(function () {
+												  var formData = new FormData();
+												  formData.append("email",response.split(' ')[0]);
+												  formData.append("id_account",response.split(' ')[1]);
+												  $.ajax({
+												        url: "reactivarCuenta.html", //correo
+												        type: "POST",
+												        dataType: "html",
+												        data: formData,
+												        cache: false,
+												        contentType: false,
+												        processData: false,
+															success : function(response) {
+																console.log("SUCCESS reactivar: ", response);
+																setTimeout(function() {
+															        swal({
+															            title: "Correcto!",
+															            text: "Se ha enviado un enlace a tu correo para reactivar tu cuenta",
+															            type: "success"
+															        }, function() {
+															        	var url = window.location.origin+"/"+window.location.pathname.split('/')[1];
+																		window.location.replace(url);
+															        });
+															    }, 1000);
+															   
+															},
+															error : function(e) {
+																console.log("ERROR: ", e);
+																display(e);
+															},
+															done : function(e) {
+																console.log("DONE");
+															}
+														});
+											    
+											  }, 1000);
+											});
+									
 							}
 							
 						}
@@ -945,8 +999,6 @@ function Login() {
 				console.log("DONE");
 			}
 		});
-	
-	
 	
  
 }

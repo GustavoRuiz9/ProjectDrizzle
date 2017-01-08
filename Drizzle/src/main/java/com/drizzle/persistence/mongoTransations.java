@@ -306,63 +306,69 @@ public class mongoTransations {
 
 		
 	
-	public static boolean UpdateEstadistica(int Comuna,int author,String weather,int suma) {
-		
-		Estadistica Etd=new Estadistica();
-		Date fecha = new Date();
-		
-		int Hora=fecha.getHours();
-		Etd.setFecha(trim(fecha));
-		Etd.setTipo(Tiempo(Hora));
-		Etd.setComuna(Comuna);
-		
-		int vlrEstado=0;
-		
-		if(suma==-1){
-			vlrEstado = hibernateTransations.ObtVlEdt(author);
-		}else{
-			vlrEstado = suma;
-		}
-		
-		System.out.println("Valor de estado es: "+vlrEstado);
-		if(ConsultarEstadistica(Etd).isEmpty()){
-			if(weather.equals("rain"))Etd.setRain(vlrEstado);
-			if(weather.equals("storm"))Etd.setStorm(vlrEstado);
-			if(weather.equals("tempered"))Etd.setTempered(vlrEstado);
-			if(weather.equals("sunny"))Etd.setSunny(vlrEstado);
-			registrarEtd(Etd);
-			System.out.println("Entro en la lista es empty");
-		}else{
-			System.out.println("Esta cargada!");
-			Query query = new Query();
-			query.addCriteria(Criteria.where("fecha").is(trim(fecha)).andOperator(
-							Criteria.where("tipo").is(Tiempo(Hora)).andOperator(
-							Criteria.where("comuna").is(Comuna))
-							));
-
-			Estadistica Etd2 = operation.findOne(query, Estadistica.class);
-			System.out.println("Etd1 - " +Etd2 );
-			Update update=new Update();
+		//pulido2
+		public static boolean UpdateEstadistica(int Comuna,int author, Publication pub, boolean aumenta) {
 			
-			if(suma==-1){
-				if(weather.equals("rain"))update.set("rain",Etd2.getRain()+vlrEstado);
-				if(weather.equals("storm"))update.set("storm",Etd2.getStorm()+vlrEstado);
-				if(weather.equals("tempered"))update.set("tempered",Etd2.getTempered()+vlrEstado);
-				if(weather.equals("sunny"))update.set("sunny",Etd2.getSunny()+vlrEstado);
+			Estadistica Etd=new Estadistica();
+			Date fecha = new Date();
+			int Hora;
+			
+			Etd.setComuna(Comuna);
+			
+			int vlrEstado=0;
+			
+			if(aumenta){
+				Hora=fecha.getHours();
+				Etd.setFecha(trim(fecha));
+				Etd.setTipo(Tiempo(Hora));
+				vlrEstado = hibernateTransations.ObtVlEdt(author);
 			}else{
-				if(weather.equals("rain"))update.set("rain",Etd2.getRain()-vlrEstado);
-				if(weather.equals("storm"))update.set("storm",Etd2.getStorm()-vlrEstado);
-				if(weather.equals("tempered"))update.set("tempered",Etd2.getTempered()-vlrEstado);
-				if(weather.equals("sunny"))update.set("sunny",Etd2.getSunny()-vlrEstado);
+				Hora = pub.getDate().getHours();
+				Etd.setFecha(trim(fecha));
+				Etd.setTipo(Tiempo(Hora));
+				vlrEstado = pub.getPtos_publicacion();
 			}
 			
-			operation.updateFirst(query, update, Estadistica.class);
+			System.out.println("Valor de estado es: "+vlrEstado);
+			if(ConsultarEstadistica(Etd).isEmpty()){
+				if(pub.getWeather().equals("rain"))Etd.setRain(vlrEstado);
+				if(pub.getWeather().equals("storm"))Etd.setStorm(vlrEstado);
+				if(pub.getWeather().equals("tempered"))Etd.setTempered(vlrEstado);
+				if(pub.getWeather().equals("sunny"))Etd.setSunny(vlrEstado);
+				registrarEtd(Etd);
+				System.out.println("Entro en la lista es empty");
+			}else{
+				System.out.println("Esta cargada!");
+				Query query = new Query();
+				
+				query.addCriteria(Criteria.where("fecha").is(trim(fecha)).andOperator(
+								Criteria.where("tipo").is(Tiempo(Hora)).andOperator(
+								Criteria.where("comuna").is(Comuna))
+								));
+
+				Estadistica Etd2 = operation.findOne(query, Estadistica.class);
+				System.out.println("Etd1 - " +Etd2 );
+				Update update=new Update();
+				
+				if(aumenta){
+					if(pub.getWeather().equals("rain"))update.set("rain",Etd2.getRain()+vlrEstado);
+					if(pub.getWeather().equals("storm"))update.set("storm",Etd2.getStorm()+vlrEstado);
+					if(pub.getWeather().equals("tempered"))update.set("tempered",Etd2.getTempered()+vlrEstado);
+					if(pub.getWeather().equals("sunny"))update.set("sunny",Etd2.getSunny()+vlrEstado);
+				}else{
+					if(pub.getWeather().equals("rain"))update.set("rain",Etd2.getRain()-vlrEstado);
+					if(pub.getWeather().equals("storm"))update.set("storm",Etd2.getStorm()-vlrEstado);
+					if(pub.getWeather().equals("tempered"))update.set("tempered",Etd2.getTempered()-vlrEstado);
+					if(pub.getWeather().equals("sunny"))update.set("sunny",Etd2.getSunny()-vlrEstado);
+				}
+				
+				operation.updateFirst(query, update, Estadistica.class);
+				
+			}
 			
+			
+			return true;
 		}
-		
-		
-		return true;
-	}
 	
 	public static int Tiempo(int Hora) {
 		int resultado = 25; 

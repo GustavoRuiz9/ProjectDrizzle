@@ -13,7 +13,9 @@
     <meta name="author" content="">
 
     <title>Drizzle Web</title>
-
+    
+    <!-- Icono de Pestaña -->
+	<link rel="shortcut icon" type="image/png" href="././resources/img/perfil/weather-9.png"/>
     <!-- Bootstrap Core CSS -->
     <link href="././resources/css/bootstrap.min.css" rel="stylesheet">
 
@@ -81,7 +83,7 @@
                         <a href="#portfolio">Estados</a>
                     </li>
                     <li class="page-scroll">
-                        <a href="#about">About</a>
+                        <a href="#about">Acerca</a>
                     </li>
                     <li class="page-scroll">
                         <a href="#contact">Sing Up</a>
@@ -101,7 +103,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
-                    <img class="img-responsive" src="././resources/img/perfil/profile.png" alt="">
+                    <img class="img-responsive" src="././resources/img/perfil/iconIndex.png" alt="">
                     <div class="intro-text">
                         <span class="name">Comparte el Clima</span>
                         <hr class="star-light">
@@ -197,16 +199,16 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 text-center">
-                    <h2>About</h2>
+                    <h2>Acerca</h2>
                     <hr class="star-light">
                 </div>
             </div>
             <div class="row">
                 <div class="col-lg-4 col-lg-offset-2">
-                    <p>Freelancer is a free bootstrap theme created by Start Bootstrap. The download includes the complete source files including HTML, CSS, and JavaScript as well as optional LESS stylesheets for easy customization.</p>
+                    <p style="text-align: justify;">Drizzle Social entrega a las personas de la ciudad de Cali, datos en tiempo real de la situacion climatica presentada en puntos especificos de la ciudad con el fin de estar al tanto de lo que sucede para tomar decisiones mas acertadas teniendo en cuenta el estado del clima, dicha informacion sera suministrada por los mismos usuarios ya que son los mismos que conocen y saben cual es el estado del clima en su ubicacion y su beneficio sera el de compartir e informar a las demas personas que utilicen el servicio.</p>
                 </div>
                 <div class="col-lg-4">
-                    <p>Whether you're a student looking to showcase your work, a professional looking to attract clients, or a graphic artist looking to share your projects, this template is the perfect starting point!</p>
+                    <p style="text-align: justify;">Es de gran importancia conocer lo ocurrido y lo que actualmente sucede en cuanto al estado del clima, saber si esta lloviendo, va a llover o por el contrario es un dia soleado siempre sera un tema de interes para la sociedad,</p>
                 </div>
                 <div class="col-lg-8 col-lg-offset-2 text-center">
                     <a href="#" class="btn btn-lg btn-outline">
@@ -312,7 +314,7 @@
   					<input type="password" id="pass" name="pass" class="form-control form-white" placeholder="Email Address" required="required">
   					<div class="checkbox-holder text-left">
   						<div>
-  							<label id="demo" class="modalconfirm" style="cursor: pointer" onclick="olvCont()"><span>¿Olvidaste Tu Contraseña?</span></label>
+  							<label id="demo" class="modalconfirm" style="cursor: pointer" onclick="olvCont()"><span>Olvidaste Tu Contrase&ntilde;a&#63;</span></label>
   						</div>
   					</div>
   					<input type="button" name="botonLogin" value="Iniciar Sesion" class="btn btn-submit" onclick="Login()"></input>
@@ -327,33 +329,33 @@
             <div class="container">
                 <div class="row">
                     <div class="footer-col col-md-4">
-                        <h3>Location</h3>
-                        <p>3481 Melrose Place
-                            <br>Beverly Hills, CA 90210</p>
+                        <h3>Localizacion</h3>
+                        <p>Santiago de Cali 
+                            <br>Valle del Cauca, COL 760001</p>
                     </div>
                     <div class="footer-col col-md-4">
-                        <h3>Around the Web</h3>
+                        <h3>Sitios Web</h3>
                         <ul class="list-inline">
                             <li>
-                                <a href="#" class="btn-social btn-outline"><i class="fa fa-fw fa-facebook"></i></a>
+                                <a href="https://www.facebook.com/" class="btn-social btn-outline"><i class="fa fa-fw fa-facebook"></i></a>
                             </li>
                             <li>
-                                <a href="#" class="btn-social btn-outline"><i class="fa fa-fw fa-google-plus"></i></a>
+                                <a href="https://plus.google.com/" class="btn-social btn-outline"><i class="fa fa-fw fa-google-plus"></i></a>
                             </li>
                             <li>
-                                <a href="#" class="btn-social btn-outline"><i class="fa fa-fw fa-twitter"></i></a>
+                                <a href="https://twitter.com/" class="btn-social btn-outline"><i class="fa fa-fw fa-twitter"></i></a>
                             </li>
                             <li>
-                                <a href="#" class="btn-social btn-outline"><i class="fa fa-fw fa-linkedin"></i></a>
+                                <a href="https://co.linkedin.com/" class="btn-social btn-outline"><i class="fa fa-fw fa-linkedin"></i></a>
                             </li>
                             <li>
-                                <a href="#" class="btn-social btn-outline"><i class="fa fa-fw fa-dribbble"></i></a>
+                                <a href="https://www.instagram.com/" class="btn-social btn-outline"><i class="fa fa-fw fa-instagram"></i></a>
                             </li>
                         </ul>
                     </div>
                     <div class="footer-col col-md-4">
-                        <h3>About Freelancer</h3>
-                        <p>Freelance is a free to use, open source Bootstrap theme created by <a href="http://startbootstrap.com">Start Bootstrap</a>.</p>
+                        <h3>Autores</h3>
+                        <p>Creadores. Mario Garcia, Gustavo Ruiz! <a>DrizzleWeb@hotmail.com</a></p>
                     </div>
                 </div>
             </div>
@@ -362,7 +364,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12">
-                        Copyright &copy; Your Website 2016
+                        Copyright &copy;Drizzle Web 2017
                     </div>
                 </div>
             </div>

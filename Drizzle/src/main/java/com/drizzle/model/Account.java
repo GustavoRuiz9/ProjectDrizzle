@@ -13,7 +13,7 @@ public class Account {
 	}
 
 
-	public Account(String name, String last_name, String email, String password, String birth_date,
+	public Account(String name, String last_name, String email, byte[] password, String birth_date,
 			String number_phone) {
 		this.name = name;
 		this.last_name = last_name;
@@ -34,7 +34,7 @@ public class Account {
 	
 	private String email;
 	
-	private String password;
+	private byte[] password;
 	
 	private String birth_date;
 	
@@ -74,13 +74,17 @@ public class Account {
 		this.email = email;
 	}
 
-	public String getPassword() {
+	
+
+	public byte[] getPassword() {
 		return password;
 	}
-	@Required
-	public void setPassword(String password) {
+
+
+	public void setPassword(byte[] password) {
 		this.password = password;
 	}
+
 
 	public String getBirth_date() {
 		return birth_date;

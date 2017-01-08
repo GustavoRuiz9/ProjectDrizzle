@@ -1,4 +1,4 @@
-document.getElementById("myBtn").onclick = displayfile;
+//document.getElementById("myBtn").onclick = displayfile;
 document.getElementById('files').addEventListener('change', archivo, false);
 
 //pulido
@@ -37,6 +37,21 @@ files.onchange = function (e){
             this.value='';
     }
 };
+
+//pulido2
+function checkExt(element) {//use in a form event or ina input
+    if( !element.value.match(/\.(jpg)|(gif)|(png)|(bmp)|(ico)$/) ){//here your extensions
+    	setTimeout(function() {
+            $.bootstrapGrowl("Tipos de imagenes validos (.ico .gif .jpg .png)", {
+                type: 'danger',
+                align: 'center',
+                stackup_spacing: 30
+            });
+        }, 10);
+    	element.value='';
+    	document.getElementById("list").value=" ";
+    }
+}
 
 //pulido
 changeprofile1.onchange = function (e){ 
@@ -106,11 +121,39 @@ function myFunction() {
 	
 }
 
-function displayfile() {
+function displayfile(id_usuario) {
     document.getElementById("changeprofile1").click();
     $('#changeprofile1').change( function(event) {
         var tmppath = URL.createObjectURL(event.target.files[0]);
         document.getElementById("Btn").click();
+        
+        //obtener div
+        var parent = document.querySelector('#chat-box');
+        // Cantidad de div
+	     var divs = parent.querySelectorAll('div');
+	     firtsdiv=(divs[0].id).split('v');
+	     if(firtsdiv[1]=="-1"){
+	    	 console.log("entro al if no habia nada!");
+	     }else{
+	    	 //cont=0;
+	    	 var image=parent.querySelectorAll('img');
+	    	 for (var int = 0; int < divs.length; int++) {
+				console.log("entro "+int);
+				if((int % 3)==0){
+					console.log("archivo: "+image[int]);
+					//console.log("usuario: "+image[int].id+" id_usuario: "+id_usuario);
+					if(image[int].name==id_usuario){
+						console.log("este es de el");
+						image[int].src=tmppath;
+					}
+					
+					//cont=cont+3;
+				}
+				
+			}
+	     }
+        
+        
         
         for (var int = 0; int < 4; int++) {
         	$("#image"+int).fadeIn("fast").attr('src',URL.createObjectURL(event.target.files[0]));	

@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.io.IOUtils;
 import org.apache.jasper.tagplugins.jstl.core.ForEach;
 import org.apache.jasper.tagplugins.jstl.core.Out;
 import org.apache.log4j.helpers.ISO8601DateFormat;
@@ -54,6 +56,7 @@ import com.drizzle.model.Profile;
 import com.drizzle.model.Publication;
 import com.drizzle.model.Setting;
 import com.drizzle.model.Ubication;
+import com.drizzle.model.cifrar_decifrar;
 import com.drizzle.persistence.hibernateTransations;
 import com.drizzle.persistence.mongoConfig;
 import com.drizzle.persistence.mongoTransations;
@@ -99,8 +102,18 @@ public class DrizzleController {
 		Object[] Dts;
 		
 		if(request.getParameter("Sign_out")!=null){
-			sesion.invalidate();
+			sesion.removeAttribute("usuario");
+			sesion.removeAttribute("nombres");
+			sesion.removeAttribute("photo");
+			System.out.println("Entro a cerrar sesion!");
+			
 		}
+		if(sesion.getAttribute("usuario")!=null){
+			System.out.println("usuario encontrado!"+sesion.getAttribute("usuario"));
+			pull=true;
+		}
+		
+		
 		try {
 			String usu=request.getParameter("usuario");
 			String ale=request.getParameter("aleatorio");
@@ -117,8 +130,10 @@ public class DrizzleController {
 						sesion.setAttribute("usuario", Dts[0]);
 						sesion.setAttribute("nombres", Dts[1]+" "+Dts[2]);
 						sesion.setAttribute("photo",photoBase64);
+						sesion.setAttribute("email",Dts[5]);
 						//Limpiar el Objeto!
 						Dts=null;
+						System.out.println("Entro a verificar cuenta!");
 						
 					}
 					
@@ -127,17 +142,21 @@ public class DrizzleController {
 					
 			}
 			
-			if(pull==true){
-				pull=false;
-				return new ModelAndView("Registrado");
-			}else{
-				return new ModelAndView("Index");
-			}
 			
 			
 		} catch (Exception e) {
 			System.out.println("no hay valores de verificacion index.html");
 			// TODO: handle exception
+			//return new ModelAndView("Index");
+		}
+		
+		if(pull==true){
+			pull=false;
+			System.out.println("puso el registrado");
+			return new ModelAndView("Registrado");
+		}else{
+			System.out.println("puso el index");
+			//sesion.invalidate();
 			return new ModelAndView("Index");
 		}
 		
@@ -148,8 +167,14 @@ public class DrizzleController {
 	
 	@RequestMapping(value = "/Registrado", method = { RequestMethod.GET, RequestMethod.POST })
 	public ModelAndView Registrado(HttpServletRequest request) {
+		HttpSession sesion = request.getSession();
+		if(sesion.getAttribute("usuario")!=null){
+			return new ModelAndView("Registrado");
+		}else{
+			return new ModelAndView("Index");
+		}
 		
-		return new ModelAndView("Registrado");
+		
 	}
 	@RequestMapping(value = "/form", method = { RequestMethod.GET, RequestMethod.POST })
 	public ModelAndView formOlviCont(HttpServletRequest request) {
@@ -167,15 +192,17 @@ public class DrizzleController {
 		Correo c= new Correo();
 		
 		
+		
 		try {
 			
 					Dts=hibernateTransations.consultarDatosSesion(correo);
 					if(Dts!=null){
+						cifrar_decifrar ciDe=new cifrar_decifrar();
 						c.setContrasenia("smcovdpwpmuvijzq");
 						c.setUsuarioCorreo("drizzleweb@hotmail.com");
 						c.setAsunto("Solicitu Recuperacion de contraseña drizzleWeb");
 						c.setMensaje("<h2>solicitud de Recuperacion de contraseña</h2> <br> "
-								+ "<h4>"+Dts[1]+"Tu password Es:"+Dts[4]+"</h4> <br>"
+								+ "<h4>"+Dts[1]+" Tu password Es: "+ciDe.descifra((byte[]) Dts[4])+"</h4> <br>"
 								+ "<a href='http://localhost:8080/proyect/'>Drizzleweb</a> <br>"
 								+ "<h4>DrizzleWeb.com</h4>");
 						c.setDestino(correo);
@@ -283,7 +310,12 @@ public class DrizzleController {
 					account.setNumber_phone(item.getString());
 				}
 				if (item.getFieldName().equals("password")) {
-					account.setPassword(item.getString());
+					//account.setPassword(item.getString());
+					cifrar_decifrar ciDe=new cifrar_decifrar();
+					//String str = IOUtils.toString(ciDe.cifra(item.getString()),"UTF-8");
+					account.setPassword(ciDe.cifra(item.getString()));
+					byte[] bi=ciDe.cifra(item.getString());
+					System.out.println("contraseña encryctada: "+ ciDe.cifra(item.getString())+" contraseña desencriptada: "+ciDe.descifra(bi));
 				}
 				
 			}
@@ -341,6 +373,78 @@ public class DrizzleController {
 		
 		
 	}
+	
+	
+	//pulido2
+		@RequestMapping(value = "/reactivarCuenta", method = { RequestMethod.GET, RequestMethod.POST })
+		public @ResponseBody String reactivarCuenta(HttpServletRequest request) {
+			
+			int id_account = 0;
+			String email = "";
+
+			String aleatorio=CadenaAlfanumAleatoria(8); 
+			Correo c= new Correo();
+			
+		try {
+				
+				FileItemFactory Interfaz = new DiskFileItemFactory();
+				ServletFileUpload servlet_up = new ServletFileUpload(Interfaz);
+				List objetos = servlet_up.parseRequest(request);
+				
+				for (int i = 0; i < objetos.size(); i++) {
+					FileItem item = (FileItem) objetos.get(i);
+					if(item.getFieldName().equals("id_account")){
+						id_account = Integer.parseInt(item.getString());
+					}
+					if(item.getFieldName().equals("email")){
+						email = item.getString();
+					}
+				}
+				
+				//actualizar profile aleatorio
+				if (hibernateTransations.actualizarStatus(id_account, aleatorio)){
+					
+					
+					//if (hibernateTransations.reactivarProfile(account.getId_account(),aleatorio)) {
+						System.out.println("TRAE!! " + id_account +" y " + email);
+						
+						c.setContrasenia("smcovdpwpmuvijzq");
+						c.setUsuarioCorreo("drizzleweb@hotmail.com");
+						c.setAsunto("Reactivar cuenta DrizzleWeb");
+						c.setMensaje("<h2>Bievenido ahora puedes seguir compartiendo el estado del Clima</h2> <br> "
+								+ "<h3>Recuerda solo en la ciudad de cali!</h3> <br> "
+								+ "<h4>Este es un correo de verificacion Por favor pulsa en el enlace: </h4> <br>"
+								//pulido2 --quermar por q ni idea en java como obtener eso
+								//+ "<a href='http://drizzleweb2.j.facilcloud.com/drizzleweb/index.html?usuario="+email+"&aleatorio="+aleatorio+"'>Enlace</a> <br>"
+								+ "<a href='http://localhost:8080/proyect/index.html?usuario="+email+"&aleatorio="+aleatorio+"'>Enlace</a> <br>"
+								+ "<h4>DrizzleWeb.com</h4>");
+						c.setDestino(email);
+						
+					if(enviarCorreo(c)){
+						System.out.println("Mensaje Enviado");
+						return "success";
+					}else{
+						System.out.println("Mensaje no enviado");
+						return "error";
+					}
+						
+				}else{
+					return "error";
+				}
+				
+			} catch (Exception e) {
+				System.out.println("error: "+e.getMessage());
+				//return "error";
+				return "fatal";
+			}
+			//return aleatorio;
+		
+			
+			
+			
+		}
+
+	
 	
 	//pulido
 		public static byte[] resize(File icon, boolean perfil) {
@@ -409,24 +513,34 @@ public class DrizzleController {
 						results=(hibernateTransations.consultarAccount(usu));
 						if(!(results.length==0)){
 							System.out.println("estatus es: "+results[2]);
-							if(results[2].toString().equals("true")){
-								if(usu.equals(results[0]) && pass.equals(results[1])){
-									
-									Dts=hibernateTransations.consultarDatosSesion(results[0].toString());
-									byte[] photo = (byte[])Dts[3];			
-									String photoBase64 = Base64.encode(photo);
-									sesion.setAttribute("usuario", Dts[0]);
-									sesion.setAttribute("nombres", Dts[1]+" "+Dts[2]);
-									sesion.setAttribute("photo",photoBase64);
-									//Limpiar el Objeto!
-									Dts=null;
-									return "success";
-									}else{
-									System.out.println("Datos incorrectos");
-									return "warning";
-									}
+							//pulido2
+							if(!results[3].toString().isEmpty()){
+								if(results[2].toString().equals("true")){
+									cifrar_decifrar ciDe=new cifrar_decifrar();
+									String passBd=ciDe.descifra((byte[]) results[1]);
+									System.out.println("password desifrado: "+passBd);
+									if(usu.equals(results[0]) && pass.equals(passBd)){
+										
+										Dts=hibernateTransations.consultarDatosSesion(results[0].toString());
+										byte[] photo = (byte[])Dts[3];			
+										String photoBase64 = Base64.encode(photo);
+										sesion.setAttribute("usuario", Dts[0]);
+										sesion.setAttribute("nombres", Dts[1]+" "+Dts[2]);
+										sesion.setAttribute("photo",photoBase64);
+										sesion.setAttribute("email",Dts[5]);
+										//Limpiar el Objeto!
+										Dts=null;
+										return "success";
+										}else{
+										System.out.println("Datos incorrectos");
+										return "warning";
+										}
+								}else{
+									return "invalidate";
+								}
+							//pulido2
 							}else{
-								return "invalidate";
+								return results[0]+" "+results[4];
 							}
 							
 						}else{
@@ -551,7 +665,8 @@ public class DrizzleController {
 							 Comuna= Integer.parseInt(pub.getId_Barrio().substring(0, 2));
 						 }
 						 
-						 mongoTransations.UpdateEstadistica(Comuna,id,pub.getWeather(),-1);
+						//pulido2
+						 mongoTransations.UpdateEstadistica(Comuna,id,pub,true);
 						 pub.setPtos_publicacion(hibernateTransations.ObtVlEdt(id));
 						 
 					} catch (Exception e) {
@@ -860,7 +975,8 @@ public class DrizzleController {
 				 Comuna= Integer.parseInt(Pb.getId_Barrio().substring(0, 2));
 			 }
 			
-			mongoTransations.UpdateEstadistica(Comuna,Usuario,Pb.getWeather(),Pb.getPtos_publicacion());
+			//pulido2
+			mongoTransations.UpdateEstadistica(Comuna,Usuario,Pb,false);
 			
 			mongoTransations.borrarPublication(Pb);
 			//pulido
@@ -1000,9 +1116,35 @@ public String crearJsonEstadisticas(List<Estadistica> listEstadisticas) {
 		
 		//mejorar
 		public int[] converClima(int storm, int sunny, int rain, int temp){
-			
-			int clima = 0;
+			//int clima = 0;
 			int mayor[] = new int[2];
+			
+			int bigger = Integer.max(Integer.max(Integer.max(storm, sunny), rain),temp);
+			System.out.println("el mayor: "+bigger);
+			if(bigger==temp){
+				mayor[0] = 25;
+				mayor[1] = temp;
+			}else{
+				if(bigger==sunny){
+					mayor[0] = 20;
+					mayor[1] = sunny;
+				}else{
+					if(bigger==rain){
+						mayor[0] = 10;
+						mayor[1] = rain;
+						
+					}else{
+						if(bigger==storm){
+							mayor[0] = 15;
+							mayor[1] = storm;
+						}
+					}
+					
+				}
+			}
+			
+			
+			/*
 			
 			if(rain > sunny && rain > storm && rain > temp){
 				clima = 10;
@@ -1070,7 +1212,7 @@ public String crearJsonEstadisticas(List<Estadistica> listEstadisticas) {
 					}
 				}
 			}
-		}
+		}*/
 		
 			return mayor;
 	}
@@ -1110,7 +1252,7 @@ public String crearJsonEstadisticas(List<Estadistica> listEstadisticas) {
 	public @ResponseBody String obtenerAjustes(HttpServletRequest request) {
 		
 		HttpSession sesion = request.getSession();
-
+		String CambioNombre="";
 		
 		
 		try {
@@ -1152,14 +1294,40 @@ public String crearJsonEstadisticas(List<Estadistica> listEstadisticas) {
 				
 			}
 			
-			hibernateTransations.actualizarAjustes(Usuario, checkCorreo, checkTelefono, nombre, apellido, contrasena, telefono);
+			sesion.getAttribute("nombres");
+			if(!sesion.getAttribute("nombres").equals(nombre+" "+apellido)){
+				sesion.setAttribute("nombres",nombre+" "+apellido);
+				//CambioNombre=nombre+" "+apellido;
+				CambioNombre="[{\"nombre\":\""+ nombre + "\",\"apellido\": \"" + apellido + "\", \"codigo\":\"" + sesion.getAttribute("usuario").toString() +"\"}]";
+				
+			}
+			
+			
+			cifrar_decifrar ciDe=new cifrar_decifrar();
+			//String str = IOUtils.toString(ciDe.cifra(item.getString()),"UTF-8");
+			hibernateTransations.actualizarAjustes(Usuario, checkCorreo, checkTelefono, nombre, apellido, ciDe.cifra(contrasena), telefono);
+			return CambioNombre;
 			
 		} catch (Exception e) {
 			// TODO: handle exception
+			return CambioNombre;
 		}
 		
-		return "";
+		
 	}
+	
+	//pulido2
+		@RequestMapping(value = "/setStatus", method = { RequestMethod.GET, RequestMethod.POST })
+		public @ResponseBody String setStatus(HttpServletRequest request) {
+			
+			HttpSession sesion = request.getSession();
+			
+			int author=Integer.parseInt(sesion.getAttribute("usuario").toString());
+			sesion.removeAttribute("usuario");
+			sesion.removeAttribute("nombres");
+			sesion.removeAttribute("photo");
+			return ""+hibernateTransations.actualizarStatus(author, "");
+		}
 	
 	@RequestMapping(value = "/showSettings", method = { RequestMethod.GET, RequestMethod.POST })
 	public @ResponseBody String ShowSettings(HttpServletRequest request) {
@@ -1196,7 +1364,7 @@ public String crearJsonEstadisticas(List<Estadistica> listEstadisticas) {
 				json += object.toString().substring(0, object.toString().length()-1)+ubicacion+datosAuthor+","; 
 			}
 			
-			return json.substring(0, json.length()-1)+"]";
+			return listPublicaciones.isEmpty()?json+"]":json.substring(0, json.length()-1)+"]";
 					
 		}
 		
