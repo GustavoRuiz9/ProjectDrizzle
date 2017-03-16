@@ -8,7 +8,7 @@ var files = document.getElementById('files');
 //pulido
 files.onchange = function (e){ 
     var ext = this.value.match(/\.(.+)$/)[1];
-    alert("Valor " + ext);
+    //alert("Valor " + ext);
     switch(ext)
     {
         case 'jpg':
@@ -88,7 +88,7 @@ changeprofile1.onchange = function (e){
 
 
 function ImageAjax(formData){
-	alert("entro al ajax");
+	//alert("entro al ajax");
 	$.ajax({
         url: "AjaxImage.html",
         type: "post",
@@ -137,18 +137,14 @@ function displayfile(id_usuario) {
 	     }else{
 	    	 //cont=0;
 	    	 var image=parent.querySelectorAll('img');
-	    	 for (var int = 0; int < divs.length; int++) {
-				console.log("entro "+int);
-				if((int % 3)==0){
+	    	 for (var int = 0; int < image.length-1; int++) {
+	    		 	console.log("entro "+int);
 					console.log("archivo: "+image[int]);
 					//console.log("usuario: "+image[int].id+" id_usuario: "+id_usuario);
 					if(image[int].name==id_usuario){
 						console.log("este es de el");
 						image[int].src=tmppath;
 					}
-					
-					//cont=cont+3;
-				}
 				
 			}
 	     }
@@ -164,6 +160,7 @@ function displayfile(id_usuario) {
         });
     
     }
+
 
 //Publicacion
 function archivo(evt) {

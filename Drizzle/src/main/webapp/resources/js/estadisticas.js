@@ -9,6 +9,11 @@ function cargarmap(Data){
 	  {
 	  lat=position.coords.latitude;
 	  lon=position.coords.longitude;
+	  //lat=3.383752;
+		//lon=-76.520274;
+		lat=3.465830504168119;
+		lon=-76.52755379676819;
+		
 	  console.log(lat);
 	  console.log(lon);
 	  latlon2=new google.maps.LatLng(3.4697714864594627, -76.49712949991226)
@@ -84,14 +89,32 @@ function cargarmap(Data){
 							myChart.setShowYValues(false);
 							myChart.setShowXValues(false);
 							
-							//pulido2
-							for (var int = 0; int < dato[0].registro.length; int++) {
+							//pulido3
+							if(matriz.length==1){
+	
+									for (var int2 = 0; int2 < dato[0].registro[0].length; int2++) {
+										myChart.setTooltip([dato[0].registro[0][int2].tipo,dato[0].registro[0][int2].valorClima+' Ptos']);
+									}
+								
+							}else{
+								
+								//pulido3
+								myChart.setTooltip([10,'!']);
+								myChart.setTooltip([15,'!']);
+								myChart.setTooltip([20,'!']);
+								myChart.setTooltip([25,'!']);
+								
+							}
+							
+							
+							/*for (var int = 0; int < dato[0].registro.length; int++) {
 								
 								for (var int2 = 0; int2 < dato[0].registro[int].length; int2++) {
 									myChart.setTooltip([dato[0].registro[int][int2].tipo,dato[0].registro[int][int2].valorClima+' Ptos']);
 								}
 								
-							}
+							}*/
+							
 
 							myChart.setFlagColor('#9D16FC');
 							myChart.setFlagRadius(4);
@@ -240,7 +263,7 @@ function displayLineChart(Data) {
 	  var image = '././resources/img/IconsMap/10.png';	
 	  latlonmarker1= new google.maps.LatLng(3.4503904999999997,-76.501415);
 	  var marker=new google.maps.Marker({position:latlonmarker1,map:map,animation: google.maps.Animation.BOUNCE, title:"Comuna!"});
-	  alert(map);
+	  //alert(map);
 							dato = JSON.parse(Data);
 							
 							var matriz=new Array();
@@ -471,8 +494,8 @@ function establecerAjustes(){
 					 regexp: {
 						 
 						 regexp: /^(?=[0-9]*$)(?:.{7}|.{10})$/, 
-	 
-						 message: 'El telefono solo puede contener numeros'
+						 //pulido3
+						 message: 'Nro. de telefono(7) o celular(10)'
 	 
 					 }
 			 
@@ -497,8 +520,8 @@ function establecerAjustes(){
 						 min: 8,
 						 
 						 max: 12,
-	 
-						 message: 'El password debe contener al menos 8 caracteres'
+						//pulido3
+						 message: 'El password debe contener entre 8 y 12 caracteres'
 	 
 					 }
 			 
@@ -513,6 +536,7 @@ function establecerAjustes(){
 	});
 	$('#formularioAjustes').bootstrapValidator().on('submit', function (e) {
 		  if (e.isDefaultPrevented()) {
+			  
 		    // handle the invalid form...
 			  console.log('hay problema en actulizar ajustes');
 			  return true;
@@ -521,6 +545,8 @@ function establecerAjustes(){
 			  
 			  console.log('todo melo en actulizar ajustes');
 			  var formData = new FormData(document.getElementById("formularioAjustes"));
+				
+				console.log("TELEFONO : " + formData.getAll('telefonoModificar'));
 				
 				swal({
 					  title: "Actualizar Ajustes",
@@ -555,22 +581,19 @@ function establecerAjustes(){
 										     var divs = parent.querySelectorAll('div');
 										     firtsdiv=(divs[0].id).split('v');
 										     if(firtsdiv[1]=="-1"){
-										    	 console.log("entro al if no habia nada!");
 										     }else{
 										    	 //cont=0;
 										    	 var span=parent.querySelectorAll('span');
-										    	 for (var int = 0; int < divs.length; int++) {
-													console.log("entro "+int);
-													if((int % 3)==0){
-														console.log("archivo: "+span[int]);
+										    	 for (var int = 0; int <= span.length-1; int++) {
 														//console.log("usuario: "+image[int].id+" id_usuario: "+id_usuario);
 														if(span[int].id==data[0].codigo){
-															console.log("este es de el");
 															span[int].textContent=data[0].nombre+" "+data[0].apellido;
+															console.log("pinto: "+span[int].textContent);
+															int=int+2;
 														}
 														
-														//cont=cont+3;
-													}
+														
+													
 													
 												}
 										     }
@@ -744,7 +767,6 @@ function PrintSettings(data){
 }
 
 
-
 function PrintPerfil(data,Id_Pb){
 	idPb=Id_Pb.split('r');
 	dato=JSON.parse(data);
@@ -773,7 +795,16 @@ function PrintPerfil(data,Id_Pb){
 		'<span class="glyphicon glyphicon-star" style="color:' +rp +'"></span>';
 	
 	if(dato[0].correo==true){
-		conten+="<strom>Email: </strom><p>"+dato[0].email+"</p>";
+		var cadena;
+		if((dato[0].email).length>15){
+			var cadena = [(dato[0].email).substring(0, 15),(dato[0].email).substring(15)];
+			//cadena[0]=(dato[0].email).substring(10);
+			//cadena[1]=(dato[0].email).substring(0, 10);
+			conten+="<strom>Email: </strom><p><u>"+cadena[0]+"</br>"+cadena[1]+"</u></p>";
+			console.log("entro y lo dividio");
+			}else{
+				conten+="<strom>Email: </strom><p>"+dato[0].email+"</p>";
+			}
 	}
 	if(dato[0].telefono==true){
 		conten+="<strom>Tel: </strom><p>"+dato[0].number_phone+"</p>";

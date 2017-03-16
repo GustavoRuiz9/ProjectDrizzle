@@ -120,7 +120,7 @@ public class hibernateTransations {
 		
 		try{
 			//File photo = new File("/opt/tomcat/webapps/drizzleweb/resources/img/perfil/profile.png");
-			File photo = new File("C:/Users/RICARDO OSPINA/WorkspaceSpring/ProjectDrizzle/IMG/avatar.png");
+			File photo = new File("/home/tavoruiz/git/ProjectDrizzle/IMG/profile.png");
 			byte[] photoBytes = new byte[(int)photo.length()];
 			
 			FileInputStream fs = new FileInputStream(photo);
@@ -175,6 +175,7 @@ public class hibernateTransations {
 		profile.setPhoto(photo);
 		
 			try{
+				System.out.println(profile.toString());
 				session.beginTransaction();		
 				session.update(profile);
 				session.getTransaction().commit();
@@ -182,7 +183,7 @@ public class hibernateTransations {
 				return true;
 				
 			}catch (Exception e) {
-				System.out.println("Error en el metodo actualizarAccount - " + e.getMessage());
+				System.out.println("Error en el metodo actualizarProfile - " + e.getMessage());
 				return false;
 			}finally {
 				session.disconnect();
@@ -323,7 +324,7 @@ public class hibernateTransations {
 			try{
 				session.beginTransaction();
 				
-				String sentenciaSQL=("UPDATE profile SET profile.reputation = profile.reputation "+Ptn+ " where profile.profile_account = "+author);
+				String sentenciaSQL=("UPDATE Profile SET Profile.reputation = Profile.reputation "+Ptn+ " where Profile.profile_account = "+author);
 				session.createSQLQuery(sentenciaSQL).executeUpdate();
 				session.getTransaction().commit();
 				return true;
@@ -371,7 +372,7 @@ public class hibernateTransations {
 			try{
 				session.beginTransaction();
 				
-				String sentenciaSQL=("UPDATE profile SET profile.estatus = "+true+" where profile.profile_account = "+id_account);
+				String sentenciaSQL=("UPDATE Profile SET Profile.estatus = "+true+" where Profile.profile_account = "+id_account);
 				session.createSQLQuery(sentenciaSQL).executeUpdate();
 				session.getTransaction().commit();
 				return true;
@@ -480,15 +481,15 @@ public class hibernateTransations {
 
 	}
 	
-	public static boolean actualizarAjustes(int author, boolean checkcorreo , boolean checktelefono, String nombre, String apellido, byte[] contrasena, int telefono ) {
+	public static boolean actualizarAjustes(int author, boolean checkcorreo , boolean checktelefono, String nombre, String apellido, byte[] contrasena, String telefono ) {
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		
 			try{
 				session.beginTransaction();
 				
 				String sentenciaSQL= ("UPDATE Account INNER JOIN Setting ON Account.id_account = Setting.id_account_profile SET  "+
-						 "Account.name = '" + nombre + "', Account.last_name = '" + apellido + "', Account.password = ?, Account.number_phone = " + telefono 
-						 + ", Setting.correo = "+checkcorreo + ", Setting.telefono = " + checktelefono + " where Account.id_account = "+author);
+						 "Account.name = '" + nombre + "', Account.last_name = '" + apellido + "', Account.password = ?, Account.number_phone = '" + telefono 
+						 + "', Setting.correo = "+checkcorreo + ", Setting.telefono = " + checktelefono + " where Account.id_account = "+author);
 				System.out.println(sentenciaSQL);
 				/*
 				 * 

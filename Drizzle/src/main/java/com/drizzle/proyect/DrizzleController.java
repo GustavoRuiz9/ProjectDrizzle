@@ -198,10 +198,11 @@ public class DrizzleController {
 					Dts=hibernateTransations.consultarDatosSesion(correo);
 					if(Dts!=null){
 						cifrar_decifrar ciDe=new cifrar_decifrar();
-						c.setContrasenia("smcovdpwpmuvijzq");
+						//c.setContrasenia("smcovdpwpmuvijzq");
+						c.setContrasenia("dr1zzl3WEB");
 						c.setUsuarioCorreo("drizzleweb@hotmail.com");
-						c.setAsunto("Solicitu Recuperacion de contraseña drizzleWeb");
-						c.setMensaje("<h2>solicitud de Recuperacion de contraseña</h2> <br> "
+						c.setAsunto("Solicitud Recuperacion de contraseÃ±a drizzleWeb");
+						c.setMensaje("<h2>solicitud de Recuperacion de contraseÃ±a</h2> <br> "
 								+ "<h4>"+Dts[1]+" Tu password Es: "+ciDe.descifra((byte[]) Dts[4])+"</h4> <br>"
 								+ "<a href='http://localhost:8080/proyect/'>Drizzleweb</a> <br>"
 								+ "<h4>DrizzleWeb.com</h4>");
@@ -237,7 +238,7 @@ public class DrizzleController {
 			ServletFileUpload servlet_up = new ServletFileUpload(Interfaz);
 			List objetos = servlet_up.parseRequest(request);
 			//String ruta = "/opt/tomcat/webapps/drizzleweb/resources/img/perfil/";
-			String ruta = "C://Users//RICARDO OSPINA//WorkspaceSpring//ProjectDrizzle//IMG//";
+			String ruta = "/home/tavoruiz/git/ProjectDrizzle/IMG/";
 			for (int i = 0; i < objetos.size(); i++) {
 				FileItem item = (FileItem) objetos.get(i);
 				if (item.getFieldName().equals("imageprofile")) {
@@ -315,7 +316,7 @@ public class DrizzleController {
 					//String str = IOUtils.toString(ciDe.cifra(item.getString()),"UTF-8");
 					account.setPassword(ciDe.cifra(item.getString()));
 					byte[] bi=ciDe.cifra(item.getString());
-					System.out.println("contraseña encryctada: "+ ciDe.cifra(item.getString())+" contraseña desencriptada: "+ciDe.descifra(bi));
+					System.out.println("contraseï¿½a encryctada: "+ ciDe.cifra(item.getString())+" contraseï¿½a desencriptada: "+ciDe.descifra(bi));
 				}
 				
 			}
@@ -341,7 +342,8 @@ public class DrizzleController {
 					c.setMensaje("<h2>Bievenido ahora puedes compartir El estado del Clima</h2> <br> "
 							+ "<h3>Recuerda solo en la ciudad de cali!</h3> <br> "
 							+ "<h4>Este es un correo de verificacion Por favor pulsa en el enlace: </h4> <br>"
-							+ "<a href='http://localhost:8080/proyect/index.html?usuario="+account.getEmail()+"&aleatorio="+aleatorio+"'>Enlace</a> <br>"
+							+ "<a href='http://localhost:8080/Drizzle/index.html?usuario="+account.getEmail()+"&aleatorio="+aleatorio+"'>Enlace</a> <br>"
+							//+ "<a href='http://192.168.0.10:8080/Drizzle/index.html?usuario="+account.getEmail()+"&aleatorio="+aleatorio+"'>Enlace</a> <br>"
 							+ "<h4>DrizzleWeb.com</h4>");
 					c.setDestino(account.getEmail());
 					
@@ -416,7 +418,7 @@ public class DrizzleController {
 								+ "<h4>Este es un correo de verificacion Por favor pulsa en el enlace: </h4> <br>"
 								//pulido2 --quermar por q ni idea en java como obtener eso
 								//+ "<a href='http://drizzleweb2.j.facilcloud.com/drizzleweb/index.html?usuario="+email+"&aleatorio="+aleatorio+"'>Enlace</a> <br>"
-								+ "<a href='http://localhost:8080/proyect/index.html?usuario="+email+"&aleatorio="+aleatorio+"'>Enlace</a> <br>"
+								+ "<a href='http://localhost:8080/Drizzle/index.html?usuario="+email+"&aleatorio="+aleatorio+"'>Enlace</a> <br>"
 								+ "<h4>DrizzleWeb.com</h4>");
 						c.setDestino(email);
 						
@@ -612,7 +614,7 @@ public class DrizzleController {
 						FileItemFactory Interfaz = new DiskFileItemFactory();
 						ServletFileUpload servlet_up = new ServletFileUpload(Interfaz);
 						List objetos = servlet_up.parseRequest(request);
-						String ruta = "C://Users//RICARDO OSPINA//WorkspaceSpring//ProjectDrizzle//IMG//";
+						String ruta = "/home/tavoruiz/git/ProjectDrizzle/IMG/";
 						//String ruta = "/opt/tomcat/webapps/drizzleweb/resources/img/";
 						int Comuna=0;
 						int id = Integer.parseInt(sesion.getAttribute("usuario").toString());
@@ -1097,7 +1099,7 @@ public String crearJsonEstadisticas(List<Estadistica> listEstadisticas) {
 			if(tipoString.equals("madrugada")){
 				tipo = 10;
 			}else{
-				if(tipoString.equals("mañana")){
+				if(tipoString.equals("maï¿½ana")){
 					tipo = 15;
 				}else{
 					if(tipoString.equals("tarde")){
@@ -1259,7 +1261,7 @@ public String crearJsonEstadisticas(List<Estadistica> listEstadisticas) {
 			String nombre = "";
 			String apellido = ""; 
 			String contrasena = "";
-			int telefono = 0;
+			String telefono = "";
 			boolean checkCorreo = false;
 			boolean checkTelefono = false;
 			
@@ -1283,7 +1285,7 @@ public String crearJsonEstadisticas(List<Estadistica> listEstadisticas) {
 					contrasena=item.getString();
 				}
 				if (item.getFieldName().equals("telefonoModificar")) {
-					telefono=Integer.parseInt(item.getString());
+					telefono=item.getString();
 				}
 				if (item.getFieldName().equals("checkTelefono")) {
 					checkTelefono=true;

@@ -7,10 +7,42 @@ function Geolocation(){
 	navigator.geolocation.getCurrentPosition(showPosition);
 	function showPosition(position){
 		var geocoder = new google.maps.Geocoder();
-		//lat=position.coords.latitude;
-		//lon=position.coords.longitude;
-		lat = 3.4686148955336327;
-		lon = -76.50039911270142;
+		lat=position.coords.latitude;
+		lon=position.coords.longitude;
+		//Salomia
+		//lat = 3.4686148955336327;
+		//lon = -76.50039911270142;
+		
+		//nueva salomia
+		//lat = 3.4686148955336327;
+		//lon = -76.50039911270142;
+		
+		//caney 
+		//lat=3.383752;
+		//lon=-76.520274;
+		
+		//versalles
+		//lat=3.4614557;
+		//lon=-76.52931389999998;
+		
+		//Guayaquil
+		//lat=3.439808;
+		//lon=-76.527334;
+		//3.439808, -76.527334
+		
+		//san fernando
+		//lat=3.431957;
+		//lon=-76.543497;
+		//3.439808, -76.527334
+		
+		//san vicente / Uniajc
+		lat=3.465830504168119;
+		lon=-76.52755379676819;
+		
+		
+		
+		
+		
 		latlonmarker= new google.maps.LatLng(lat, lon);
 		geocoder.geocode({ 'latLng': latlonmarker },geocoderact);
 		
@@ -68,11 +100,12 @@ function display(data) {
 	var datos=data.split(',');
 	if(datos[1]!=""){
 		document.getElementById("Id_").value=datos[1];
+		document.getElementById("BtnPub").disabled=false;
 	}else{
 		document.getElementById("BtnPub").disabled=true;
 	}
 	$('#Barrio').html(datos[0]);
-}
+} 
 
 //pulido
 function ValPublication() {
@@ -102,6 +135,9 @@ function ValPublication() {
 	    				ShowPublication(response);
 	    				ConsultaEstadiscticas(document.getElementById("comuna").value);
 	    				$('#myModal').modal('hide');
+	    				//pulido3
+	    				document.getElementById("comuna").selectedIndex = 0;
+	    				document.getElementById("comuna").onchange();
 	    				//llamar el ShowPublication
 	    			},
 	    			error : function(e) {
@@ -168,6 +204,8 @@ function regComment() {
 				success : function(response) {
 					console.log("SUCCESS: ", response);
 					paintComments(JSON.parse(response));
+					//pulido3
+					document.getElementById("textarearDescription").value = "";
 					//ShowPublication(response); dividir esto en 2 metodos uno para comentarios y otro para publi q llame a ....
 					//llamar el ShowPublication
 				},
@@ -265,16 +303,19 @@ function ShowPublication(data) {
 		 	}
 		 	
 		  onclick="consultaPerfil(this.name,this.id)"
-		   newTextBoxDiv.before().html('<img src="data:image/png;base64,'+ dato[cont].profile + '"  alt="user image" class="online" style="cursor: pointer" id="popoveUser'+dato[cont].id_publication+'" name="'+ dato[cont].authorperfil + '" onclick="consultaPerfil(this.name,this.id)" >'+
-				    '<p class="message">'+
-					'<a href="#" class="name">'+
-					'<small class="text-muted pull-right"><i class="fa fa-clock-o"></i>'+dato[cont].date.split(' ')[3]+'</small>'+ dato[cont].nombre_author +
-					'</a>'+ 
-					'<img src="././resources/img/perfil/'+ dato[cont].weather+ '-weather.png" class="img-responsive"/>'+
-		 			//Pulido
-					descripcion
-					+imagen
-					+Btn);
+			   newTextBoxDiv.before().html('<img src="data:image/png;base64,'+ dato[cont].profile + '"  alt="user image" class="online" style="cursor: pointer" id="popoveUser'+dato[cont].id_publication+'" name="'+ dato[cont].authorperfil + '" onclick="consultaPerfil(this.name,this.id)" >'+
+					    '<p class="message">'+
+						'<a href="#" class="name">'+
+						'<small class="text-muted pull-right"><i class="fa fa-clock-o"></i>'+dato[cont].date.split(' ')[3]+'</small>'+ 
+						'<span  id="'+dato[cont].authorperfil+'">'+
+					     dato[cont].nombre_author+
+					     '</span>'+
+						'</a>'+ 
+						'<img src="././resources/img/perfil/'+ dato[cont].weather+ '-weather.png" class="img-responsive"/>'+
+			 			//Pulido
+						descripcion
+						+imagen
+						+Btn);
 
 		   $("#chat-box").prepend(newTextBoxDiv);
 		   cont = cont + 1;
@@ -342,7 +383,6 @@ function ShowComments(data,id_publicacion) {
 
 //cambios
 function paintComments(dato) {
-	alert("pinte comentarios");
 	var divComment;
 	cont = 0;
 	if ((dato[0].comments.length)==0){
@@ -372,8 +412,7 @@ function AlertDrop(clicked_id) {
     var parent = document.querySelector('#chat-box');
     // Cantidad de div
     var divs = parent.querySelectorAll('div');
-    firtsdiv=(divs[0].id).split('v');
-    alert("div a eliminar: "+div);
+    firtsdiv=(divs[0].id).split('v');    
     
     $('#'+clicked_id).on('click', function () {
         var jc= $.confirm({
@@ -398,7 +437,6 @@ function AlertDrop(clicked_id) {
          		    				console.log("SUCCESS: ", response);
          		    				document.getElementById(div).remove();
          		    				BarraSnPb(response);
-         		    				$.alert('Has eliminado la Publicacion!');
          		    				ConsultaEstadiscticas(document.getElementById("comuna").value);
          		    			},
          		    			error : function(e) {
@@ -465,7 +503,7 @@ function Like(clicked_id) {
 	            url: "LikePublicacion.html",
 	            type: "GET",
 	            dataType: "html",
-	            data:"Lk_Pbl="+clicked_id +"&SpanCls="+Span[0].className,
+	            data:"Lk_Pbl="+clicked_id +"&SpanCls="+Span[1].className, 
 	            cache: false,
 	            contentType: false,
 	            processData: false,
@@ -526,12 +564,12 @@ function  AlertLike(varLk ,idPl){
 		 //obtener div
 	    var parent = document.querySelector('#TextBoxDiv'+idPl);
 		var Span = parent.querySelectorAll('span');
-		if(Span[0].className=="glyphicon glyphicon-heart"){
-			Span[0].className="glyphicon glyphicon-heart-empty";
+		if(Span[1].className=="glyphicon glyphicon-heart"){
+			Span[1].className="glyphicon glyphicon-heart-empty";
 			console.log("No me gusta!");
 			
 		}else{
-			Span[0].className="glyphicon glyphicon-heart";
+			Span[1].className="glyphicon glyphicon-heart";
 			console.log("Gracias por darle Me gusta!");
 		}
 
@@ -540,7 +578,6 @@ function  AlertLike(varLk ,idPl){
 }
 
 function Filtro(Vr){
-	
 	$.ajax({
         url: "FiltroPb.html",
         type: "GET",
@@ -603,7 +640,7 @@ function tildes_unicode(str){
 //cambios
 function DisplayComments(id_publication) {
 
-	alert("Entra y trae" + id_publication);
+	
 		$.ajax({
 	            url: "loadComments.html",
 	            type: "GET",
@@ -774,8 +811,8 @@ function registroUsuario() {
 					 regexp: {
 						 
 						 regexp: /^(?=[0-9]*$)(?:.{7}|.{10})$/, 
-	 
-						 message: 'El telefono solo puede contener numeros'
+						 //pulido3
+						 message: 'Nro. de telefono(7) o celular(10)'
 	 
 					 }
 			 
@@ -800,10 +837,15 @@ function registroUsuario() {
 						 min: 8,
 						 
 						 max: 12,
+						//pulido3
+						 message: 'El password debe contener entre 8 y 12 caracteres'
 	 
-						 message: 'El password debe contener al menos 8 caracteres'
-	 
-					 }
+					 },
+					//pulido3
+					 identical: {
+		                    field: 'password2',
+		                    message: 'los campos password y confirm password deben de ser iguales'
+		             }
 			 
 			 		
 
@@ -816,13 +858,14 @@ function registroUsuario() {
 				 validators: {
 
 					 notEmpty: {
-
-						 message: 'el password es requerido'
+						//pulido3
+						 message: 'confirmar password es requerido'
 
 					 },
 					 identical: {
 		                    field: 'password',
-		                    message: 'los dos campos deben de ser iguales'
+		                    //pulido3
+		                    message: 'los campos password y confirm password deben de ser iguales'
 		             }
 
 				 }
@@ -1101,12 +1144,14 @@ function olvCont() {
 				console.log("DONE");
 			}
 		});*/
-	
-	
-	
+
+}
+function Manual(archivo) {
+
+	//document.location = archivo;
+	window.open(archivo, 'resizable,scrollbars'); 
  
 }
-
 
 
 	

@@ -149,6 +149,8 @@
 						      
 						      <output height="100px" width = "150px" name="list" id="list"></output>
 						      
+						      <br/>
+						      
 							  <textarea name="textareaPublicacion" id="textareaPublicacion" style="overflow:auto;resize:none;min-width: 100%" placeholder="Describe tu publicación..." rows="4" cols="80" maxlength = "160"></textarea>
 							  
 						<BR><BR>
@@ -157,7 +159,7 @@
 				
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-					<button id="BtnPub" name="BtnPub" type="button" class="btn btn-primary" onclick="ValPublication()">Publicar</button>
+					<button id="BtnPub" name="BtnPub" type="button" class="btn btn-primary" disabled="true" onclick="ValPublication()">Publicar</button>
 					
 				</div>
 
@@ -472,7 +474,7 @@
                 <div class="pull-right">
                 		<form action="index.html" method="post">
                 		<span id="salida"></span>
-                		<input type="submit" class="btn btn-default btn-flat" name="Sign_out" id="Sing_out" value="Sign out"></input>
+                		<input type="submit" class="btn btn-default btn-flat" name="Sign_out" id="Sing_out" value="Cerrar Sesion"></input>
                 		<!-- Alert Para salir -->
                 		<!--<a href="#" class="btn btn-default btn-flat"></a>-->
                 		</form>

@@ -86,10 +86,10 @@
                         <a href="#about">Acerca</a>
                     </li>
                     <li class="page-scroll">
-                        <a href="#contact">Sing Up</a>
+                        <a href="#contact">Registro</a>
                     </li>
                     <li class="page-scroll">
-                        <a href="#" data-toggle="modal" data-target="#modal1" class="btn btn-blue">Login</a>
+                        <a href="#" data-toggle="modal" data-target="#modal1" class="btn btn-blue">Iniciar Sesion</a>
                     </li>
                 </ul>
             </div>
@@ -211,8 +211,8 @@
                     <p style="text-align: justify;">Es de gran importancia conocer lo ocurrido y lo que actualmente sucede en cuanto al estado del clima, saber si esta lloviendo, va a llover o por el contrario es un dia soleado siempre sera un tema de interes para la sociedad,</p>
                 </div>
                 <div class="col-lg-8 col-lg-offset-2 text-center">
-                    <a href="#" class="btn btn-lg btn-outline">
-                        <i class="fa fa-download"></i> Download Theme
+                    <a onclick="Manual('././resources/img/Manual de Usuario.pdf')" class="btn btn-lg btn-outline">
+                        <i class="fa fa-download"></i> Descargar Manual
                     </a>
                 </div>
             </div>
@@ -265,7 +265,8 @@
                             <div class="form-group col-xs-12 floating-label-form-group controls">
                                 <div class="col-xs-11">
                                 	<label>Phone Number</label>
-                                	<input type="number" class="form-control" placeholder="Phone Number" maxlength="10" id="phone" name="phone" required="required"/>
+                                	<!-- pulido3 quitar maxlength -->
+                                	<input type="number" class="form-control" placeholder="Phone Number" id="phone" name="phone" required="required"/>
                                 	<p class="help-block text-danger"></p>
                                 </div>
                             </div>
@@ -310,8 +311,9 @@
   				<a href="#" class="close-link"><i class="icon_close_alt2"></i></a>
   				<h3 class="white">Login</h3>
   				<form class="popup-form" method="post" enctype="multipart/form-data" id="logger" name="logger" >
-  					<input type="email" id="user_name" name="user_name" class="form-control form-white" placeholder="Full Name" required="required">
-  					<input type="password" id="pass" name="pass" class="form-control form-white" placeholder="Email Address" required="required">
+  				<!-- pulido3 -->
+  					<input type="email" id="user_name" name="user_name" class="form-control form-white" placeholder="correo" required="required">
+  					<input type="password" id="pass" name="pass" class="form-control form-white" placeholder="contraseña" required="required">
   					<div class="checkbox-holder text-left">
   						<div>
   							<label id="demo" class="modalconfirm" style="cursor: pointer" onclick="olvCont()"><span>Olvidaste Tu Contrase&ntilde;a&#63;</span></label>
@@ -337,19 +339,17 @@
                         <h3>Sitios Web</h3>
                         <ul class="list-inline">
                             <li>
-                                <a href="https://www.facebook.com/" class="btn-social btn-outline"><i class="fa fa-fw fa-facebook"></i></a>
+                                <a href="https://www.facebook.com/profile.php?id=100015473926041" target="_blank"  class="btn-social btn-outline"><i class="fa fa-fw fa-facebook"></i></a>
+                            </li>
+                            
+                            <li>
+                                <a href="https://twitter.com/DrizzleCali"  target="_blank" class="btn-social btn-outline"><i class="fa fa-fw fa-twitter"></i></a>
                             </li>
                             <li>
-                                <a href="https://plus.google.com/" class="btn-social btn-outline"><i class="fa fa-fw fa-google-plus"></i></a>
+                                <a href="https://www.linkedin.com/in/drizzle-web-820050139/" target="_blank"  class="btn-social btn-outline"><i class="fa fa-fw fa-linkedin"></i></a>
                             </li>
                             <li>
-                                <a href="https://twitter.com/" class="btn-social btn-outline"><i class="fa fa-fw fa-twitter"></i></a>
-                            </li>
-                            <li>
-                                <a href="https://co.linkedin.com/" class="btn-social btn-outline"><i class="fa fa-fw fa-linkedin"></i></a>
-                            </li>
-                            <li>
-                                <a href="https://www.instagram.com/" class="btn-social btn-outline"><i class="fa fa-fw fa-instagram"></i></a>
+                                <a href="https://www.instagram.com/drizzlewebcali/" target="_blank"  class="btn-social btn-outline"><i class="fa fa-fw fa-instagram"></i></a>
                             </li>
                         </ul>
                     </div>
@@ -379,7 +379,7 @@
     </div>
 
     <!-- Portfolio Modals -->
-    <div class="portfolio-modal modal fade" id="portfolioModal1" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="portfolio-modal modal fade" id="portfolioModal1"  tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-content">
             <div class="close-modal" data-dismiss="modal">
                 <div class="lr">
@@ -395,13 +395,13 @@
                             <hr class="star-primary">
                             <!-- pulido -->
                             <img src="././resources/img/portfolio/umbrella.png" class="img-responsive img-centered" alt="">
-                            <p>Â¿CÃ³mo se encuentra el estado climatico de tu ubicaciÃ³n?</p>
+                            <p>¿Cómo se encuentra el estado climatico de tu ubicación?</p>
                             <img id = "imagenClima0" class="img-responsive img-centered" src="././resources/img/perfil/no-weather.png" alt="clima">
                             <ul class="list-inline item-details">
                             
                             	<strong>Autor:</strong>
                             	<li>                            	
-                                 tÃº (regÃ­strate)
+                                 tú (regi­strate)
                                 </li>
                                  
                                 <strong>Fecha:</strong>
@@ -433,12 +433,12 @@
                             <hr class="star-primary">
                             <!-- pulido -->
                             <img src="././resources/img/portfolio/umbrella.png" class="img-responsive img-centered" alt="">
-                            <p>Â¿CÃ³mo se encuentra el estado climatico de tu ubicaciÃ³n?</p>
+                            <p>¿Cómo se encuentra el estado climatico de tu ubicación?</p>
                             <img id = "imagenClima1" class="img-responsive img-centered" src="././resources/img/perfil/no-weather.png" alt="clima">
                             <ul class="list-inline item-details">
                                 <strong>Autor:</strong>
                             	<li>
-                            	tÃº (regÃ­strate)
+                            	tú (regi­strate)
                                 </li>
                                 
                                 <strong>Fecha:</strong>
@@ -469,12 +469,12 @@
                             <hr class="star-primary">
                             <!-- pulido -->
                             <img src="././resources/img/portfolio/umbrella.png" class="img-responsive img-centered" alt="">
-                            <p>Â¿CÃ³mo se encuentra el estado climatico de tu ubicaciÃ³n?</p>
+                            <p>¿Cómo se encuentra el estado climatico de tu ubicación?</p>
                             <img id = "imagenClima2" class="img-responsive img-centered" src="././resources/img/perfil/no-weather.png" alt="clima">
                             <ul class="list-inline item-details">
                                 <strong>Autor:</strong>
                             	<li>
-                            	tÃº (regÃ­strate)
+                            	tú (regi­strate)
                                 </li>
                                 
                                  
@@ -506,12 +506,12 @@
                             <hr class="star-primary">
                             <!-- pulido -->
                             <img src="././resources/img/portfolio/umbrella.png" class="img-responsive img-centered" alt="">
-                            <p>Â¿CÃ³mo se encuentra el estado climatico de tu ubicaciÃ³n?</p>
+                            <p>¿Cómo se encuentra el estado climatico de tu ubicación?</p>
                             <img id = "imagenClima3" class="img-responsive img-centered" src="././resources/img/perfil/no-weather.png" alt="clima">
                             <ul class="list-inline item-details">
                                 <strong>Autor:</strong>
                             	<li>
-                            	tÃº (regÃ­strate)
+                            	tú (regi­strate)
                                 </li>
                                 
                                  
@@ -543,12 +543,12 @@
                             <hr class="star-primary">
                             <!-- pulido -->
                             <img src="././resources/img/portfolio/umbrella.png" class="img-responsive img-centered" alt="">
-                            <p>Â¿CÃ³mo se encuentra el estado climatico de tu ubicaciÃ³n?</p>
+                            <p>¿Cómo se encuentra el estado climatico de tu ubicación?</p>
                             <img id = "imagenClima4" class="img-responsive img-centered" src="././resources/img/perfil/no-weather.png" alt="clima">
                             <ul class="list-inline item-details">
                                 <strong>Autor:</strong>
                             	<li>
-                            	tÃº (regÃ­strate)
+                            	tú (regi­strate)
                                 </li>
                                 
                                  
@@ -580,12 +580,12 @@
                             <hr class="star-primary">
                             <!-- pulido -->
                             <img src="././resources/img/portfolio/umbrella.png" class="img-responsive img-centered" alt="">
-                            <p>Â¿CÃ³mo se encuentra el estado climatico de tu ubicaciÃ³n?</p>
+                            <p>¿Cómo se encuentra el estado climatico de tu ubicación?</p>
                             <img id = "imagenClima5" class="img-responsive img-centered" src="././resources/img/perfil/no-weather.png" alt="clima">
                             <ul class="list-inline item-details">
                                 <strong>Autor:</strong>
                             	<li>
-                            	tÃº (regÃ­strate)
+                            	tú (regi­strate)
                                 </li>
                                 
                                  

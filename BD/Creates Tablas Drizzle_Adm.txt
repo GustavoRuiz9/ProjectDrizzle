@@ -1,0 +1,35 @@
+--Script de Tablas de BD en uso para Pruebas
+
+
+CREATE DATABASE `Drizzle_Adm` /*!40100 DEFAULT CHARACTER SET latin1 */;
+
+
+CREATE TABLE `Account` (
+  `id_account` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(40) NOT NULL,
+  `last_name` varchar(40) NOT NULL,
+  `email` varchar(40) NOT NULL,
+  `password` varchar(40) NOT NULL,
+  `birth_date` varchar(40) NOT NULL,
+  `number_phone` varchar(40) NOT NULL,
+  PRIMARY KEY (`id_account`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
+
+CREATE TABLE `Profile` (
+  `profile_account` int(11) NOT NULL,
+  `photo` longblob,
+  `verification` varchar(40) NOT NULL,
+  `estatus` tinyint(1) NOT NULL,
+  `reputation` int(2) NOT NULL,
+  PRIMARY KEY (`profile_account`),
+  CONSTRAINT `FK_PROFILE_ACCOUNT` FOREIGN KEY (`profile_account`) REFERENCES `Account` (`id_account`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE `Setting` (
+  `id_account_profile` int(11) NOT NULL,
+  `correo` tinyint(1) NOT NULL,
+  `telefono` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id_account_profile`),
+  CONSTRAINT `fk_Setting_1` FOREIGN KEY (`id_account_profile`) REFERENCES `Account` (`id_account`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
